@@ -246,7 +246,7 @@ function render(){
   var v=$('#view');
   var h=state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='detail'?viewDetail():viewBackup();
   v.innerHTML=h;
-  var showNav=(state.view==='library'||state.view==='backup');
+  var showNav=(state.view==='library'||state.view==='backup'||(state.view==='add'&&state.form==='choose'));
   $('#nav').classList.toggle('hidden',!showNav);
   var ns=document.querySelectorAll('.ni');
   for(var i=0;i<ns.length;i++){ns[i].classList.toggle('on',ns[i].getAttribute('data-go')===state.view);}
