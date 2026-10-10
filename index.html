@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-10 21:22 UTC">
+<meta name="build" content="2026-10-10 21:33 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6}
@@ -98,6 +98,9 @@ h2{font-size:18px;font-weight:500;margin:0 0 6px}
 .lk{display:block;margin:14px auto 0;font-size:14px;padding:8px}
 .hidden{display:none!important}
 body.noscroll{overflow:hidden}
+.syn{margin:0;font-size:14px;line-height:1.5}
+.syn.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lnk.l{margin:6px 0 0;text-align:left;padding:4px 0}
 .toast-act{color:#fff;font-weight:500;text-decoration:underline;padding:4px 6px;font-size:14px}
 .row.btns{gap:8px}
 .row.btns .ob,.row.btns .pb{padding:11px 6px;font-size:14px;white-space:nowrap;min-width:0}
@@ -153,7 +156,7 @@ var COVERS=['#3D5A80','#4E5859','#6B8E6B','#7A5C99','#6F6A5E','#2F6F73'];
 var BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0" y="1" width="28" height="26" viewBox="22 24 56 52"><rect x="26" y="33.5" width="9" height="36" rx="1.5" fill="#FFB500"/><rect x="39" y="25.5" width="9" height="44" rx="1.5" fill="#42BB37"/><rect x="52" y="37.5" width="9" height="32" rx="1.5" fill="#00BDF6"/><rect x="65" y="29.5" width="9" height="40" rx="1.5" fill="#009CC6"/><rect x="23" y="71.5" width="54" height="3" rx="1.5" fill="#F0D9B2"/></svg><path transform="translate(38 21.9) scale(0.022)" d="M155 0V-100H356Q409 -100 438.0 -133.0Q467 -166 467 -209Q467 -238 454.0 -263.0Q441 -288 416.0 -303.0Q391 -318 356 -318H155V-418H339Q384 -418 411.0 -441.0Q438 -464 438 -509Q438 -554 411.0 -577.0Q384 -600 339 -600H155V-700H342Q413 -700 460.0 -674.0Q507 -648 530.0 -607.0Q553 -566 553 -519Q553 -464 522.5 -422.0Q492 -380 433 -354L442 -390Q508 -363 545.0 -314.0Q582 -265 582 -199Q582 -145 555.5 -100.0Q529 -55 477.5 -27.5Q426 0 351 0ZM76 0V-700H191V0Z M903 10Q833 10 776.0 -23.5Q719 -57 685.5 -114.0Q652 -171 652 -241Q652 -311 685.5 -367.0Q719 -423 776.0 -456.5Q833 -490 903 -490Q974 -490 1031.0 -457.0Q1088 -424 1121.5 -367.5Q1155 -311 1155 -241Q1155 -171 1121.5 -114.0Q1088 -57 1031.0 -23.5Q974 10 903 10ZM903 -96Q944 -96 975.5 -114.5Q1007 -133 1024.5 -166.0Q1042 -199 1042 -241Q1042 -283 1024.0 -315.0Q1006 -347 975.0 -365.5Q944 -384 903 -384Q863 -384 831.5 -365.5Q800 -347 782.5 -315.0Q765 -283 765 -241Q765 -199 782.5 -166.0Q800 -133 831.5 -114.5Q863 -96 903 -96Z M1466 10Q1396 10 1339.0 -23.5Q1282 -57 1248.5 -114.0Q1215 -171 1215 -241Q1215 -311 1248.5 -367.0Q1282 -423 1339.0 -456.5Q1396 -490 1466 -490Q1537 -490 1594.0 -457.0Q1651 -424 1684.5 -367.5Q1718 -311 1718 -241Q1718 -171 1684.5 -114.0Q1651 -57 1594.0 -23.5Q1537 10 1466 10ZM1466 -96Q1507 -96 1538.5 -114.5Q1570 -133 1587.5 -166.0Q1605 -199 1605 -241Q1605 -283 1587.0 -315.0Q1569 -347 1538.0 -365.5Q1507 -384 1466 -384Q1426 -384 1394.5 -365.5Q1363 -347 1345.5 -315.0Q1328 -283 1328 -241Q1328 -199 1345.5 -166.0Q1363 -133 1394.5 -114.5Q1426 -96 1466 -96Z M2114 0 1911 -245 2113 -480H2244L2012 -216L2017 -279L2254 0ZM1809 0V-720H1919V0Z M2535 0V-700H2615L2650 -568V0ZM3020 0 2601 -547 2615 -700 3034 -153ZM3020 0 2985 -123V-700H3100V0Z M3460 10Q3388 10 3330.5 -22.5Q3273 -55 3239.5 -112.0Q3206 -169 3206 -240Q3206 -311 3239.0 -367.5Q3272 -424 3328.5 -457.0Q3385 -490 3454 -490Q3521 -490 3572.5 -459.0Q3624 -428 3653.5 -374.0Q3683 -320 3683 -251Q3683 -239 3681.5 -226.5Q3680 -214 3677 -199H3283V-289H3620L3579 -253Q3577 -297 3562.0 -327.0Q3547 -357 3519.5 -373.0Q3492 -389 3452 -389Q3410 -389 3379.0 -371.0Q3348 -353 3331.0 -320.5Q3314 -288 3314 -243Q3314 -198 3332.0 -164.0Q3350 -130 3383.0 -111.5Q3416 -93 3459 -93Q3496 -93 3527.5 -106.0Q3559 -119 3581 -144L3651 -73Q3616 -32 3566.0 -11.0Q3516 10 3460 10Z M3771 0V-480H3881V0ZM3881 -267 3843 -286Q3843 -377 3883.5 -433.5Q3924 -490 4006 -490Q4042 -490 4071.0 -477.0Q4100 -464 4125 -435L4053 -361Q4040 -375 4024.0 -381.0Q4008 -387 3987 -387Q3941 -387 3911.0 -358.0Q3881 -329 3881 -267Z M4365 10Q4300 10 4247.5 -23.0Q4195 -56 4164.5 -112.5Q4134 -169 4134 -239Q4134 -310 4164.5 -366.5Q4195 -423 4247.5 -456.5Q4300 -490 4365 -490Q4420 -490 4462.5 -466.5Q4505 -443 4530.0 -402.0Q4555 -361 4555 -309V-171Q4555 -119 4530.5 -78.0Q4506 -37 4463.0 -13.5Q4420 10 4365 10ZM4383 -94Q4424 -94 4454.5 -112.5Q4485 -131 4502.0 -164.0Q4519 -197 4519 -240Q4519 -283 4502.0 -316.0Q4485 -349 4454.5 -367.5Q4424 -386 4384 -386Q4343 -386 4312.5 -367.5Q4282 -349 4264.5 -316.0Q4247 -283 4247 -240Q4247 -197 4264.5 -164.0Q4282 -131 4312.5 -112.5Q4343 -94 4383 -94ZM4622 0H4512V-129L4531 -246L4512 -362V-720H4622Z" fill="#F0D9B2"/></svg>';
 
-var state={rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',own:'any',addOwned:true};
+var state={synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',own:'any',addOwned:true};
 var scanner=null,handled=false,scanToken=0,pendingRestore=null;
 var db=null,memoryOnly=false;
 
@@ -309,6 +312,12 @@ function viewAdd(){
   h+='</div></div>'+ownRow(state.addOwned,'ownadd')+'<p class="err" id="err">'+esc(state.err)+'</p><button type="submit" class="pb">Add to Library</button></form>';
   return h;
 }
+function synHTML(b){
+  if(!b.synopsis){return synBusy[b.id]?'<div class="sm" style="margin-top:14px">Looking for a synopsis\u2026</div>':'';}
+  var long=b.synopsis.length>240;
+  return '<div style="margin-top:14px"><div class="lb">Synopsis</div><p class="syn'+(long&&!state.synOpen?' clamp':'')+'">'+esc(b.synopsis)+'</p>'+
+    (long?'<button class="lnk l" data-act="synmore">'+(state.synOpen?'Show Less':'Read More')+'</button>':'')+'</div>';
+}
 function cardHead(t){return '<div class="chdr"><b>'+esc(t)+'</b><button class="xb" data-act="closecard" aria-label="Close">'+ico('x',24)+'</button></div>';}
 function cardDetail(){
   var b=byId(state.id);
@@ -321,6 +330,7 @@ function cardDetail(){
   '<div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:76px;flex:none">'+coverHTML(b)+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+esc(b.author)+'</div>':'<div style="height:10px"></div>')+
   '<button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button><div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
+  synHTML(b)+
   ownRow(own,'owndetail',own?'Owned.':'Not owned. A bag shows on its cover.');
   h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
   if(state.editProg){
@@ -411,9 +421,10 @@ function renderCard(){
   var nb=el.querySelector('.cbody');if(nb&&keep)nb.scrollTop=keep;
 }
 function openCard(type){
-  state.card=type;state.editProg=false;
+  state.card=type;state.editProg=false;state.synOpen=false;
   document.body.classList.add('noscroll');
   renderCard();
+  if(type==='detail')ensureSynopsis(byId(state.id));
 }
 function closeCard(silent){
   var was=state.card;
@@ -513,8 +524,8 @@ function doLookup(isbn){
 }
 function pickIsbn(arr){if(!arr)return '';for(var i=0;i<arr.length;i++){if(/^97[89][0-9]{10}$/.test(arr[i]))return arr[i];}return '';}
 function searchOL(q){
-  return fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=20&fields=title,author_name,first_publish_year,cover_i,isbn,number_of_pages_median').then(function(r){return r.json();}).then(function(j){
-    return (j.docs||[]).map(function(d){return {title:d.title||'',author:(d.author_name||[]).slice(0,2).join(', '),year:d.first_publish_year?String(d.first_publish_year):'',pages:d.number_of_pages_median||0,cover:d.cover_i?'https://covers.openlibrary.org/b/id/'+d.cover_i+'-M.jpg':'',isbn:pickIsbn(d.isbn)};}).filter(function(x){return x.title;});
+  return fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=20&fields=key,title,author_name,first_publish_year,cover_i,isbn,number_of_pages_median').then(function(r){return r.json();}).then(function(j){
+    return (j.docs||[]).map(function(d){return {title:d.title||'',author:(d.author_name||[]).slice(0,2).join(', '),year:d.first_publish_year?String(d.first_publish_year):'',pages:d.number_of_pages_median||0,cover:d.cover_i?'https://covers.openlibrary.org/b/id/'+d.cover_i+'-M.jpg':'',isbn:pickIsbn(d.isbn),olKey:/^\/works\/OL\d+W$/.test(d.key||'')?d.key:''};}).filter(function(x){return x.title;});
   });
 }
 function searchGB(q){
@@ -552,17 +563,72 @@ function pickResult(i){
     if((r.isbn&&b.isbn===r.isbn)||(b.title.toLowerCase()===tl&&(b.author||'').toLowerCase()===au)){ex=b;break;}
   }
   if(ex){toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
-  state.found={title:r.title,author:r.author,pages:r.pages,year:r.year,cover:r.cover,isbn:r.isbn,status:'toread'};
+  state.found={title:r.title,author:r.author,pages:r.pages,year:r.year,cover:r.cover,isbn:r.isbn,olKey:r.olKey||'',status:'toread'};
   state.nf='';state.isbn=r.isbn||'';state.addAs='toread';state.addOwned=true;state.from='search';
   openCard('found');
+}
+function cleanSynopsis(raw){
+  if(raw&&typeof raw==='object')raw=raw.value;
+  if(typeof raw!=='string')return '';
+  var s=raw;
+  if(/<[a-z][\s\S]*>/i.test(s)){
+    try{s=new DOMParser().parseFromString(s.replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n'),'text/html').body.textContent||'';}
+    catch(e){s=s.replace(/<[^>]+>/g,' ');}
+  }
+  s=s.split(/\r?\n\s*(?:-{4,}|_{4,}|={4,})/)[0];
+  s=s.split(/\r?\n\s*(?:Contains:|Also contained in|See also|Source:|\[\d+\]:|Previously published as)/i)[0];
+  s=s.replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\[([^\]]+)\]\[\d+\]/g,'$1').replace(/\(\[source\]\[\d+\]\)/gi,'');
+  s=s.replace(/^#+\s*/gm,'').replace(/\*+/g,'').replace(/(^|\s)_+(?=\S)|(\S)_+(?=\s|[.,;:!?]|$)/g,'$1$2');
+  s=s.replace(/\s+/g,' ').trim();
+  if(s.length>1200){
+    var cut=s.slice(0,1200),i=Math.max(cut.lastIndexOf('. '),cut.lastIndexOf('! '),cut.lastIndexOf('? '));
+    s=(i>500)?cut.slice(0,i+1):cut.replace(/\s+\S*$/,'')+'\u2026';
+  }
+  return s.length>=40?s:'';
+}
+function jget(u){
+  return withTimeout(fetch(u).then(function(r){if(r.status===404)return null;if(!r.ok)throw new Error('http '+r.status);return r.json();}),10000);
+}
+function fetchSynopsis(b){
+  var failed=false;
+  function safe(p){return p.catch(function(){failed=true;return null;});}
+  function viaWork(key){return safe(jget('https://openlibrary.org'+key+'.json')).then(function(w){return w?cleanSynopsis(w.description):'';});}
+  var chain=Promise.resolve('');
+  if(b.olKey){chain=viaWork(b.olKey);}
+  else if(b.isbn){
+    chain=safe(jget('https://openlibrary.org/isbn/'+b.isbn+'.json')).then(function(ed){
+      if(!ed)return '';
+      var d=cleanSynopsis(ed.description);if(d)return d;
+      var wk=ed.works&&ed.works[0]&&ed.works[0].key;return wk?viaWork(wk):'';
+    });
+  }
+  return chain.then(function(txt){
+    if(txt||!b.isbn)return txt;
+    return safe(jget('https://www.googleapis.com/books/v1/volumes?q=isbn:'+b.isbn)).then(function(g){
+      var v=g&&g.items&&g.items[0]&&g.items[0].volumeInfo;return v?cleanSynopsis(v.description):'';
+    });
+  }).then(function(txt){return {text:txt,failed:failed};});
+}
+var synBusy={};
+function ensureSynopsis(b){
+  if(!b||b.synopsis||synBusy[b.id]||(!b.isbn&&!b.olKey))return;
+  if(b.synopsisChecked&&Date.now()-b.synopsisChecked<7*864e5)return;
+  synBusy[b.id]=true;
+  if(state.card==='detail'&&state.id===b.id)renderCard();
+  fetchSynopsis(b).then(function(r){
+    delete synBusy[b.id];
+    if(r.text){b.synopsis=r.text;delete b.synopsisChecked;dbPut(b);}
+    else if(!r.failed){b.synopsisChecked=Date.now();dbPut(b);}
+    if(state.card==='detail'&&state.id===b.id)renderCard();
+  });
 }
 function makeBook(f){
   var now=Date.now();
   var b={id:uid(),title:f.title,author:f.author||'',pages:f.pages||0,status:state.addAs,currentPage:0,rating:0,notes:'',owned:state.addOwned!==false,addedAt:now,updatedAt:now};
-  if(f.isbn)b.isbn=f.isbn;if(f.cover)b.coverUrl=f.cover;if(f.year)b.year=f.year;
+  if(f.isbn)b.isbn=f.isbn;if(f.cover)b.coverUrl=f.cover;if(f.year)b.year=f.year;if(f.olKey)b.olKey=f.olKey;
   if(b.status==='reading')b.startedAt=now;
   if(b.status==='finished'){b.startedAt=now;b.finishedAt=now;if(b.pages>0)b.currentPage=b.pages;}
-  state.books.push(b);dbPut(b);
+  state.books.push(b);dbPut(b);ensureSynopsis(b);
   state.addAs='toread';state.addOwned=true;state.filter='all';state.own='any';state.q='';state.search=false;state.err='';state.found=null;
   go('library');toast('Added to Library');
 }
@@ -602,6 +668,8 @@ function cleanBook(x){
     rating:Math.min(5,num(x.rating)),notes:typeof x.notes==='string'?x.notes.slice(0,20000):'',
     addedAt:num(x.addedAt)||now,updatedAt:num(x.updatedAt)||now};
   if(x.owned===false)b.owned=false;
+  if(typeof x.synopsis==='string'&&x.synopsis.trim())b.synopsis=x.synopsis.slice(0,2000);
+  if(typeof x.olKey==='string'&&/^\/works\/OL\d+W$/.test(x.olKey))b.olKey=x.olKey;
   if(typeof x.review==='string'&&x.review.trim())b.review=x.review.slice(0,20000);
   if(num(x.startedAt))b.startedAt=num(x.startedAt);
   if(num(x.finishedAt))b.finishedAt=num(x.finishedAt);
@@ -758,6 +826,7 @@ document.addEventListener('click',function(e){
     }
     closeSheet();return;
   }
+  if(a==='synmore'){state.synOpen=!state.synOpen;renderCard();return;}
   if(a==='savebackup'){saveBackup();return;}
   if(a==='restore'){var rf=$('#restorefile');if(rf){rf.value='';rf.click();}return;}
   if(a==='restoreyes'){applyRestore();return;}
@@ -847,7 +916,7 @@ function start(){
 start();
 checkUpdate();
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkUpdate();});
-window.__bm={lookup:doLookup};
+window.__bm={lookup:doLookup,clean:cleanSynopsis};
 })();
 </script>
 </body>
