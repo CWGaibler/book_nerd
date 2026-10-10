@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-10 21:33 UTC">
+<meta name="build" content="2026-10-10 21:45 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6}
@@ -262,7 +262,7 @@ function viewLibrary(){
   var h=top('<button class="ic'+(state.search?' on':'')+'" data-act="search" aria-label="Search">'+ico('search',22)+'</button>')+ptitle('Library');
   if(state.search){h+='<label class="fld" style="margin-top:12px"><input id="q" type="search" placeholder="Search Your Library" value="'+esc(state.q)+'" autocomplete="off"></label>';}
   if(!all.length){
-    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, search by title, or type it in.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
+    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, enter an ISBN, or search by title.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
     return h;
   }
   h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',16)+'Filter</button>';
@@ -290,27 +290,11 @@ function filterSheet(){
   return h;
 }
 function viewAdd(){
-  var h=top();
-  if(state.form==='choose'){
-    h+=ptitle('Add Book')+'<div class="cam"><div id="reader"></div></div>'+
+  return top()+ptitle('Add Book')+'<div class="cam"><div id="reader"></div></div>'+
     '<p class="stat'+(state.statusErr?' e':'')+'" id="stat">'+esc(state.status)+'</p>'+
     '<div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">'+
     '<button class="bt" data-act="isbn">'+ico('keyboard',22)+'Enter ISBN</button>'+
-    '<button class="bt" data-act="typeit">'+ico('pencil',22)+'Type It In</button>'+
     '<button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button></div>';
-    return h;
-  }
-  h+=ptitle('Type It In')+(state.isbn?'<p class="sm" style="margin:16px 0 0">ISBN '+esc(state.isbn)+' will be saved with this book.</p>':'')+
-  '<form id="addform" novalidate>'+
-  '<label class="fld"><span class="lb">Title</span><input id="f-title" type="text" autocomplete="off" autocapitalize="words"></label>'+
-  '<label class="fld"><span class="lb">Author</span><input id="f-author" type="text" autocomplete="off" autocapitalize="words"></label>'+
-  '<label class="fld"><span class="lb">Pages</span><input id="f-pages" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off"></label>'+
-  '<div class="fld"><div class="lb">Add As</div><div class="row" style="gap:6px;flex-wrap:wrap">';
-  ['toread','reading','finished'].forEach(function(k){
-    h+='<button type="button" class="ch" data-as="'+k+'" style="flex:none;'+(state.addAs===k?'background:'+STAT[k].color+';color:#00033C':'')+'">'+STAT[k].label+'</button>';
-  });
-  h+='</div></div>'+ownRow(state.addOwned,'ownadd')+'<p class="err" id="err">'+esc(state.err)+'</p><button type="submit" class="pb">Add to Library</button></form>';
-  return h;
 }
 function synHTML(b){
   if(!b.synopsis){return synBusy[b.id]?'<div class="sm" style="margin-top:14px">Looking for a synopsis\u2026</div>':'';}
@@ -356,8 +340,8 @@ function viewSearch(){
   '<button type="submit" class="pb" style="width:auto;padding:12px 18px">Search</button></form>';
   if(state.sstat==='idle'){return h+'<p class="sm" style="margin-top:20px">Type a title, an author, or both, then tap Search.</p>';}
   if(state.sstat==='loading'){return h+'<p class="sm" style="margin-top:20px">Searching\u2026</p>';}
-  if(state.sstat==='err'){return h+'<p class="err" style="margin-top:20px;font-size:15px">Search is not working right now. Check your connection and try again, or use Type It In.</p>';}
-  if(state.sstat==='empty'){return h+'<p class="sm" style="margin-top:20px">No books found. Try fewer words, or use Type It In.</p>';}
+  if(state.sstat==='err'){return h+'<p class="err" style="margin-top:20px;font-size:15px">Search is not working right now. Check your connection and try again.</p>';}
+  if(state.sstat==='empty'){return h+'<p class="sm" style="margin-top:20px">No books found. Try fewer words or a different spelling, or scan the barcode.</p>';}
   h+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">';
   state.sres.forEach(function(r,i){
     var meta=[r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
@@ -372,8 +356,8 @@ function cardFound(){
   var f=state.found;
   var h=cardHead(f?'Book Found':'No Match Found');
   if(!f){
-    return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:15px">Neither Open Library nor Google Books has ISBN '+esc(state.nf)+'. Type the details in by hand and the ISBN will be saved with the book.</p>'+
-    '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="bt" data-act="typeit">'+ico('pencil',22)+'Type It In</button><button class="bt" data-act="rescan">'+ico('barcode',22)+'Scan Again</button></div></div>';
+    return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:15px">Neither Open Library nor Google Books has ISBN '+esc(state.nf)+'. Try searching for it by title instead, or scan again.</p>'+
+    '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button><button class="bt" data-act="rescan">'+ico('barcode',22)+'Scan Again</button></div></div>';
   }
   var meta=[f.year,f.pages?f.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
   h+='<div class="cbody"><div class="big">'+coverHTML({title:f.title,status:'toread',coverUrl:f.cover})+'</div>'+
@@ -464,7 +448,7 @@ function stopScan(){
 function startScan(){
   handled=false;
   if(state.view!=='add'||state.form!=='choose'||!$('#reader'))return;
-  if(typeof Html5Qrcode==='undefined'){setStat('The scanner did not load. Check your connection, or use Enter ISBN or Type It In.',true);return;}
+  if(typeof Html5Qrcode==='undefined'){setStat('The scanner did not load. Check your connection, or use Enter ISBN or Search by Title.',true);return;}
   setStat('Starting the camera\u2026');
   var s=new Html5Qrcode('reader',{
     formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A],
@@ -478,9 +462,9 @@ function startScan(){
     if(token!==scanToken)return;
     scanner=null;
     var name=err&&err.name?err.name:'',msg=String(err);
-    if(name==='NotAllowedError'||/Permission/i.test(msg)){setStat('Camera access was blocked. Allow it in your phone settings, or use Enter ISBN or Type It In.',true);}
-    else if(name==='NotFoundError'||/Requested device not found/i.test(msg)){setStat('No camera was found. Use Enter ISBN or Type It In.',true);}
-    else{setStat('The camera did not start. Use Enter ISBN or Type It In.',true);}
+    if(name==='NotAllowedError'||/Permission/i.test(msg)){setStat('Camera access was blocked. Allow it in your phone settings, or use Enter ISBN or Search by Title.',true);}
+    else if(name==='NotFoundError'||/Requested device not found/i.test(msg)){setStat('No camera was found. Use Enter ISBN or Search by Title.',true);}
+    else{setStat('The camera did not start. Use Enter ISBN or Search by Title.',true);}
   });
 }
 function onScan(text){
@@ -773,7 +757,7 @@ document.addEventListener('click',function(e){
   if(el.hasAttribute('data-clr')){if(el.getAttribute('data-clr')==='s')state.filter='all';else state.own='any';render();return;}
   if(el.hasAttribute('data-ps')){state.pst=el.getAttribute('data-ps');openSheet(filterSheet());return;}
   if(el.hasAttribute('data-po')){state.pown=el.getAttribute('data-po');openSheet(filterSheet());return;}
-  if(el.hasAttribute('data-as')){var f=readForm();state.addAs=el.getAttribute('data-as');state.err='';refresh();writeForm(f);return;}
+  if(el.hasAttribute('data-as')){state.addAs=el.getAttribute('data-as');refresh();return;}
   if(el.hasAttribute('data-star')){
     var b=byId(state.id);if(!b)return;
     var n=parseInt(el.getAttribute('data-star'),10);
@@ -787,8 +771,7 @@ document.addEventListener('click',function(e){
   if(a==='search'){state.search=!state.search;if(!state.search)state.q='';render();if(state.search){var q=$('#q');if(q)q.focus();}return;}
   if(a==='closecard'){closeCard();return;}
   if(a==='rescan'){closeCard();return;}
-  if(a==='searchtitle'){stopScan();state.view='search';render();window.scrollTo(0,0);return;}
-  if(a==='typeit'){stopScan();if(state.card)closeCard(true);state.view='add';state.form='type';state.err='';render();window.scrollTo(0,0);return;}
+  if(a==='searchtitle'){stopScan();if(state.card)closeCard(true);state.view='search';render();window.scrollTo(0,0);return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='seereading'){state.filter='reading';state.own='any';go('library');return;}
   if(a==='openfilter'){state.pst=state.filter;state.pown=state.own;openSheet(filterSheet());return;}
@@ -805,7 +788,7 @@ document.addEventListener('click',function(e){
     return;
   }
   if(a==='addfound'){if(state.found)makeBook(state.found);return;}
-  if(a==='ownadd'){var of=readForm();state.addOwned=!state.addOwned;refresh();writeForm(of);return;}
+  if(a==='ownadd'){state.addOwned=!state.addOwned;refresh();return;}
   if(a==='owndetail'){var ob=byId(state.id);if(!ob)return;ob.owned=!isOwned(ob);ob.updatedAt=Date.now();dbPut(ob);refresh();return;}
   if(a==='finishbook'){
     var fb=byId(el.getAttribute('data-bid')||state.id);if(!fb||fb.status==='finished')return;
@@ -863,10 +846,7 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&state.card&&!$('#layer').innerHTML){closeCard();return;}
   if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.getAttribute&&e.target.getAttribute('role')==='button'&&e.target.hasAttribute('data-open')){e.preventDefault();e.target.click();}
 });
-function readForm(){var t=$('#f-title');if(!t)return null;return {t:t.value,a:$('#f-author').value,p:$('#f-pages').value};}
-function writeForm(f){if(!f)return;var t=$('#f-title');if(!t)return;t.value=f.t;$('#f-author').value=f.a;$('#f-pages').value=f.p;}
 document.addEventListener('input',function(e){
-  if(e.target.id==='f-title'&&state.err){state.err='';var er=$('#err');if(er)er.textContent='';}
   if(e.target.id==='q'){state.q=e.target.value;var pos=e.target.selectionStart;render();var q=$('#q');if(q){q.focus();try{q.setSelectionRange(pos,pos);}catch(x){}}return;}
   if(e.target.id==='notes'){
     var b=byId(state.id);if(!b)return;
@@ -897,12 +877,6 @@ document.addEventListener('submit',function(e){
     if(!/^97[89][0-9]{10}$/.test(code)){$('#isbn-err').textContent='Enter a 13-digit ISBN that starts with 978 or 979.';return;}
     doLookup(code);return;
   }
-  if(e.target.id!=='addform')return;
-  e.preventDefault();
-  var title=$('#f-title').value.trim();
-  if(!title){state.err='Enter a title to continue.';var er=$('#err');if(er)er.textContent=state.err;$('#f-title').focus();return;}
-  var pages=parseInt(($('#f-pages').value||'0').replace(/\D/g,''),10)||0;
-  makeBook({title:title,author:$('#f-author').value.trim(),pages:pages,isbn:state.isbn});
 });
 window.addEventListener('pagehide',function(){var n=$('#notes'),rv=$('#review');if((n||rv)&&state.id){var b=byId(state.id);if(b){if(n)b.notes=n.value;if(rv){if(rv.value)b.review=rv.value;else delete b.review;}dbPut(b);}}});
 
@@ -916,7 +890,7 @@ function start(){
 start();
 checkUpdate();
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkUpdate();});
-window.__bm={lookup:doLookup,clean:cleanSynopsis};
+window.__bm={lookup:doLookup,clean:cleanSynopsis,add:function(title,status,pages,author,owned){state.addAs=status||'toread';state.addOwned=owned!==false;makeBook({title:title,author:author||'',pages:pages||0});}};
 })();
 </script>
 </body>
