@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 19:01 UTC · Navy Bar Test">
+<meta name="build" content="2026-10-11 19:28 UTC · Top Edge Test">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -159,6 +159,7 @@ body.noscroll{overflow:hidden}
 .aph.skel,.cv.skel{opacity:.55}
 .cv.skel{--c:#00478E}
 .abk{display:block;text-align:left;width:100%}
+#topstrip{position:fixed;top:0;left:0;right:0;height:max(var(--sat),14px);background:var(--navy);z-index:3}
 #celx{position:fixed;inset:0;z-index:36;background:transparent;touch-action:none;animation:celxOff 0s linear 2.6s forwards}
 @keyframes celxOff{to{visibility:hidden}}
 .card2 .bt,.sheet .scan{background:var(--navy)}
@@ -490,6 +491,7 @@ function viewBackup(){
   '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="savebackup">Save Backup</button>'+
   '<button class="bt c" data-act="restore">Restore from Backup</button><button class="bt" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button></div>'+
   '<p class="sm" style="margin-top:16px;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p>'+
+  displayTest()+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="bld">Build '+esc(BUILD)+'</p>';
 }
@@ -1446,6 +1448,7 @@ document.addEventListener('click',function(e){
   if(a==='qscan'){var qc=$('#q-cam');if(qc&&!ocr.busy)qc.click();return;}
   if(a==='qpick'){var qp=$('#q-pick');if(qp&&!ocr.busy)qp.click();return;}
   if(a==='qscancancel'){ocrAbort();scanUI('idle');return;}
+  if(a==='topstrip'){lsSet('bm_topstrip',stripOn()?'0':'1');stripApply();render();return;}
   if(a==='author'){var an=el.getAttribute('data-name'),ab=byId(el.getAttribute('data-bid'));if(an)openAuthor(an,ab);return;}
   if(a==='authretry'){if(state.author)authLoad(state.author.name,state.author.title,true);return;}
   if(a==='authmore'){if(state.author){state.author.more=!state.author.more;renderCard();}return;}
@@ -1719,8 +1722,29 @@ function navH(){var n=document.getElementById('nav');if(n)document.documentEleme
 window.addEventListener('resize',navH);window.addEventListener('orientationchange',navH);window.addEventListener('pageshow',navH);document.addEventListener('visibilitychange',navH);
 if(window.ResizeObserver){try{new ResizeObserver(navH).observe(document.getElementById('nav'));}catch(e){}}
 
+
+/* ---------- temporary: top edge test (status bar behaviour on iOS) ---------- */
+function isStandalone(){return !!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));}
+function stripOn(){return lsGet('bm_topstrip')!=='0';}
+function stripApply(){
+  var el=document.getElementById('topstrip'),want=isStandalone()&&stripOn();
+  if(want&&!el){el=document.createElement('div');el.id='topstrip';el.setAttribute('aria-hidden','true');document.body.appendChild(el);}
+  else if(!want&&el){el.parentNode.removeChild(el);}
+}
+function probePx(css){
+  var p=document.createElement('div');p.style.cssText='position:absolute;visibility:hidden;padding-top:'+css;
+  document.body.appendChild(p);var v=Math.round(parseFloat(getComputedStyle(p).paddingTop)||0);document.body.removeChild(p);return v;
+}
+function displayTest(){
+  var rows=[['Opened As',isStandalone()?'Home Screen App':'Browser'],['Screen',screen.width+' x '+screen.height],['Page Area',window.innerWidth+' x '+window.innerHeight],['Top Safe Area',probePx('env(safe-area-inset-top,0px)')+' pt'],['Bottom Safe Area',probePx('env(safe-area-inset-bottom,0px)')+' pt']];
+  var h='<div class="cd" style="margin-top:16px"><div style="font-weight:500;margin-bottom:6px">Display Test</div>';
+  rows.forEach(function(r){h+='<div class="sm" style="display:flex;justify-content:space-between;gap:12px"><span>'+r[0]+'</span><span>'+esc(r[1])+'</span></div>';});
+  return h+'<button class="ob" data-act="topstrip" style="margin-top:12px;width:100%">Top Strip: '+(stripOn()?'On':'Off')+'</button><p class="sm" style="font-size:12px;margin:8px 0 0">Temporary. Flip it, then scroll Home up and down to compare.</p></div>';
+}
+
 /* ---------- start ---------- */
 function start(){
+  stripApply();
   render();
   navH();
   welcome();
