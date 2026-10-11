@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 19:28 UTC · Top Edge Test">
+<meta name="build" content="2026-10-11 20:25 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -20,15 +20,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 input,textarea{font:inherit;font-size:16px;color:#fff}
 .tb{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;flex:none}
 #app{max-width:480px;margin:0 auto;min-height:100vh}
-#topbar{padding:calc(var(--sat) + 16px) 16px 0}
-#topbar>div{display:flex;align-items:center;min-height:36px}
+#topbar{position:sticky;top:0;z-index:4;background:var(--navy);padding:var(--sat) 16px 8px;border-bottom:1px solid var(--line)}
+#topbar>div{display:flex;align-items:center;min-height:28px}
 #view{padding:0 16px 110px;display:flow-root}
 .ghost{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2}
 input[type=search]{-webkit-appearance:none;appearance:none}
 .top{display:flex;align-items:center;justify-content:space-between;min-height:36px}
 .slot{width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-right:-8px}
 .slot .ic{margin:0}
-.pt{font-size:17px;font-weight:500;margin:14px 0 0;line-height:1.3}
+.pt{font-size:17px;font-weight:500;margin:10px 0 0;line-height:22px}
 .cnt{font-size:17px;line-height:1.3;margin:12px 0 0}
 .badge{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(0,3,60,.85);display:flex;align-items:center;justify-content:center;color:#fff}
 .own{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border-radius:14px;padding:12px;text-align:left;margin-top:16px;font-size:15px;color:#fff}
@@ -159,7 +159,6 @@ body.noscroll{overflow:hidden}
 .aph.skel,.cv.skel{opacity:.55}
 .cv.skel{--c:#00478E}
 .abk{display:block;text-align:left;width:100%}
-#topstrip{position:fixed;top:0;left:0;right:0;height:max(var(--sat),14px);background:var(--navy);z-index:3}
 #celx{position:fixed;inset:0;z-index:36;background:transparent;touch-action:none;animation:celxOff 0s linear 2.6s forwards}
 @keyframes celxOff{to{visibility:hidden}}
 .card2 .bt,.sheet .scan{background:var(--navy)}
@@ -282,8 +281,10 @@ function setStatus(b,st){
 
 /* ---------- views ---------- */
 function top(){return '';}
-(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div>';})();
-function ptitle(t){return '<h1 class="pt">'+esc(t)+'</h1>';}
+(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><h1 class="pt" id="ptitle"></h1>';})();
+var ptNow='';
+function ptitle(t){ptNow=String(t);return '';}
+function setPT(){var e=document.getElementById('ptitle');if(e&&e.textContent!==ptNow)e.textContent=ptNow;}
 function isOwned(b){return b.owned!==false;}
 function isbn13to10(i){
   if(!/^978[0-9]{10}$/.test(i))return null;
@@ -491,7 +492,6 @@ function viewBackup(){
   '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="savebackup">Save Backup</button>'+
   '<button class="bt c" data-act="restore">Restore from Backup</button><button class="bt" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button></div>'+
   '<p class="sm" style="margin-top:16px;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p>'+
-  displayTest()+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="bld">Build '+esc(BUILD)+'</p>';
 }
@@ -531,6 +531,7 @@ function render(){
   var ghost=(lastView!==null&&lastView!==state.view&&state.loaded&&!reduced())?makeGhost(v):null;
   if(!state.loaded&&(state.view==='home'||state.view==='library')){v.innerHTML=top()+ptitle(state.view==='home'?'Home':'Library');}
   else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='search'?viewSearch():viewBackup();}
+  setPT();
   var tab=state.view==='search'?'add':state.view;
   var ns=document.querySelectorAll('.ni');
   for(var i=0;i<ns.length;i++){ns[i].classList.toggle('on',ns[i].getAttribute('data-go')===tab);}
@@ -1448,7 +1449,6 @@ document.addEventListener('click',function(e){
   if(a==='qscan'){var qc=$('#q-cam');if(qc&&!ocr.busy)qc.click();return;}
   if(a==='qpick'){var qp=$('#q-pick');if(qp&&!ocr.busy)qp.click();return;}
   if(a==='qscancancel'){ocrAbort();scanUI('idle');return;}
-  if(a==='topstrip'){lsSet('bm_topstrip',stripOn()?'0':'1');stripApply();render();return;}
   if(a==='author'){var an=el.getAttribute('data-name'),ab=byId(el.getAttribute('data-bid'));if(an)openAuthor(an,ab);return;}
   if(a==='authretry'){if(state.author)authLoad(state.author.name,state.author.title,true);return;}
   if(a==='authmore'){if(state.author){state.author.more=!state.author.more;renderCard();}return;}
@@ -1723,28 +1723,9 @@ window.addEventListener('resize',navH);window.addEventListener('orientationchang
 if(window.ResizeObserver){try{new ResizeObserver(navH).observe(document.getElementById('nav'));}catch(e){}}
 
 
-/* ---------- temporary: top edge test (status bar behaviour on iOS) ---------- */
-function isStandalone(){return !!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));}
-function stripOn(){return lsGet('bm_topstrip')!=='0';}
-function stripApply(){
-  var el=document.getElementById('topstrip'),want=isStandalone()&&stripOn();
-  if(want&&!el){el=document.createElement('div');el.id='topstrip';el.setAttribute('aria-hidden','true');document.body.appendChild(el);}
-  else if(!want&&el){el.parentNode.removeChild(el);}
-}
-function probePx(css){
-  var p=document.createElement('div');p.style.cssText='position:absolute;visibility:hidden;padding-top:'+css;
-  document.body.appendChild(p);var v=Math.round(parseFloat(getComputedStyle(p).paddingTop)||0);document.body.removeChild(p);return v;
-}
-function displayTest(){
-  var rows=[['Opened As',isStandalone()?'Home Screen App':'Browser'],['Screen',screen.width+' x '+screen.height],['Page Area',window.innerWidth+' x '+window.innerHeight],['Top Safe Area',probePx('env(safe-area-inset-top,0px)')+' pt'],['Bottom Safe Area',probePx('env(safe-area-inset-bottom,0px)')+' pt']];
-  var h='<div class="cd" style="margin-top:16px"><div style="font-weight:500;margin-bottom:6px">Display Test</div>';
-  rows.forEach(function(r){h+='<div class="sm" style="display:flex;justify-content:space-between;gap:12px"><span>'+r[0]+'</span><span>'+esc(r[1])+'</span></div>';});
-  return h+'<button class="ob" data-act="topstrip" style="margin-top:12px;width:100%">Top Strip: '+(stripOn()?'On':'Off')+'</button><p class="sm" style="font-size:12px;margin:8px 0 0">Temporary. Flip it, then scroll Home up and down to compare.</p></div>';
-}
-
 /* ---------- start ---------- */
 function start(){
-  stripApply();
+  try{localStorage.removeItem('bm_topstrip');}catch(e){}
   render();
   navH();
   welcome();
