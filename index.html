@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 13:30 UTC">
+<meta name="build" content="2026-10-11 13:53 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -871,6 +871,21 @@ function afterReview(){
   }});
 }
 
+/* ---------- finishing a book ---------- */
+function finishBook(fb){
+  if(celeb.on||!fb||fb.status==='finished')return;
+  var prev={status:fb.status,currentPage:fb.currentPage,startedAt:fb.startedAt,finishedAt:fb.finishedAt,rating:fb.rating,review:fb.review};
+  setStatus(fb,'finished');refresh();
+  state.rev={id:fb.id,rating:fb.rating||0,prev:prev};
+  celebrate(function(){
+    if(!state.rev||state.rev.id!==fb.id)return;
+    openSheet(reviewSheet(fb),afterReview);
+  });
+}
+function lastPageSheet(b){
+  return '<h2>You Reached the Last Page</h2><p class="sm" style="margin:0 0 16px;word-break:break-word">Mark '+esc(b.title)+' as finished?</p><div class="row"><button class="ob" data-act="closesheet2">Not Yet</button><button class="pb" data-act="lpyes" data-bid="'+esc(b.id)+'">Mark as Finished</button></div>';
+}
+
 /* ---------- celebration (Finished Reading) ---------- */
 var celeb={on:false,t:[]};
 function celebAt(fn,ms){celeb.t.push(setTimeout(fn,ms));}
@@ -1001,18 +1016,8 @@ document.addEventListener('click',function(e){
     openSheet('<h2>Change Ownership</h2>'+[['1','Owned',cur],['0','Not Owned',!cur]].map(function(c){return '<button class="opt" data-setown="'+c[0]+'">'+c[1]+(c[2]?'<small>Current</small>':'')+'</button>';}).join(''));
     return;
   }
-  if(a==='finishbook'){
-    if(celeb.on)return;
-    var fb=byId(el.getAttribute('data-bid')||state.id);if(!fb||fb.status==='finished')return;
-    var prev={status:fb.status,currentPage:fb.currentPage,startedAt:fb.startedAt,finishedAt:fb.finishedAt,rating:fb.rating,review:fb.review};
-    setStatus(fb,'finished');refresh();
-    state.rev={id:fb.id,rating:fb.rating||0,prev:prev};
-    celebrate(function(){
-      if(!state.rev||state.rev.id!==fb.id)return;
-      openSheet(reviewSheet(fb),afterReview);
-    });
-    return;
-  }
+  if(a==='finishbook'){finishBook(byId(el.getAttribute('data-bid')||state.id));return;}
+  if(a==='lpyes'){var lb=byId(el.getAttribute('data-bid'));closeSheet();finishBook(lb);return;}
   if(a==='rvskip'){closeSheet();return;}
   if(a==='rvsave'){
     var rb2=state.rev?byId(state.rev.id):null;
@@ -1034,10 +1039,15 @@ document.addEventListener('click',function(e){
     var pb=byId(state.id);if(!pb)return;
     var cur=parseInt(($('#p-cur').value||'0').replace(/\D/g,''),10)||0;
     var tot=parseInt(($('#p-tot').value||'0').replace(/\D/g,''),10)||0;
+    var was=pb.pages>0&&(pb.currentPage||0)>=pb.pages;
     pb.pages=tot;pb.currentPage=(tot>0)?Math.min(cur,tot):cur;pb.updatedAt=Date.now();
     var started=false;
     if(pb.status==='toread'&&pb.currentPage>0){pb.status='reading';if(!pb.startedAt)pb.startedAt=Date.now();started=true;}
-    dbPut(pb);state.editProg=false;closeSheet();if(state.card)renderCard();render();
+    var ask=pb.status==='reading'&&pb.pages>0&&pb.currentPage>=pb.pages&&!was;
+    dbPut(pb);state.editProg=false;
+    if(!ask)closeSheet();
+    if(state.card)renderCard();render();
+    if(ask)openSheet(lastPageSheet(pb));
     if(started)toast('Moved to Currently Reading');
     return;
   }
