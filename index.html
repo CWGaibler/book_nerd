@@ -10,10 +10,10 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-10 23:48 UTC">
+<meta name="build" content="2026-10-11 01:22 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-:root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
+:root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--navy);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--navy);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5}
@@ -23,7 +23,7 @@ input,textarea{font:inherit;font-size:16px;color:#fff}
 #app{max-width:480px;margin:0 auto;min-height:100vh}
 #topbar{padding:calc(env(safe-area-inset-top,0px) + 16px) 16px 0}
 #topbar>div{display:flex;align-items:center;min-height:36px}
-#view{padding:0 16px 110px}
+#view{padding:0 16px 110px;display:flow-root}
 .ghost{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2}
 input[type=search]{-webkit-appearance:none;appearance:none}
 .top{display:flex;align-items:center;justify-content:space-between;min-height:36px}
@@ -64,7 +64,8 @@ nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;
 .bt.hit svg{color:var(--blue)}
 .bt small{margin-left:auto;font-size:12px}
 .bt[disabled]{opacity:.6;cursor:default}
-.pb{display:block;width:100%;background:var(--line);border:1px solid var(--blue);color:#fff;border-radius:12px;padding:14px;text-align:center;font-size:16px;font-weight:500}
+.bt.c{justify-content:center;text-align:center;border:1px solid transparent}
+.pb{display:block;width:100%;background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid var(--blue);color:#fff;border-radius:12px;padding:14px;text-align:center;font-size:16px;font-weight:500}
 .ob{display:block;width:100%;border:0.5px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-size:15px;color:#fff}
 .pill{display:inline-block;font-size:13px;font-weight:500;padding:4px 12px;border-radius:999px;color:var(--deep)}
 .fld{display:block;margin-top:16px}
@@ -102,13 +103,13 @@ h2{font-size:18px;font-weight:500;margin:0 0 6px}
 .lk{display:block;margin:14px auto 0;font-size:14px;padding:8px}
 .hidden{display:none!important}
 body.noscroll{overflow:hidden}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes dimIn{from{background-color:rgba(0,3,60,0)}}
+@keyframes dimOut{to{background-color:rgba(0,3,60,0)}}
 @keyframes slideUp{from{transform:translateY(102%)}to{transform:none}}
 @keyframes slideDown{from{transform:none}to{transform:translateY(102%)}}
-.scrim2.in,.ov.in{animation:fadeIn var(--mo) ease-out}
+.scrim2.in,.ov.in{animation:dimIn var(--do) ease-out}
 .scrim2.in .card2,.ov.in .sheet{animation:slideUp var(--mo) var(--eo)}
-.scrim2.out,.ov.out{animation:fadeOut var(--mc) ease-in forwards;pointer-events:none}
+.scrim2.out,.ov.out{animation:dimOut var(--dc) ease-in forwards;pointer-events:none}
 .scrim2.out .card2,.ov.out .sheet{animation:slideDown var(--mc) var(--ec) forwards}
 @media (prefers-reduced-motion:reduce){.scrim2,.card2,.ov,.sheet{animation:none!important}}
 .pills{display:flex;gap:6px;flex-wrap:wrap}
@@ -120,6 +121,7 @@ body.noscroll{overflow:hidden}
 .toast-act{color:#fff;font-weight:500;text-decoration:underline;padding:4px 6px;font-size:14px}
 .row.btns{gap:8px}
 .row.btns .ob,.row.btns .pb{padding:11px 6px;font-size:14px;white-space:nowrap;min-width:0}
+.row.btns .ob{background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid rgba(0,3,60,.35)}
 @media (max-width:359px){.row.btns .ob,.row.btns .pb{font-size:13px;padding:11px 4px}}
 .sec{font-size:14px;font-weight:500;margin:20px 0 8px}
 .lnk{display:block;margin:14px auto 0;font-size:13px;color:#fff;text-decoration:underline;padding:8px}
@@ -284,7 +286,7 @@ function viewHome(){
   '<span class="pill" style="background:'+STAT.reading.color+'">Reading</span><div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
   (p!==null?'<div class="bar" style="height:6px;margin:10px 0 6px"><b style="width:'+p+'%"></b></div><div class="sm">'+left+' page'+(left===1?'':'s')+' left</div>':'')+
-  '<div class="row btns" style="margin-top:12px"><button class="ob" data-act="homeprog">Update Progress</button><button class="pb" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button></div></div>';
+  '<div class="row btns" style="margin-top:12px"><button class="ob" data-act="homeprog">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button></div></div>';
   if(rd.length>1){var n=rd.length-1;h+='<button class="lnk" data-act="seereading">Also reading '+n+' more book'+(n===1?'':'s')+'</button>';}
   return h;
 }
@@ -371,7 +373,7 @@ function cardDetail(){
   '<div class="pills"><button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button>'+
   '<button class="pill o" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',13)+(own?'Owned':'Not Owned')+'</button></div>'+
   '<div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
-  (own?'':'<div class="row btns" style="margin-top:14px"><button class="pb" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
+  (own?'':'<div class="row btns" style="margin-top:14px"><button class="ob" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
   synHTML(b);
   h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
   if(state.editProg){
@@ -381,7 +383,7 @@ function cardDetail(){
   }else{
     h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
     (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>')+
-    '<div class="row btns"><button class="ob" data-act="progedit">Update Progress</button>'+(b.status==='reading'?'<button class="pb" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button>':'')+'</div>';
+    '<div class="row btns"><button class="ob" data-act="progedit">Update Progress</button>'+(b.status==='reading'?'<button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button>':'')+'</div>';
   }
   h+='</div><div style="margin-top:16px"><div class="lb">Your Rating</div><div class="stars">';
   for(var i=1;i<=5;i++){h+='<button class="star'+(i<=(b.rating||0)?' f':'')+'" data-star="'+i+'" aria-label="'+i+' star'+(i>1?'s':'')+'">'+ico('star',28)+'</button>';}
@@ -441,7 +443,7 @@ function viewBackup(){
   '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
   '<div class="sm">Books: '+state.books.length+'</div><div class="sm">Last Backup: '+lastTxt+'</div></div>'+
   '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="savebackup">Save Backup</button>'+
-  '<button class="bt" data-act="restore">'+ico('upload',22)+'Restore from Backup</button></div>'+
+  '<button class="bt c" data-act="restore">Restore from Backup</button></div>'+
   '<p class="sm" style="margin-top:16px;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p>'+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="sm" style="margin-top:24px;font-size:12px">Build '+esc(BUILD)+'</p>';
