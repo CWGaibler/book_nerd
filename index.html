@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 11:35 UTC">
+<meta name="build" content="2026-10-11 12:20 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -235,6 +235,7 @@ function toast(msg,act){
 }
 function setStatus(b,st){
   var now=Date.now();
+  if(b.status==='finished'&&st!=='finished'){b.currentPage=0;if(st==='reading')b.startedAt=now;else delete b.startedAt;}
   b.status=st;
   if(st==='reading'&&!b.startedAt)b.startedAt=now;
   if(st==='finished'){b.finishedAt=now;if(b.pages>0)b.currentPage=b.pages;}
@@ -377,8 +378,9 @@ function cardDetail(){
   '<div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
   (own?'':'<div class="row btns" style="margin-top:14px"><button class="ob" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
   synHTML(b);
-  h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
-  if(state.editProg){
+  var fin=b.status==='finished';
+  if(!fin)h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
+  if(fin){}else if(state.editProg){
     h+='<div class="row" style="gap:10px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.currentPage||0)+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label>'+
     '<label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.pages||'')+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label></div>'+
     '<div class="row" style="margin-top:12px"><button class="ob" data-act="progcancel">Cancel</button><button class="pb" data-act="progsave" style="padding:10px;font-size:15px">Save</button></div>';
@@ -387,7 +389,7 @@ function cardDetail(){
     (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>')+
     '<div class="row btns"><button class="ob" data-act="progedit">Update Progress</button>'+(b.status==='reading'?'<button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button>':'')+'</div>';
   }
-  h+='</div><div style="margin-top:16px"><div class="lb">Your Rating</div><div class="stars">';
+  h+=(fin?'':'</div>')+'<div style="margin-top:16px"><div class="lb">Your Rating</div><div class="stars">';
   for(var i=1;i<=5;i++){h+='<button class="star'+(i<=(b.rating||0)?' f':'')+'" data-star="'+i+'" aria-label="'+i+' star'+(i>1?'s':'')+'">'+ico('star',28)+'</button>';}
   h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>'+
   '<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
@@ -946,7 +948,7 @@ document.addEventListener('click',function(e){
   }
   if(el.hasAttribute('data-set')){
     var bk=byId(state.id);if(!bk)return;
-    setStatus(bk,el.getAttribute('data-set'));closeSheet();refresh();return;
+    state.editProg=false;setStatus(bk,el.getAttribute('data-set'));closeSheet();refresh();return;
   }
   var a=el.getAttribute('data-act');
   if(a==='clearq'){state.q='';var cq=$('#q');if(cq){cq.value='';cq.focus();}updateLib();return;}
