@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 13:11 UTC">
+<meta name="build" content="2026-10-11 13:30 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -155,13 +155,14 @@ body.noscroll{overflow:hidden}
 #cel{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
 #celx{position:fixed;inset:0;z-index:36;background:transparent;touch-action:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
-#wl.wsp{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px);touch-action:none}
-.wlg{display:flex;flex-direction:column;align-items:center;flex:none;transform-origin:50% 0}
-.wmk{display:block;width:104px;height:auto;overflow:visible}
-.wwm{display:block;width:176px;height:auto;margin-top:12px}
-.wlg.big .wmk{width:150px}
-.wlg.big .wwm{width:230px}
-.wtg{position:absolute;left:0;right:0;text-align:center;font-size:14px;color:#fff;margin:0}
+#wl.wsp,#wl.wcen{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+#wl.wsp{touch-action:none}
+.wlg{display:flex;flex-direction:column;align-items:center;flex:none;position:relative;transform-origin:50% 50%}
+.wmk{display:block;width:104px;height:96.57px;overflow:visible}
+.wwm{display:block;width:176px;height:29.82px;margin-top:12px}
+.wlg.big .wmk{width:150px;height:139.29px}
+.wlg.big .wwm{width:230px;height:38.97px}
+.wtg{position:absolute;left:50%;top:100%;width:260px;margin:12px 0 0 -130px;text-align:center;font-size:14px;line-height:1.3;color:#fff}
 .wcard{width:100%;max-width:440px;margin-top:28px;background:var(--card);border-radius:14px;padding:20px;visibility:hidden;pointer-events:none}
 .wcard.on{visibility:visible;pointer-events:auto}
 .wcard h2{font-size:20px;font-weight:500;margin:0}
@@ -1163,7 +1164,13 @@ function wlFirst(){
   el.id='wl';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Welcome to Book Nerd');
   var card=document.createElement('div');card.className='wcard';
   card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Should We Call You?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk" id="wl-skip" type="button">Skip for Now</button>';
-  el.appendChild(p.box);el.appendChild(card);document.body.appendChild(el);wl=el;
+  el.appendChild(p.box);el.appendChild(card);
+  var SC=150/104,tg=null;
+  if(anim){
+    el.className='wcen';card.style.display='none';p.box.style.transform='scale('+SC+')';
+    tg=document.createElement('p');tg.className='wtg';tg.textContent='Your Books, All in One Place';p.box.appendChild(tg);
+  }
+  document.body.appendChild(el);wl=el;
   function done(name){
     lsSet('bm_name_done','1');if(name)lsSet('bm_name',name);
     render();wlClose(anim?500*S:0);
@@ -1178,15 +1185,17 @@ function wlFirst(){
   document.getElementById('wl-in').addEventListener('input',function(){document.getElementById('wl-err').textContent='';});
   document.getElementById('wl-in').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();go();}});
   if(!anim){card.className='wcard on';return;}
-  var H=window.innerHeight,r=p.box.getBoundingClientRect(),sc=150/104;
-  var dy=H*.42-r.top-r.height*sc/2;
-  var tg=document.createElement('p');tg.className='wtg';tg.textContent='Your Books, All in One Place';
-  tg.style.top=(H*.42+r.height*sc/2+12)+'px';el.appendChild(tg);
   wlRise(p,S,1);
   wlFade(p.wm,S,900,500,12);
   wlFade(tg,S,1300,500,12);
-  p.box.animate([{transform:'translateY('+dy+'px) scale('+sc+')'},{transform:'none'}],{duration:600*S,delay:2300*S,easing:'cubic-bezier(.4,0,.3,1)',fill:'both'});
-  wlAt(function(){tg.animate([{opacity:1},{opacity:0}],{duration:300*S,fill:'forwards'});},2300*S);
+  wlAt(function(){
+    tg.animate([{opacity:1},{opacity:0}],{duration:300*S,fill:'forwards'});
+    var a=p.box.getBoundingClientRect();
+    p.box.style.transform='';el.className='';card.style.display='';
+    var b=p.box.getBoundingClientRect();
+    var dy=(a.top+a.height/2)-(b.top+b.height/2);
+    p.box.animate([{transform:'translateY('+dy+'px) scale('+SC+')'},{transform:'none'}],{duration:600*S,easing:'cubic-bezier(.4,0,.3,1)',fill:'both'});
+  },2300*S);
   wlAt(function(){card.className='wcard on';card.animate([{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:500*S,easing:'cubic-bezier(.3,.05,.2,1)',fill:'both'});},2700*S);
 }
 function welcome(){
