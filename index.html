@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-11 18:47 UTC · Navy Bar Test">
+<meta name="build" content="2026-10-11 19:01 UTC · Navy Bar Test">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -175,7 +175,7 @@ body.noscroll{overflow:hidden}
 #view .sheet .dt,.sheet .dt{min-height:46px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
 .sheet .dtro{min-height:46px;display:flex;align-items:center;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px}
 #view .bt small.nmv{font-size:16px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bld{position:fixed;left:0;right:0;bottom:var(--navh,62px);margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
+.bld{position:fixed;left:0;right:0;bottom:max(var(--navh,62px),calc(var(--sab) + 62px));margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 #wl.wsp,#wl.wcen{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
 #wl.wsp{touch-action:none}
@@ -533,6 +533,7 @@ function render(){
   var ns=document.querySelectorAll('.ni');
   for(var i=0;i<ns.length;i++){ns[i].classList.toggle('on',ns[i].getAttribute('data-go')===tab);}
   lastView=state.view;
+  if(state.view==='backup')navH();
   if(ghost)startFade(v,ghost);
 }
 function renderCard(){
@@ -1715,7 +1716,8 @@ function welcome(){
 }
 
 function navH(){var n=document.getElementById('nav');if(n)document.documentElement.style.setProperty('--navh',n.getBoundingClientRect().height+'px');}
-window.addEventListener('resize',navH);window.addEventListener('orientationchange',navH);
+window.addEventListener('resize',navH);window.addEventListener('orientationchange',navH);window.addEventListener('pageshow',navH);document.addEventListener('visibilitychange',navH);
+if(window.ResizeObserver){try{new ResizeObserver(navH).observe(document.getElementById('nav'));}catch(e){}}
 
 /* ---------- start ---------- */
 function start(){
