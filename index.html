@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 20:49 UTC">
+<meta name="build" content="2026-10-12 21:47 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -120,6 +120,7 @@ body.noscroll{overflow:hidden}
 .lnk.l{margin:6px 0 0;text-align:left;padding:4px 0}
 .toast-act{color:#fff;font-weight:500;text-decoration:underline;padding:4px 6px;font-size:14px}
 .row.btns{gap:8px}
+.row.btns.btns3 .ob{display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1.2;padding:8px 10px;min-height:46px;white-space:normal}
 .row.btns .ob,.row.btns .pb{padding:11px 6px;font-size:14px;white-space:nowrap;min-width:0}
 .row.btns .ob{background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid rgba(0,3,60,.35)}
 @media (max-width:359px){.row.btns .ob,.row.btns .pb{font-size:13px;padding:11px 4px}}
@@ -561,20 +562,31 @@ function cardDetail(){
   '<div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
   (own?'':'<div class="row btns" style="margin-top:14px"><button class="ob" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
   synHTML(b);
-  var fin=b.status==='finished';
-  if(!fin)h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
-  if(fin){}else if(state.editProg){
-    h+='<div class="row" style="gap:10px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.currentPage||0)+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label>'+
+  var s2=b.status,fin=s2==='finished',tr=s2==='toread',started=!tr;
+  var hasQ=!!(b.quotes&&b.quotes.length),hasR=(b.rating||0)>0,hasV=!!(typeof b.review==='string'&&b.review.trim());
+  if(tr){
+    h+='<div style="margin-top:14px">';
+    if((b.currentPage||0)>0)h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>';
+    h+='<div class="row btns"><button class="ob" data-act="startbook" data-bid="'+b.id+'">Start Reading</button></div><div class="center" style="margin-top:10px"><button class="alk" data-act="alreadyread" data-bid="'+b.id+'">Already Read It? Mark as Finished</button></div></div>';
+  }else if(!fin){
+    h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
+    if(state.editProg&&s2==='reading'){
+      h+='<div class="row" style="gap:10px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.currentPage||0)+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label>'+
     '<label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.pages||'')+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label></div>'+
     '<div class="row" style="margin-top:12px"><button class="ob" data-act="progcancel">Cancel</button><button class="pb" data-act="progsave" style="padding:10px;font-size:15px">Save</button></div>';
-  }else{
-    h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
-    (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>')+
-    '<div class="row btns"><button class="ob" data-act="progedit">Update Progress</button>'+(b.status==='reading'?'<button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button>':'')+'</div>';
+    }else{
+      h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
+      (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>');
+      if(s2==='reading')h+='<div class="row btns btns3"><button class="ob" data-act="progedit">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button><button class="ob" data-act="dnfbook" data-bid="'+b.id+'">Did Not Finish</button></div>';
+      else h+='<div class="row btns"><button class="ob" data-act="resumebook" data-bid="'+b.id+'">Pick It Back Up</button></div>';
+    }
+    h+='</div>';
   }
-  h+=(fin?'':'</div>')+quotesHTML(b)+'<div style="margin-top:16px"><div class="lb">Your Rating</div><div style="display:flex;align-items:center">';h+=starsHTML(b.rating||0,'detail',28);h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>'+
-  '<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
-  '<label class="fld"><span class="lb">Notes</span><textarea id="notes" placeholder="Add a Note">'+esc(b.notes||'')+'</textarea></label>'+
+  if(started||hasQ)h+=quotesHTML(b);
+  if(started||hasR){h+='<div style="margin-top:16px"><div class="lb">Your Rating</div><div style="display:flex;align-items:center">';h+=starsHTML(b.rating||0,'detail',28);h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>';}
+  if(started||hasV)h+='<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>';
+  h+='<label class="fld"><span class="lb">Notes</span><textarea id="notes" placeholder="Add a Note">'+esc(b.notes||'')+'</textarea></label>'+
+  (tr&&!(hasQ&&hasR&&hasV)?'<p class="sm" style="margin:12px 0 0">Quotes, Rating and Review appear once you start reading.</p>':'')+
   '<div class="center" style="margin-top:20px"><button class="tr" data-act="remove">'+ico('trash',18)+'Remove from Library</button></div></div>';
   return h;
 }
@@ -1075,6 +1087,41 @@ function finishBook(fb){
     if(!state.rev||state.rev.id!==fb.id)return;
     openSheet(reviewSheet(fb),afterReview);
   });
+}
+function restoreBook(fb,p){
+  fb.status=p.status;
+  ['startedAt','finishedAt'].forEach(function(k){if(p[k]===undefined)delete fb[k];else fb[k]=p[k];});
+  fb.updatedAt=Date.now();dbPut(fb);refresh();
+}
+function startBook(fb){
+  if(!fb||fb.status!=='toread')return;
+  var p={status:fb.status,startedAt:fb.startedAt,finishedAt:fb.finishedAt};
+  state.editProg=false;setStatus(fb,'reading');
+  if(!((fb.currentPage||0)>0)){fb.startedAt=Date.now();dbPut(fb);}
+  refresh();
+  toast('Started Reading',{label:'Undo',fn:function(){restoreBook(fb,p);}});
+  BGX.check();
+}
+function dnfBook(fb){
+  if(!fb||fb.status!=='reading')return;
+  var p={status:fb.status,startedAt:fb.startedAt,finishedAt:fb.finishedAt};
+  state.editProg=false;setStatus(fb,'dnf');refresh();
+  toast('Marked as Did Not Finish',{label:'Undo',fn:function(){restoreBook(fb,p);}});
+  BGX.check();
+}
+function resumeBook(fb){
+  if(!fb||fb.status!=='dnf')return;
+  var p={status:fb.status,startedAt:fb.startedAt,finishedAt:fb.finishedAt};
+  setStatus(fb,'reading');refresh();
+  toast('Back to Currently Reading',{label:'Undo',fn:function(){restoreBook(fb,p);}});
+  BGX.check();
+}
+function alreadyRead(fb){
+  if(!fb||fb.status==='finished')return;
+  var prev={status:fb.status,currentPage:fb.currentPage,startedAt:fb.startedAt,finishedAt:fb.finishedAt,rating:fb.rating,review:fb.review};
+  chLast=null;setStatus(fb,'finished');refresh();
+  state.rev={id:fb.id,rating:fb.rating||0,prev:prev,cr:chLast};
+  openSheet(reviewSheet(fb),afterReview);
 }
 function lastPageSheet(b){
   return '<h2>You Reached the Last Page</h2><p class="sm" style="margin:0 0 16px;word-break:break-word">Mark '+esc(b.title)+' as finished?</p><div class="row"><button class="ob" data-act="closesheet2">Not Yet</button><button class="pb" data-act="lpyes" data-bid="'+esc(b.id)+'">Mark as Finished</button></div>';
@@ -1645,6 +1692,10 @@ document.addEventListener('click',function(e){
     return;
   }
   if(a==='finishbook'){finishBook(byId(el.getAttribute('data-bid')||state.id));return;}
+  if(a==='startbook'){startBook(byId(el.getAttribute('data-bid')||state.id));return;}
+  if(a==='alreadyread'){alreadyRead(byId(el.getAttribute('data-bid')||state.id));return;}
+  if(a==='dnfbook'){dnfBook(byId(el.getAttribute('data-bid')||state.id));return;}
+  if(a==='resumebook'){resumeBook(byId(el.getAttribute('data-bid')||state.id));return;}
   if(a==='lpyes'){var lb=byId(el.getAttribute('data-bid'));closeSheet();finishBook(lb);return;}
   if(a==='rvskip'){closeSheet();return;}
   if(a==='rvsave'){
