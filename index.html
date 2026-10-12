@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 11:29 UTC">
+<meta name="build" content="2026-10-12 17:59 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -59,8 +59,8 @@ nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;
 .ni svg{color:#fff}
 .ni.on svg,.ni.hit svg{color:var(--blue)}
 .ni.on{font-weight:500}
-.bt{background:var(--card);border-radius:999px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:16px;color:#fff;width:100%;text-align:left}
-.bt svg{color:#fff}
+.bt{background:var(--card);border-radius:999px;height:40px;padding:0 16px;display:flex;align-items:center;gap:10px;font-size:14px;line-height:1.2;color:#fff;width:100%;text-align:left}
+.bt svg{color:#fff;width:18px;height:18px;flex:none}
 .bt.hit svg{color:var(--blue)}
 .bt small{margin-left:auto;font-size:12px}
 .bt[disabled]{opacity:.6;cursor:default}
@@ -113,7 +113,7 @@ body.noscroll{overflow:hidden}
 .scrim2.out .card2,.ov.out .sheet{animation:slideDown var(--mc) var(--ec) forwards}
 @media (prefers-reduced-motion:reduce){.scrim2,.card2,.ov,.sheet{animation:none!important}}
 .pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill.o.pwy{background:#D1006F} .pill.o.pwn{background:#4E5859}
+.pill.o.pwy{background:#D1006F} .pill.o.pwn{background:#ADB1B1}
 .buybtn{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
 .syn{margin:0;font-size:14px;line-height:1.5}
 .syn.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -174,10 +174,13 @@ body.noscroll{overflow:hidden}
 .warn{color:var(--gold);font-size:13px;margin:8px 0 0}
 #view .sheet .dt,.sheet .dt{min-height:46px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
 .sheet .dtro{min-height:46px;display:flex;align-items:center;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px}
-#view .bt small.nmv,.ghost .bt small.nmv{font-size:16px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#view .bt small.nmv,.ghost .bt small.nmv{font-size:14px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bld{position:fixed;left:0;right:0;bottom:max(var(--navh,62px),calc(var(--sab) + 62px));margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 #wl.wsp,#wl.wcen{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+#wl.wsp{padding-bottom:calc(env(safe-area-inset-top,0px) + 50px)}
+#wl.wcen{padding-bottom:calc(env(safe-area-inset-top,0px) + 63px)}
+#wl .wlg.big{margin:0}
 #wl.wsp{touch-action:none}
 .wlg{display:flex;flex-direction:column;align-items:center;flex:none;position:relative;transform-origin:50% 50%}
 .wmk{display:block;width:104px;height:96.57px;overflow:visible}
@@ -385,7 +388,7 @@ function viewHomeBase(){
   h+='<div class="cd" style="padding:14px;display:block">'+
   '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:96px;flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur))+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
   (cur.author?'<div style="font-size:14px;margin:6px 0 10px">'+authorLinks(cur)+'</div>':'<div style="height:10px"></div>')+
-  '<span class="pill" style="background:'+STAT.reading.color+'">Reading</span><div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+
+  '<div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
   (p!==null?'<div class="bar" style="height:6px;margin:10px 0 6px"><b style="width:'+p+'%"></b></div><div class="sm">'+left+' page'+(left===1?'':'s')+' left</div>':'')+
   '<div class="row btns" style="margin-top:12px"><button class="ob" data-act="homeprog" data-bid="'+cur.id+'">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button></div></div>';
@@ -618,7 +621,7 @@ function viewBackup(){
   var last=lsGet('bm_last_backup');
   var lastTxt=last?fmtDate(parseInt(last,10)):'Never';
   return top()+ptitle('Settings')+
-  '<h2 class="sec" style="margin-top:16px">Profile</h2><button class="bt sq" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button><h2 class="sec">Backup</h2>'+
+  '<h2 class="sec" style="margin-top:16px">Profile</h2><button class="bt" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button><h2 class="sec">Backup</h2>'+
   '<div class="cd"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
   '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
   '<div class="sm">Books: '+state.books.length+'</div><div class="sm">Last Backup: '+lastTxt+'</div></div>'+
@@ -714,6 +717,7 @@ function refresh(){if(state.card)renderCard();else render();}
 function go(view){
   if(state.card)closeCard(true);
   var stopped=stopScan();
+  if(state.view==='search'&&view!=='search'){state.sq='';state.sres=[];state.sstat='idle';}
   state.view=view;state.editProg=false;BGX.nav(view);
   if(view==='add'){state.form='choose';state.err='';state.isbn='';state.status='';state.statusErr=false;state.from='';state.scanning=false;}
   if(view==='library'){state.id=null;state.isbn='';}
