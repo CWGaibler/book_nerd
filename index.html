@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 17:59 UTC">
+<meta name="build" content="2026-10-12 19:34 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -178,8 +178,8 @@ body.noscroll{overflow:hidden}
 .bld{position:fixed;left:0;right:0;bottom:max(var(--navh,62px),calc(var(--sab) + 62px));margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 #wl.wsp,#wl.wcen{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
-#wl.wsp{padding-bottom:calc(env(safe-area-inset-top,0px) + 50px)}
-#wl.wcen{padding-bottom:calc(env(safe-area-inset-top,0px) + 63px)}
+#wl.wsp{padding-bottom:calc(env(safe-area-inset-top,0px) + 50px + var(--lift,0px))}
+#wl.wcen{padding-bottom:calc(env(safe-area-inset-top,0px) + 63px + var(--lift,0px))}
 #wl .wlg.big{margin:0}
 #wl.wsp{touch-action:none}
 .wlg{display:flex;flex-direction:column;align-items:center;flex:none;position:relative;transform-origin:50% 50%}
@@ -1811,7 +1811,7 @@ function wlFade(el,S,delay,dur,dy){
 function wlSplash(){
   try{sessionStorage.setItem('bm_splash','1');}catch(e){}
   var S=1.6,p=wlLogo(true),el=document.createElement('div');
-  el.id='wl';el.className='wsp';el.setAttribute('aria-hidden','true');
+  el.id='wl';el.className='wsp';el.setAttribute('aria-hidden','true');el.style.setProperty('--lift',Math.round(window.innerHeight*0.2)+'px');
   el.appendChild(p.box);document.body.appendChild(el);wl=el;
   var tg=document.createElement('p');tg.className='wtg';tg.textContent='Your Books, All in One Place';p.box.appendChild(tg);
   wlRise(p,S,.8);
@@ -1829,7 +1829,7 @@ function wlFirst(){
   el.appendChild(p.box);el.appendChild(card);
   var SC=150/104,tg=null;
   if(anim){
-    el.className='wcen';card.style.display='none';p.box.style.transform='scale('+SC+')';
+    el.className='wcen';el.style.setProperty('--lift',Math.round(window.innerHeight*0.2)+'px');card.style.display='none';p.box.style.transform='scale('+SC+')';
     tg=document.createElement('p');tg.className='wtg';tg.textContent='Your Books, All in One Place';p.box.appendChild(tg);
   }
   document.body.appendChild(el);wl=el;
