@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 01:45 UTC">
+<meta name="build" content="2026-10-12 11:29 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -59,15 +59,15 @@ nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;
 .ni svg{color:#fff}
 .ni.on svg,.ni.hit svg{color:var(--blue)}
 .ni.on{font-weight:500}
-.bt{background:var(--card);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;font-size:16px;color:#fff;width:100%;text-align:left}
+.bt{background:var(--card);border-radius:999px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:16px;color:#fff;width:100%;text-align:left}
 .bt svg{color:#fff}
 .bt.hit svg{color:var(--blue)}
 .bt small{margin-left:auto;font-size:12px}
 .bt[disabled]{opacity:.6;cursor:default}
-.bt.c{justify-content:center;text-align:center;border:1px solid transparent}
-.pb{display:block;width:100%;background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid var(--blue);color:#fff;border-radius:12px;padding:14px;text-align:center;font-size:16px;font-weight:500}
+.bt.sq{border-radius:12px;padding:14px} .bt.c{justify-content:center;text-align:center;border:1px solid transparent}
+.pb{display:block;width:100%;background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid rgba(0,3,60,.35);color:#fff;border-radius:12px;padding:14px;text-align:center;font-size:16px;font-weight:500}
 .ob{display:block;width:100%;border:0.5px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-size:15px;color:#fff}
-.pill{display:inline-block;font-size:13px;font-weight:500;padding:4px 12px;border-radius:999px;color:var(--deep)}
+.pill{display:inline-flex;align-items:center;gap:5px;height:30px;box-sizing:border-box;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;line-height:1;color:#fff;white-space:nowrap}
 .fld{display:block;margin-top:16px}
 .fld input,.fld textarea{width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0}
 .fld input:focus,.fld textarea:focus{border-color:var(--blue)}
@@ -78,9 +78,9 @@ nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;
 h2{font-size:18px;font-weight:500;margin:0 0 6px}
 .center{text-align:center}
 .stars{display:flex;align-items:center;gap:2px;margin-left:-4px}
-.star{padding:4px;color:var(--line)}
-.star.f{color:var(--gold)}
-.star.f svg{fill:var(--gold)}
+.stars[data-rate]{touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer;outline:0} .stars[data-rate]:focus-visible{outline:2px solid var(--blue);border-radius:8px} .star{position:relative;display:block;padding:4px;color:var(--line)} .star .fl{position:absolute;left:4px;top:4px;color:var(--gold);fill:var(--gold);pointer-events:none}
+
+
 .tr{display:inline-flex;align-items:center;gap:6px;padding:10px;font-size:14px;color:#fff}
 .toast{display:flex;align-items:center;gap:14px;z-index:40;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);background:var(--line);border:0.5px solid var(--blue);border-radius:999px;padding:8px 16px;font-size:14px;max-width:90%}
 .ov{position:fixed;inset:0;background:rgba(0,3,60,.7);z-index:30;display:flex;align-items:flex-end;justify-content:center}
@@ -113,7 +113,7 @@ body.noscroll{overflow:hidden}
 .scrim2.out .card2,.ov.out .sheet{animation:slideDown var(--mc) var(--ec) forwards}
 @media (prefers-reduced-motion:reduce){.scrim2,.card2,.ov,.sheet{animation:none!important}}
 .pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill.o{display:inline-flex;align-items:center;gap:5px;background:transparent;color:#fff;border:1px solid var(--line)}
+.pill.o.pwy{background:#D1006F} .pill.o.pwn{background:#4E5859}
 .buybtn{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
 .syn{margin:0;font-size:14px;line-height:1.5}
 .syn.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -126,7 +126,7 @@ body.noscroll{overflow:hidden}
 .sec{font-size:17px;font-weight:500;line-height:1.3;margin:20px 0 10px}
 .lnk{display:block;margin:14px auto 0;font-size:13px;color:#fff;text-decoration:underline;padding:8px}
 .frow{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;margin-top:14px}
-.fb{display:inline-flex;align-items:center;gap:6px;border:0.5px solid var(--line);border-radius:999px;padding:0 14px;height:40px;flex:none;font-size:14px;color:#fff}
+.fb{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:0.5px solid var(--line);border-radius:999px;padding:0 14px;height:40px;flex:none;font-size:14px;color:#fff}
 .fb.hit svg{color:var(--blue)}
 .ac{display:inline-flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:7px 10px 7px 14px;font-size:13px;font-weight:500;color:#fff}
 .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px;min-height:30px}
@@ -153,7 +153,7 @@ body.noscroll{overflow:hidden}
 .card2 .ch.sel,.sheet .ch.sel{background:var(--line)}
 .card2 .fld input,.card2 .fld textarea{background:var(--navy)}
 #cel{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
-#view .alk,.card2 .alk{display:inline;font-size:14px;text-decoration:underline;color:#fff;padding:4px 0;text-align:left}
+#view .alk,.ghost .alk,.card2 .alk{display:inline;font-size:14px;text-decoration:underline;color:#fff;padding:4px 0;text-align:left}
 .aph{position:relative;width:88px;height:88px;border-radius:50%;overflow:hidden;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:500;flex:none}
 .aph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .aph.skel,.cv.skel{opacity:.55}
@@ -162,7 +162,7 @@ body.noscroll{overflow:hidden}
 #celx{position:fixed;inset:0;z-index:36;background:transparent;touch-action:none;animation:celxOff 0s linear 2.6s forwards}
 @keyframes celxOff{to{visibility:hidden}}
 .card2 .bt,.sheet .scan{background:var(--navy)}
-.sheet .scan{border:0.5px solid var(--line);justify-content:center}
+.sheet .scan{border:0.5px solid var(--line);border-radius:999px;justify-content:center}
 .qc{margin-top:10px}
 .qt{font-size:15px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
 .qm{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px}
@@ -174,7 +174,7 @@ body.noscroll{overflow:hidden}
 .warn{color:var(--gold);font-size:13px;margin:8px 0 0}
 #view .sheet .dt,.sheet .dt{min-height:46px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
 .sheet .dtro{min-height:46px;display:flex;align-items:center;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px}
-#view .bt small.nmv{font-size:16px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#view .bt small.nmv,.ghost .bt small.nmv{font-size:16px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bld{position:fixed;left:0;right:0;bottom:max(var(--navh,62px),calc(var(--sab) + 62px));margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 #wl.wsp,#wl.wcen{justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
@@ -249,7 +249,7 @@ body.noscroll{overflow:hidden}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <symbol id="i-logo" viewBox="0 0 24 24"><rect x="3.11" y="5.6" width="3.33" height="13.33" rx="0.6" fill="currentColor" stroke="none"/><rect x="7.92" y="2.65" width="3.33" height="16.28" rx="0.6" fill="currentColor" stroke="none"/><rect x="12.73" y="7.07" width="3.33" height="11.84" rx="0.6" fill="currentColor" stroke="none"/><rect x="17.54" y="4.11" width="3.33" height="14.8" rx="0.6" fill="currentColor" stroke="none"/><rect x="2" y="19.8" width="20" height="1.5" rx="0.75" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-award" viewBox="0 0 24 24"><path d="M12 9m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"/><path d="M12 15l3.4 5.89l1.598 -3.233l3.598 .232l-3.4 -5.889"/><path d="M6.802 12l-3.4 5.89l3.598 -.233l1.598 3.232l3.4 -5.889"/></symbol>
-<symbol id="i-barcode" viewBox="0 0 24 24"><path d="M4 7v-1a2 2 0 0 1 2 -2h2" /> <path d="M4 17v1a2 2 0 0 0 2 2h2" /> <path d="M16 4h2a2 2 0 0 1 2 2v1" /> <path d="M16 20h2a2 2 0 0 0 2 -2v-1" /> <path d="M5 11h1v2h-1z" /> <path d="M10 11l0 2" /> <path d="M14 11h1v2h-1z" /> <path d="M19 11l0 2" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M5 12l14 0" /> <path d="M5 12l6 6" /> <path d="M5 12l6 -6" /></symbol><symbol id="i-dots" viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="i-keyboard" viewBox="0 0 24 24"><path d="M2 6m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z" /> <path d="M6 10l0 .01" /> <path d="M10 10l0 .01" /> <path d="M14 10l0 .01" /> <path d="M18 10l0 .01" /> <path d="M6 14l0 .01" /> <path d="M18 14l0 .01" /> <path d="M10 14l4 .01" /></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 11l5 5l5 -5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 9l5 -5l5 5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /> <path d="M9 11v-5a3 3 0 0 1 6 0v5" /></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /> <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /> <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol><symbol id="i-adjustments-horizontal" viewBox="0 0 24 24"><path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 6l8 0" /> <path d="M16 6l4 0" /> <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 12l2 0" /> <path d="M10 12l10 0" /> <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 18l11 0" /> <path d="M19 18l1 0" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /> <path d="M11 13l9 -9" /> <path d="M15 4h5v5" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" /></symbol>
+<symbol id="i-barcode" viewBox="0 0 24 24"><path d="M4 7v-1a2 2 0 0 1 2 -2h2" /> <path d="M4 17v1a2 2 0 0 0 2 2h2" /> <path d="M16 4h2a2 2 0 0 1 2 2v1" /> <path d="M16 20h2a2 2 0 0 0 2 -2v-1" /> <path d="M5 11h1v2h-1z" /> <path d="M10 11l0 2" /> <path d="M14 11h1v2h-1z" /> <path d="M19 11l0 2" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M5 12l14 0" /> <path d="M5 12l6 6" /> <path d="M5 12l6 -6" /></symbol><symbol id="i-dots" viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="i-keyboard" viewBox="0 0 24 24"><path d="M2 6m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z" /> <path d="M6 10l0 .01" /> <path d="M10 10l0 .01" /> <path d="M14 10l0 .01" /> <path d="M18 10l0 .01" /> <path d="M6 14l0 .01" /> <path d="M18 14l0 .01" /> <path d="M10 14l4 .01" /></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 11l5 5l5 -5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 9l5 -5l5 5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /> <path d="M9 11v-5a3 3 0 0 1 6 0v5" /></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /> <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /> <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol><symbol id="i-adjustments-horizontal" viewBox="0 0 24 24"><path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 6l8 0" /> <path d="M16 6l4 0" /> <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 12l2 0" /> <path d="M10 12l10 0" /> <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 18l11 0" /> <path d="M19 18l1 0" /></symbol><symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 9l4 -4l4 4" /> <path d="M7 5v14" /> <path d="M21 15l-4 4l-4 -4" /> <path d="M17 19v-14" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /> <path d="M11 13l9 -9" /> <path d="M15 4h5v5" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" /></symbol>
 </svg>
 <div id="app"><header id="topbar"></header><main id="view"></main></div>
 <nav id="nav"><div>
@@ -257,7 +257,7 @@ body.noscroll{overflow:hidden}
 <button class="ni" data-go="library" aria-label="Library"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-logo"/></svg>Library</button>
 <button class="ni" data-go="add" aria-label="Add Book"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg>Add Book</button>
 <button class="ni" data-go="badges" aria-label="Badges"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-award"/></svg>Badges<i class="bgdot" hidden></i></button>
-<button class="ni" data-go="backup" aria-label="Backup"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-settings"/></svg>Backup</button>
+<button class="ni" data-go="backup" aria-label="Settings"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-settings"/></svg>Settings</button>
 </div></nav>
 <div id="layer"></div>
 <div id="card"></div>
@@ -276,7 +276,10 @@ var COVERS=['#3D5A80','#4E5859','#6B8E6B','#7A5C99','#6F6A5E','#2F6F73'];
 var BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0" y="1" width="28" height="26" viewBox="22 24 56 52"><rect x="26" y="33.5" width="9" height="36" rx="1.5" fill="#FFB500"/><rect x="39" y="25.5" width="9" height="44" rx="1.5" fill="#42BB37"/><rect x="52" y="37.5" width="9" height="32" rx="1.5" fill="#00BDF6"/><rect x="65" y="29.5" width="9" height="40" rx="1.5" fill="#009CC6"/><rect x="23" y="71.5" width="54" height="3" rx="1.5" fill="#F0D9B2"/></svg><path transform="translate(38 21.9) scale(0.022)" d="M155 0V-100H356Q409 -100 438.0 -133.0Q467 -166 467 -209Q467 -238 454.0 -263.0Q441 -288 416.0 -303.0Q391 -318 356 -318H155V-418H339Q384 -418 411.0 -441.0Q438 -464 438 -509Q438 -554 411.0 -577.0Q384 -600 339 -600H155V-700H342Q413 -700 460.0 -674.0Q507 -648 530.0 -607.0Q553 -566 553 -519Q553 -464 522.5 -422.0Q492 -380 433 -354L442 -390Q508 -363 545.0 -314.0Q582 -265 582 -199Q582 -145 555.5 -100.0Q529 -55 477.5 -27.5Q426 0 351 0ZM76 0V-700H191V0Z M903 10Q833 10 776.0 -23.5Q719 -57 685.5 -114.0Q652 -171 652 -241Q652 -311 685.5 -367.0Q719 -423 776.0 -456.5Q833 -490 903 -490Q974 -490 1031.0 -457.0Q1088 -424 1121.5 -367.5Q1155 -311 1155 -241Q1155 -171 1121.5 -114.0Q1088 -57 1031.0 -23.5Q974 10 903 10ZM903 -96Q944 -96 975.5 -114.5Q1007 -133 1024.5 -166.0Q1042 -199 1042 -241Q1042 -283 1024.0 -315.0Q1006 -347 975.0 -365.5Q944 -384 903 -384Q863 -384 831.5 -365.5Q800 -347 782.5 -315.0Q765 -283 765 -241Q765 -199 782.5 -166.0Q800 -133 831.5 -114.5Q863 -96 903 -96Z M1466 10Q1396 10 1339.0 -23.5Q1282 -57 1248.5 -114.0Q1215 -171 1215 -241Q1215 -311 1248.5 -367.0Q1282 -423 1339.0 -456.5Q1396 -490 1466 -490Q1537 -490 1594.0 -457.0Q1651 -424 1684.5 -367.5Q1718 -311 1718 -241Q1718 -171 1684.5 -114.0Q1651 -57 1594.0 -23.5Q1537 10 1466 10ZM1466 -96Q1507 -96 1538.5 -114.5Q1570 -133 1587.5 -166.0Q1605 -199 1605 -241Q1605 -283 1587.0 -315.0Q1569 -347 1538.0 -365.5Q1507 -384 1466 -384Q1426 -384 1394.5 -365.5Q1363 -347 1345.5 -315.0Q1328 -283 1328 -241Q1328 -199 1345.5 -166.0Q1363 -133 1394.5 -114.5Q1426 -96 1466 -96Z M2114 0 1911 -245 2113 -480H2244L2012 -216L2017 -279L2254 0ZM1809 0V-720H1919V0Z M2535 0V-700H2615L2650 -568V0ZM3020 0 2601 -547 2615 -700 3034 -153ZM3020 0 2985 -123V-700H3100V0Z M3460 10Q3388 10 3330.5 -22.5Q3273 -55 3239.5 -112.0Q3206 -169 3206 -240Q3206 -311 3239.0 -367.5Q3272 -424 3328.5 -457.0Q3385 -490 3454 -490Q3521 -490 3572.5 -459.0Q3624 -428 3653.5 -374.0Q3683 -320 3683 -251Q3683 -239 3681.5 -226.5Q3680 -214 3677 -199H3283V-289H3620L3579 -253Q3577 -297 3562.0 -327.0Q3547 -357 3519.5 -373.0Q3492 -389 3452 -389Q3410 -389 3379.0 -371.0Q3348 -353 3331.0 -320.5Q3314 -288 3314 -243Q3314 -198 3332.0 -164.0Q3350 -130 3383.0 -111.5Q3416 -93 3459 -93Q3496 -93 3527.5 -106.0Q3559 -119 3581 -144L3651 -73Q3616 -32 3566.0 -11.0Q3516 10 3460 10Z M3771 0V-480H3881V0ZM3881 -267 3843 -286Q3843 -377 3883.5 -433.5Q3924 -490 4006 -490Q4042 -490 4071.0 -477.0Q4100 -464 4125 -435L4053 -361Q4040 -375 4024.0 -381.0Q4008 -387 3987 -387Q3941 -387 3911.0 -358.0Q3881 -329 3881 -267Z M4365 10Q4300 10 4247.5 -23.0Q4195 -56 4164.5 -112.5Q4134 -169 4134 -239Q4134 -310 4164.5 -366.5Q4195 -423 4247.5 -456.5Q4300 -490 4365 -490Q4420 -490 4462.5 -466.5Q4505 -443 4530.0 -402.0Q4555 -361 4555 -309V-171Q4555 -119 4530.5 -78.0Q4506 -37 4463.0 -13.5Q4420 10 4365 10ZM4383 -94Q4424 -94 4454.5 -112.5Q4485 -131 4502.0 -164.0Q4519 -197 4519 -240Q4519 -283 4502.0 -316.0Q4485 -349 4454.5 -367.5Q4424 -386 4384 -386Q4343 -386 4312.5 -367.5Q4282 -349 4264.5 -316.0Q4247 -283 4247 -240Q4247 -197 4264.5 -164.0Q4282 -131 4312.5 -112.5Q4343 -94 4383 -94ZM4622 0H4512V-129L4531 -246L4512 -362V-720H4622Z" fill="#F0D9B2"/></svg>';
 
-var state={synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',own:'any',addOwned:true,scanning:false};
+var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',own:'any',addOwned:true,scanning:false};
+var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
+try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
+function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
 var scanner=null,handled=false,scanToken=0,pendingRestore=null,pendingName='',pendingChallenge=null,pendingBadges=null;
 var db=null,memoryOnly=false;
 
@@ -389,6 +392,31 @@ function viewHomeBase(){
   if(rd.length>1){var n=rd.length-1;h+='<button class="lnk" data-act="seereading">Also reading '+n+' more book'+(n===1?'':'s')+'</button>';}
   return h;
 }
+var PARTS=['van','von','de','del','della','di','da','du','der','den','le','la','el','al','bin','ibn','st','saint'];
+function sNorm(t){return String(t||'').normalize?String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim():String(t||'').toLowerCase().trim();}
+function authorSortKey(b){
+  var n=(authorNames(b.author||'')[0]||'').trim();if(!n)return '';
+  var t=n.split(/[\s,]+/).filter(Boolean);
+  while(t.length>1&&/^(jr|sr|ii|iii|iv|v|phd|md|esq)\.?$/i.test(t[t.length-1]))t.pop();
+  var last=t.pop()||'',first=t.join(' ');
+  while(t.length&&PARTS.indexOf(sNorm(t[t.length-1]).replace(/\./g,''))>=0){last=t.pop()+' '+last;}
+  return sNorm(last)+'|'+sNorm(t.join(' ')||first);
+}
+function titleSortKey(b){return sNorm(b.title).replace(/^(the|a|an)\s+/,'');}
+function cmpS(a,b){return a<b?-1:(a>b?1:0);}
+function sortCmp(k){
+  return function(a,b){
+    var r=0;
+    if(k==='old')r=(a.addedAt||0)-(b.addedAt||0);
+    else if(k==='title')r=cmpS(titleSortKey(a),titleSortKey(b));
+    else if(k==='author'){var x=authorSortKey(a),y=authorSortKey(b);if(!x&&y)return 1;if(x&&!y)return -1;r=cmpS(x,y);}
+    else if(k==='rating'){var ra=a.rating||0,rb=b.rating||0;if(!ra&&rb)return 1;if(ra&&!rb)return -1;r=rb-ra;}
+    else if(k==='fin'){var fa=a.finishedAt||0,fb=b.finishedAt||0;if(!fa&&fb)return 1;if(fa&&!fb)return -1;r=fb-fa;}
+    if(r)return r;
+    r=cmpS(titleSortKey(a),titleSortKey(b));
+    return r||((b.addedAt||0)-(a.addedAt||0));
+  };
+}
 function libFilter(){
   var all=state.books.slice().sort(function(a,b){return b.addedAt-a.addedAt;});
   var q=state.q.trim().toLowerCase();
@@ -399,12 +427,14 @@ function libFilter(){
     if(q&&(b.title+' '+(b.author||'')).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
+  if(state.sort!=='new')list.sort(sortCmp(state.sort));
   return {all:all,list:list};
 }
 function libMeta(list){
-  var h='<span class="cnt">'+list.length+' book'+(list.length===1?'':'s')+'</span>';
+  var h='<span class="cnt">'+list.length+' Book'+(list.length===1?'':'s')+'</span>';
   if(state.filter!=='all')h+='<button class="ac" data-clr="s" aria-label="Clear the '+STAT[state.filter].label+' filter">'+STAT[state.filter].label+ico('x',14)+'</button>';
   if(state.own!=='any')h+='<button class="ac" data-clr="o" aria-label="Clear the ownership filter">'+(state.own==='owned'?'Owned':'To Buy')+ico('x',14)+'</button>';
+  if(state.sort!=='new')h+='<button class="ac" data-clr="k" aria-label="Clear the sort, currently '+SORTL[state.sort]+'">'+ico('sort',14)+SORTL[state.sort]+ico('x',14)+'</button>';
   return h;
 }
 function libBody(list){
@@ -413,6 +443,53 @@ function libBody(list){
   list.forEach(function(b){h+='<button data-open="'+b.id+'" aria-label="'+esc(b.title)+'" style="display:block;text-align:left">'+coverHTML(b,'',!isOwned(b))+'</button>';});
   return h+'</div>';
 }
+function starsHTML(r,kind,sz){
+  var h='<div class="stars" data-rate="'+kind+'" data-r="'+r+'" role="slider" tabindex="0" aria-label="Rating" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+r+'" aria-valuetext="'+(r?r+' out of 5':'Not rated')+'">';
+  for(var i=1;i<=5;i++){var f=Math.max(0,Math.min(1,r-(i-1)));h+='<span class="star">'+ico('star',sz)+'<svg class="tb fl" width="'+sz+'" height="'+sz+'" aria-hidden="true" style="clip-path:inset(0 '+Math.round((1-f)*100)+'% 0 0)"><use href="#i-star"/></svg></span>';}
+  return h+'</div>';
+}
+function paintStars(box,r){
+  var fl=box.querySelectorAll('.fl');
+  for(var i=0;i<fl.length;i++){var f=Math.max(0,Math.min(1,r-i));fl[i].style.clipPath='inset(0 '+Math.round((1-f)*100)+'% 0 0)';}
+  box.setAttribute('aria-valuenow',r);box.setAttribute('aria-valuetext',r?r+' out of 5':'Not rated');
+}
+function starVal(box,e){
+  var st=box.querySelectorAll('.star'),v=0.5;
+  for(var i=0;i<st.length;i++){var r=st[i].getBoundingClientRect();
+    if(e.clientX>=r.left+r.width/2)v=i+1;else if(e.clientX>=r.left){v=i+0.5;break;}else if(i===0){v=0.5;break;}else break;}
+  return Math.max(0.5,Math.min(5,v));
+}
+function starCommit(box,v){
+  var kind=box.getAttribute('data-rate');
+  box.setAttribute('data-r',v);paintStars(box,v);
+  if(kind==='detail'){var b=byId(state.id);if(!b)return;b.rating=v;b.updatedAt=Date.now();dbPut(b);refresh();}
+  else if(kind==='rv'&&state.rev){state.rev.rating=v;}
+}
+var starG=null;
+document.addEventListener('pointerdown',function(e){
+  var box=e.target.closest?e.target.closest('.stars[data-rate]'):null;if(!box)return;
+  var start=parseFloat(box.getAttribute('data-r'))||0;
+  starG={box:box,id:e.pointerId,start:start,moved:false,cur:starVal(box,e)};
+  try{box.setPointerCapture(e.pointerId);}catch(x){}
+  paintStars(box,starG.cur);
+});
+document.addEventListener('pointermove',function(e){
+  if(!starG||e.pointerId!==starG.id)return;
+  var v=starVal(starG.box,e);if(v!==starG.cur){starG.moved=true;starG.cur=v;paintStars(starG.box,v);}
+});
+function starEnd(e,cancel){
+  if(!starG||e.pointerId!==starG.id)return;
+  var g=starG;starG=null;
+  if(cancel){paintStars(g.box,g.start);return;}
+  starCommit(g.box,(!g.moved&&g.cur===g.start)?0:g.cur);
+}
+document.addEventListener('pointerup',function(e){starEnd(e,false);});
+document.addEventListener('pointercancel',function(e){starEnd(e,true);});
+document.addEventListener('keydown',function(e){
+  var box=e.target.closest?e.target.closest('.stars[data-rate]'):null;if(!box)return;
+  var r=parseFloat(box.getAttribute('data-r'))||0,d=(e.key==='ArrowRight'||e.key==='ArrowUp')?0.5:((e.key==='ArrowLeft'||e.key==='ArrowDown')?-0.5:0);
+  if(!d)return;e.preventDefault();starCommit(box,Math.max(0,Math.min(5,r+d)));
+});
 function viewLibrary(){
   var f=libFilter(),all=f.all,list=f.list;
   var h=top()+ptitle('Library');
@@ -420,7 +497,7 @@ function viewLibrary(){
     h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, enter an ISBN, or search by title.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
     return h;
   }
-  h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',16)+'Filter</button>'+
+  h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',16)+'Filter and Sort</button>'+
     '<label class="sp'+(state.q?' has':'')+'" id="sp">'+ico('search',18)+'<span class="spw"><input id="q" type="search" placeholder="Search Your Books" value="'+esc(state.q)+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-label="Search your books"></span>'+
     '<button type="button" class="spx" data-act="clearq" aria-label="Clear search">'+ico('x',16)+'</button></label></div>'+
     '<div class="meta" id="libmeta">'+libMeta(list)+'</div><div id="libbody">'+libBody(list)+'</div>';
@@ -433,7 +510,7 @@ function updateLib(){
 }
 function filterSheet(){
   var n=state.books.filter(function(b){return (state.pst==='all'||b.status===state.pst)&&(state.pown==='any'||(state.pown==='owned'?isOwned(b):!isOwned(b)));}).length;
-  var h='<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Filter</h2><button class="lnk" style="margin:0;padding:6px" data-act="clearfilter">Clear</button></div>'+
+  var h='<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Filter and Sort</h2><button class="lnk" style="margin:0;padding:6px" data-act="clearfilter">Clear</button></div>'+
   '<div class="fld"><div class="lb">Status</div><div class="chs">';
   [['all','All'],['reading','Reading'],['toread','To Read'],['finished','Finished'],['dnf','Did Not Finish']].forEach(function(c){
     h+='<button class="ch'+(state.pst===c[0]?' sel':'')+'" data-ps="'+c[0]+'" aria-pressed="'+(state.pst===c[0]?'true':'false')+'">'+c[1]+'</button>';
@@ -442,6 +519,8 @@ function filterSheet(){
   [['any','Any'],['owned','Owned'],['buy','To Buy']].forEach(function(c){
     h+='<button class="ch'+(state.pown===c[0]?' sel':'')+'" data-po="'+c[0]+'" aria-pressed="'+(state.pown===c[0]?'true':'false')+'">'+c[1]+'</button>';
   });
+  h+='</div></div><div class="fld"><div class="lb">Sort By</div><div class="chs">';
+  SORTS.forEach(function(k){h+='<button class="ch'+(state.psort===k?' sel':'')+'" data-so="'+k+'" aria-pressed="'+(state.psort===k?'true':'false')+'">'+SORTL[k]+'</button>';});
   h+='</div></div><button class="pb" data-act="applyfilter" style="margin-top:20px">Show '+n+' Book'+(n===1?'':'s')+'</button>';
   return h;
 }
@@ -472,7 +551,7 @@ function cardDetail(){
   '<div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:76px;flex:none">'+coverHTML(b)+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+authorLinks(b)+'</div>':'<div style="height:10px"></div>')+
   '<div class="pills"><button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button>'+
-  '<button class="pill o" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',13)+(own?'Owned':'Not Owned')+'</button></div>'+
+  '<button class="pill o '+(own?'pwy':'pwn')+'" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',13)+(own?'Owned':'Not Owned')+'</button></div>'+
   '<div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
   (own?'':'<div class="row btns" style="margin-top:14px"><button class="ob" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
   synHTML(b);
@@ -487,9 +566,7 @@ function cardDetail(){
     (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>')+
     '<div class="row btns"><button class="ob" data-act="progedit">Update Progress</button>'+(b.status==='reading'?'<button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button>':'')+'</div>';
   }
-  h+=(fin?'':'</div>')+quotesHTML(b)+'<div style="margin-top:16px"><div class="lb">Your Rating</div><div class="stars">';
-  for(var i=1;i<=5;i++){h+='<button class="star'+(i<=(b.rating||0)?' f':'')+'" data-star="'+i+'" aria-label="'+i+' star'+(i>1?'s':'')+'">'+ico('star',28)+'</button>';}
-  h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>'+
+  h+=(fin?'':'</div>')+quotesHTML(b)+'<div style="margin-top:16px"><div class="lb">Your Rating</div><div style="display:flex;align-items:center">';h+=starsHTML(b.rating||0,'detail',28);h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>'+
   '<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
   '<label class="fld"><span class="lb">Notes</span><textarea id="notes" placeholder="Add a Note">'+esc(b.notes||'')+'</textarea></label>'+
   '<div class="center" style="margin-top:20px"><button class="tr" data-act="remove">'+ico('trash',18)+'Remove from Library</button></div></div>';
@@ -523,7 +600,7 @@ function cardFound(){
   var meta=[f.year,f.pages?f.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
   h+='<div class="cbody"><div class="big">'+coverHTML({title:f.title,status:'toread',coverUrl:f.cover})+'</div>'+
   '<div class="center" style="margin-top:16px"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(f.title)+'</div>'+
-  (f.author?'<div class="sm" style="font-size:14px;margin-top:2px">'+esc(f.author)+'</div>':'')+
+  (f.author?'<div class="sm" style="font-size:14px;margin-top:2px">'+foundAuthorLinks(f)+'</div>':'')+
   (meta?'<div class="sm" style="margin-top:10px">'+esc(meta)+'</div>':'')+
   (f.isbn?'<div class="sm" style="font-size:12px;margin-top:4px">ISBN '+esc(f.isbn)+'</div>':'')+'</div>'+
   '<div class="fld"><div class="lb">Add As</div><div class="row" style="gap:6px;flex-wrap:wrap">';
@@ -540,12 +617,13 @@ function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function viewBackup(){
   var last=lsGet('bm_last_backup');
   var lastTxt=last?fmtDate(parseInt(last,10)):'Never';
-  return top()+ptitle('Backup')+
-  '<div class="cd" style="margin-top:16px"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
+  return top()+ptitle('Settings')+
+  '<h2 class="sec" style="margin-top:16px">Profile</h2><button class="bt sq" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button><h2 class="sec">Backup</h2>'+
+  '<div class="cd"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
   '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
   '<div class="sm">Books: '+state.books.length+'</div><div class="sm">Last Backup: '+lastTxt+'</div></div>'+
   '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="savebackup">Save Backup</button>'+
-  '<button class="bt c" data-act="restore">Restore from Backup</button><button class="bt" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button></div>'+
+  '<button class="pb" data-act="restore">Restore from Backup</button></div>'+
   '<p class="sm" style="margin-top:16px;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p>'+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="bld">Build '+esc(BUILD)+'</p>';
@@ -868,7 +946,7 @@ function cleanBook(x){
   var now=Date.now();
   var b={id:x.id.slice(0,64),title:title.slice(0,300),author:typeof x.author==='string'?x.author.slice(0,300):'',
     pages:num(x.pages),status:STAT[x.status]?x.status:'toread',currentPage:num(x.currentPage),
-    rating:Math.min(5,num(x.rating)),notes:typeof x.notes==='string'?x.notes.slice(0,20000):'',
+    rating:(function(v){v=Number(v);return isFinite(v)&&v>0?Math.min(5,Math.round(v*2)/2):0;})(x.rating),notes:typeof x.notes==='string'?x.notes.slice(0,20000):'',
     addedAt:num(x.addedAt)||now,updatedAt:num(x.updatedAt)||now};
   if(x.owned===false)b.owned=false;
   if(typeof x.synopsis==='string'&&x.synopsis.trim())b.synopsis=x.synopsis.slice(0,2000);
@@ -958,9 +1036,7 @@ function closeSheet(){
 }
 function reviewSheet(b){
   var r=state.rev.rating;
-  var h='<h2>Finished! How Was It?</h2><p class="sm" style="margin:0 0 12px">Rate it and share your thoughts, or skip. Both are optional.</p><div class="stars" id="rv-stars">';
-  for(var i=1;i<=5;i++){h+='<button type="button" class="star'+(i<=r?' f':'')+'" data-rv="'+i+'" aria-label="'+i+' star'+(i>1?'s':'')+'">'+ico('star',30)+'</button>';}
-  h+='</div><label class="fld" style="margin-top:12px"><span class="lb">Your Thoughts</span><textarea id="rv-text" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
+  var h='<h2>Finished! How Was It?</h2><p class="sm" style="margin:0 0 12px">Rate it and share your thoughts, or skip. Both are optional.</p><div id="rv-wrap">';h+=starsHTML(r,'rv',30);h+='</div><label class="fld" style="margin-top:12px"><span class="lb">Your Thoughts</span><textarea id="rv-text" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
   '<div class="row" style="margin-top:16px"><button class="ob" data-act="rvskip">Skip</button><button class="pb" data-act="rvsave">Save</button></div>';
   return h;
 }
@@ -1322,6 +1398,7 @@ function authorNames(s){
   });
   return out;
 }
+function foundAuthorLinks(f){return authorNames(f.author).map(function(n){return '<button class="alk" data-act="author" data-name="'+esc(n)+'" data-found="1">'+esc(n)+'</button>';}).join(', ');}
 function authorLinks(b){
   return authorNames(b.author).map(function(n){return '<button class="alk" data-act="author" data-name="'+esc(n)+'" data-bid="'+esc(b.id)+'">'+esc(n)+'</button>';}).join(', ');
 }
@@ -1416,13 +1493,14 @@ function authLoad(name,title,force){
   });
 }
 function openAuthor(name,book){
-  state.authorBack=(state.card==='detail');
+  state.authorBack=(state.card==='detail')?true:((state.card==='found'&&state.found)?'found':false);
   clearTimeout(cardTimer);cardClosing=false;document.body.classList.add('noscroll');
   state.card='author';state.editProg=false;
   authLoad(name,book?book.title:'');
 }
 function cardBack(){
-  if(state.card==='author'&&state.authorBack&&byId(state.id)){state.authorBack=false;state.card='detail';state.synOpen=false;renderCard();return;}
+  if(state.card==='author'&&state.authorBack==='found'&&state.found){state.authorBack=false;state.card='found';renderCard();return;}
+  if(state.card==='author'&&state.authorBack===true&&byId(state.id)){state.authorBack=false;state.card='detail';state.synOpen=false;renderCard();return;}
   closeCard();
 }
 function cardAuthor(){
@@ -1466,7 +1544,7 @@ document.addEventListener('pointerdown',function(e){
 });
 document.addEventListener('click',function(e){
   var t=e.target;
-  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-star],[data-as],[data-act],[data-set],[data-pick]');
+  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-so],[data-star],[data-as],[data-act],[data-set],[data-pick]');
   if(!el){return;}
   if(el.getAttribute('data-act')==='closesheet'){if(t===el&&!state.lockSheet)closeSheet();return;}
   if(el.hasAttribute('data-go')){closeSheet();go(el.getAttribute('data-go'));return;}
@@ -1483,7 +1561,8 @@ document.addEventListener('click',function(e){
       var rs=document.querySelectorAll('#rv-stars .star');for(var q=0;q<rs.length;q++){rs[q].classList.toggle('f',q<state.rev.rating);}}
     return;
   }
-  if(el.hasAttribute('data-clr')){if(el.getAttribute('data-clr')==='s')state.filter='all';else state.own='any';render();return;}
+  if(el.hasAttribute('data-clr')){var ck=el.getAttribute('data-clr');if(ck==='s')state.filter='all';else if(ck==='k'){state.sort='new';sortSave();}else state.own='any';render();return;}
+  if(el.hasAttribute('data-so')){state.psort=el.getAttribute('data-so');openSheet(filterSheet());return;}
   if(el.hasAttribute('data-ps')){state.pst=el.getAttribute('data-ps');openSheet(filterSheet());return;}
   if(el.hasAttribute('data-po')){state.pown=el.getAttribute('data-po');openSheet(filterSheet());return;}
   if(el.hasAttribute('data-as')){state.addAs=el.getAttribute('data-as');refresh();return;}
@@ -1509,7 +1588,7 @@ document.addEventListener('click',function(e){
   if(a==='qscan'){var qc=$('#q-cam');if(qc&&!ocr.busy)qc.click();return;}
   if(a==='qpick'){var qp=$('#q-pick');if(qp&&!ocr.busy)qp.click();return;}
   if(a==='qscancancel'){ocrAbort();scanUI('idle');return;}
-  if(a==='author'){var an=el.getAttribute('data-name'),ab=byId(el.getAttribute('data-bid'));if(an)openAuthor(an,ab);return;}
+  if(a==='author'){var an=el.getAttribute('data-name'),ab=byId(el.getAttribute('data-bid'))||(el.getAttribute('data-found')&&state.found?{title:state.found.title}:null);if(an)openAuthor(an,ab);return;}
   if(a==='authretry'){if(state.author)authLoad(state.author.name,state.author.title,true);return;}
   if(a==='authmore'){if(state.author){state.author.more=!state.author.more;renderCard();}return;}
   if(a==='authbook'){
@@ -1533,9 +1612,9 @@ document.addEventListener('click',function(e){
   if(a==='searchtitle'){stopScan();if(state.card)closeCard(true);state.view='search';render();window.scrollTo(0,0);return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='seereading'){state.filter='reading';state.own='any';go('library');return;}
-  if(a==='openfilter'){state.pst=state.filter;state.pown=state.own;openSheet(filterSheet());return;}
-  if(a==='clearfilter'){state.pst='all';state.pown='any';openSheet(filterSheet());return;}
-  if(a==='applyfilter'){state.filter=state.pst;state.own=state.pown;closeSheet();render();return;}
+  if(a==='openfilter'){state.pst=state.filter;state.pown=state.own;state.psort=state.sort;openSheet(filterSheet());return;}
+  if(a==='clearfilter'){state.pst='all';state.pown='any';state.psort='new';openSheet(filterSheet());return;}
+  if(a==='applyfilter'){state.filter=state.pst;state.own=state.pown;state.sort=state.psort;sortSave();closeSheet();render();return;}
   if(a==='homeprog'){
     var hc=el.closest('[data-open]');var hb=byId(el.getAttribute('data-bid'))||(hc?byId(hc.getAttribute('data-open')):null);if(!hb)return;
     state.id=hb.id;
@@ -1727,17 +1806,19 @@ function wlFade(el,S,delay,dur,dy){
 }
 function wlSplash(){
   try{sessionStorage.setItem('bm_splash','1');}catch(e){}
-  var S=1.4,p=wlLogo(true),el=document.createElement('div');
+  var S=1.6,p=wlLogo(true),el=document.createElement('div');
   el.id='wl';el.className='wsp';el.setAttribute('aria-hidden','true');
   el.appendChild(p.box);document.body.appendChild(el);wl=el;
+  var tg=document.createElement('p');tg.className='wtg';tg.textContent='Your Books, All in One Place';p.box.appendChild(tg);
   wlRise(p,S,.8);
   wlFade(p.wm,S,600,400,10);
-  wlAt(function(){wlClose(400*S);},1100*S);
+  wlFade(tg,S,1000,500,10);
+  wlAt(function(){wlClose(400*S);},1800*S);
   el.addEventListener('pointerdown',function(){wlClose(200);});
 }
 function wlFirst(){
   try{sessionStorage.setItem('bm_splash','1');}catch(e){}
-  var S=1.4,anim=!reduced()&&!!document.documentElement.animate,p=wlLogo(false),el=document.createElement('div');
+  var S=2.2,anim=!reduced()&&!!document.documentElement.animate,p=wlLogo(false),el=document.createElement('div');
   el.id='wl';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Welcome to Book Nerd');
   var card=document.createElement('div');card.className='wcard';
   card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Is Your Name?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk" id="wl-skip" type="button">Skip for Now</button>';
@@ -1803,7 +1884,7 @@ offs.forEach(function(d){var k=(r-d-rho)/r,C=V.map(function(v){return [ic[0]+(v[
 for(i=0;i<3;i++){p=C[i];q=C[(i+1)%3];dx=q[0]-p[0];dy=q[1]-p[1];l=Math.sqrt(dx*dx+dy*dy);nx=dy/l;ny=-dx/l;if(nx*(p[0]-ic[0])+ny*(p[1]-ic[1])<0){nx=-nx;ny=-ny}N.push(Math.atan2(ny,nx))}
 for(i=0;i<3;i++){a0=N[(i+2)%3];a1=N[i];da=a1-a0;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;for(j=0;j<=10;j++){t=a0+da*j/10;pts.push([C[i][0]+rho*Math.cos(t),C[i][1]+rho*Math.sin(t)])}}
 out.push(poly(pts))});return out}
-var CL={leaf:LEAF(),tri2:TRI(2.8),circle:'circle(50% at 50% 50%)',arch:arch(),squircle:sq(),oct:reg(8,Math.PI/8),slant:'polygon(16% 4%,100% 4%,84% 96%,0 96%)',pent:'polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)',cloud:wav(3,38,10,1),shield:'polygon(50% 100%,10% 80%,8% 14%,50% 0,92% 14%,90% 80%)',hex:reg(6,-Math.PI/2),rose:spk(10,50,40),hept:reg(7,-Math.PI/2),tab:'polygon(14% 0,86% 0,86% 100%,50% 80%,14% 100%)',heart:heart()};function LEAF(){var a=[],i,t,w,y,c=Math.cos(-40*Math.PI/180),s=Math.sin(-40*Math.PI/180);for(i=0;i<=40;i++){t=Math.PI*i/40;w=40*Math.sin(t);y=-50+100*i/40;a.push([w,y])}for(i=40;i>=0;i--){t=Math.PI*i/40;w=40*Math.sin(t);y=-50+100*i/40;a.push([-w,y])}return poly(a.map(function(p){return [50+p[0]*c-p[1]*s,50+p[0]*s+p[1]*c]}))}
+var CL={leaf:LEAF(),tri2:TRI(2.8),circle:'circle(50% at 50% 50%)',arch:arch(),squircle:sq(),oct:reg(8,Math.PI/8),slant:'polygon(16% 4%,100% 4%,84% 96%,0 96%)',pent:'polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)',cloud:wav(3,38,10,1),shield:'polygon(50% 100%,10% 80%,8% 14%,50% 0,92% 14%,90% 80%)',shield2:'polygon(50.0% 0.0%,93.2% 11.4%,93.2% 50.0%,92.8% 56.1%,91.6% 61.8%,89.6% 67.1%,87.0% 72.1%,83.8% 76.7%,80.1% 81.0%,75.9% 84.9%,71.3% 88.6%,66.3% 91.9%,61.1% 94.9%,55.6% 97.6%,50.0% 100.0%,44.4% 97.6%,38.9% 94.9%,33.7% 91.9%,28.7% 88.6%,24.1% 84.9%,19.9% 81.0%,16.2% 76.7%,13.0% 72.1%,10.4% 67.1%,8.4% 61.8%,7.2% 56.1%,6.8% 50.0%,6.8% 11.4%)',gem:'polygon(22.7% 2.3%,77.3% 2.3%,100% 31.8%,50% 100%,0% 31.8%)',hex:reg(6,-Math.PI/2),rose:spk(10,50,40),hept:reg(7,-Math.PI/2),tab:'polygon(14% 0,86% 0,86% 100%,50% 80%,14% 100%)',heart:heart()};function LEAF(){var a=[],i,t,w,y,c=Math.cos(-40*Math.PI/180),s=Math.sin(-40*Math.PI/180);for(i=0;i<=40;i++){t=Math.PI*i/40;w=40*Math.sin(t);y=-50+100*i/40;a.push([w,y])}for(i=40;i>=0;i--){t=Math.PI*i/40;w=40*Math.sin(t);y=-50+100*i/40;a.push([-w,y])}return poly(a.map(function(p){return [50+p[0]*c-p[1]*s,50+p[0]*s+p[1]*c]}))}
 var PAL={blue:['#00478E','#0A5AA6','#00BDF6','#00305F','#FFB500','Freeman blue'],green:['#1F7A2A','#42BB37','#B4EBA9','#0F4A16','#FFB500','Spine green'],cyan:['#0079A3','#00BDF6','#BCEEFF','#004A66','#FFB500','Cyan'],bronze:['#6B3A12','#B8733A','#EBC08F','#3A1D08','#FFD34D','Bronze'],coral:['#8F2E1F','#E8604C','#F9B8AD','#55160C','#FFD34D','Coral'],sky:['#4A63B8','#8FB0F0','#DCE8FF','#223A7A','#FF7A59','Sky'],gold:['#B87800','#FFB500','#FFE49A','#5A3B00','#C0392B','Gold'],indigo:['#151A44','#343E9A','#8F9BEB','#0C1030','#FFD34D','Midnight indigo'],sun:['#B04A12','#F28C28','#FFD7A1','#6B2A06','#FFD34D','Sunrise orange'],ochre:['#7A5A10','#D9A82E','#F6DE9A','#3F2D05','#00478E','Ochre'],meadow:['#4C7A12','#9BCB3A','#E2F5B0','#2A4508','#E8604C','Meadow'],forest:['#123D22','#1E6B3A','#7FD6A0','#0A2414','#FFB500','Deep forest'],violet:['#2A1553','#5B3AA8','#C3AEF0','#150A30','#FFD34D','Dusk violet'],navy:['#0A2A66','#1C4FA0','#7FB4FF','#06173A','#FFB500','Navy'],teal2:['#0B5A63','#1696A6','#9BE3EC','#06343A','#FFD34D','Lagoon'],summit:['#7A1E12','#E8604C','#FFD34D','#55160C','#FFD34D','Coral and gold'],pink:['#A8325E','#F26B9A','#FFC2D8','#6B1633','#FFD34D','Rose']};
 function spl(cx,cy,r){return 'M'+cx+' '+(cy-r)+'Q'+cx+' '+cy+' '+(cx+r)+' '+cy+'Q'+cx+' '+cy+' '+cx+' '+(cy+r)+'Q'+cx+' '+cy+' '+(cx-r)+' '+cy+'Q'+cx+' '+cy+' '+cx+' '+(cy-r)+'Z'}
 function stp(cx,cy,R,r){var a=[],i,t,q;for(i=0;i<10;i++){t=-Math.PI/2+Math.PI*i/5;q=i%2?r:R;a.push((cx+q*Math.cos(t)).toFixed(1)+','+(cy+q*Math.sin(t)).toFixed(1))}return a.join(' ')}
@@ -1845,7 +1926,7 @@ mara:function(I,A){return '<g><path d="M28 8L50 8L56 44L44 44Z" fill="'+A+'"/><p
 quote:function(I,A){return '<g><path d="M24 24H76Q81 24 81 29V57Q81 62 76 62H52L40 77V62H24Q19 62 19 57V29Q19 24 24 24Z" fill="'+CR+'"/></g><g><circle cx="39" cy="42" r="6" fill="'+I+'"/><path d="M33 42Q33 53 42 55L42 51Q38 49 38 43Z" fill="'+I+'"/><circle cx="61" cy="42" r="6" fill="'+I+'"/><path d="M55 42Q55 53 64 55L64 51Q60 49 60 43Z" fill="'+I+'"/></g>'},
 critic:function(I,A){return '<g><path d="M20 20H80Q86 20 86 26V62Q86 68 80 68H54L38 84V68H20Q14 68 14 62V26Q14 20 20 20Z" fill="'+CR+'"/></g><g><rect x="25" y="40" width="9" height="22" rx="2.5" fill="#F4B8AC" stroke="#E8604C" stroke-width="2.2"/><path d="M38 62V42L46 30Q50 26 54 30Q56 34 54 40L53 44H70Q75 44 74 50L72 58Q71 62 66 62Z" fill="#F9CFC6" stroke="#E8604C" stroke-width="2.6" stroke-linejoin="round"/></g>'},
 round:function(I,A){var s='',i,t,x,y;for(i=0;i<5;i++){t=(-90+i*72)*Math.PI/180;x=50+33*Math.cos(t);y=50+33*Math.sin(t);s+='<g><circle cx="'+x.toFixed(1)+'" cy="'+(y-4.5).toFixed(1)+'" r="6" fill="'+CR+'"/><path d="M'+(x-10).toFixed(1)+' '+(y+11).toFixed(1)+'A10 10 0 0 1 '+(x+10).toFixed(1)+' '+(y+11).toFixed(1)+'Z" fill="'+CR+'"/></g>'}return '<g><circle cx="50" cy="50" r="31" fill="none" stroke="'+CR+'" stroke-width="2.4" stroke-dasharray="2 5" stroke-linecap="round" opacity=".45"/></g><g>'+s+'</g><g><path d="M50 61L37 58L37 42Q44 40 50 45Z" fill="'+A+'"/><path d="M50 61L63 58L63 42Q56 40 50 45Z" fill="'+A+'" opacity=".75"/><path d="M50 45V61" stroke="'+I+'" stroke-width="1.8" opacity=".5"/></g>'},
-fan:function(I,A){var g='',i;for(i=0;i<3;i++)g+='<g><rect x="'+(24+i*18)+'" y="66" width="14" height="20" rx="2" fill="'+A+'"/><rect x="'+(24+i*18)+'" y="71" width="14" height="2.6" fill="'+CR+'"/></g>';return '<g><ellipse cx="50" cy="34" rx="22" ry="26" fill="'+I+'" opacity=".55"/><ellipse cx="50" cy="34" rx="22" ry="26" fill="none" stroke="'+A+'" stroke-width="4"/></g><g><circle cx="50" cy="28" r="8.5" fill="'+CR+'"/><path d="M33 56Q33 40 50 40Q67 40 67 56Q60 59 50 59Q40 59 33 56Z" fill="'+CR+'"/></g>'+g},
+fan:function(I,A){var b='',i;for(i=0;i<3;i++)b+='<rect x="'+(32.25+i*8.5)+'" y="48.5" width="6.5" height="9" rx="1.2" fill="'+A+'"/><rect x="'+(32.25+i*8.5)+'" y="50.6" width="6.5" height="1.3" fill="'+CR+'"/>';return '<g transform="scale(1.13636)"><g transform="translate(44 32) scale(.546) translate(-50 -34)"><ellipse cx="50" cy="34" rx="22" ry="26" fill="'+I+'" opacity=".55"/><ellipse cx="50" cy="34" rx="22" ry="26" fill="none" stroke="'+A+'" stroke-width="4"/><circle cx="50" cy="28" r="8.5" fill="'+CR+'"/><path d="M33 56Q33 40 50 40Q67 40 67 56Q60 59 50 59Q40 59 33 56Z" fill="'+CR+'"/></g>'+b+'</g>'},
 worm:function(I,A){return book(I,A)+worm([[46,58],[38,38],[70,52],[77,27]],10,17,A,I)},
 owl:function(I,A){return '<g><circle cx="50" cy="42" r="31" fill="'+CR+'"/><circle cx="38" cy="32" r="4.2" fill="'+I+'" opacity=".12"/><circle cx="62" cy="48" r="5.2" fill="'+I+'" opacity=".12"/><circle cx="46" cy="52" r="3" fill="'+I+'" opacity=".12"/></g><g><path d="M40 28L46 36L38 40Z" fill="'+I+'"/><path d="M60 28L54 36L62 40Z" fill="'+I+'"/><ellipse cx="50" cy="66" rx="15" ry="19" fill="'+I+'"/><circle cx="50" cy="46" r="13.5" fill="'+I+'"/><path d="M42 70Q50 76 58 70" stroke="'+CR+'" stroke-width="2.2" fill="none" opacity=".45"/></g><g><circle cx="44.5" cy="46" r="5" fill="'+A+'"/><circle cx="55.5" cy="46" r="5" fill="'+A+'"/><circle cx="45" cy="46" r="2.2" fill="'+I+'"/><circle cx="56" cy="46" r="2.2" fill="'+I+'"/><path d="M50 49L47.5 54L52.5 54Z" fill="'+A+'"/></g><g><rect x="16" y="82" width="68" height="5" rx="2.5" fill="'+CR+'"/><path d="M44 84V88M56 84V88" stroke="'+A+'" stroke-width="2.4" stroke-linecap="round"/></g><g><path d="'+spl(18,24,5)+'" fill="'+CR+'"/><path d="'+spl(84,26,4)+'" fill="'+CR+'"/><path d="'+spl(88,62,3.4)+'" fill="'+CR+'"/></g>'}
 };
@@ -1853,30 +1934,31 @@ owl:function(I,A){return '<g><circle cx="50" cy="42" r="31" fill="'+CR+'"/><circ
 
 var DEFS=[
  {id:'spine',n:'First Spine',r:'Finish your first book',sh:'circle',pal:'blue',es:.66,ey:-.02,rb:1},
- {id:'worm',n:'Bookworm',r:'Finish 10 books',sh:'leaf',pal:'green',es:.66,ey:.03},
+ {id:'worm',n:'Bookworm',r:'Finish 10 books',sh:'leaf',pal:'green',es:.66,ey:.03,k:1.14},
  {id:'bib',n:'Bibliophile',r:'Finish 25 books',sh:'hex',pal:'teal2',es:.78,ey:0},
  {id:'legend',n:'Legend',r:'Finish 50 books',sh:'circle',pal:'gold',es:.78,ey:0,foil:1},
  {id:'pages',n:'Page Turner',r:'Read 5,000 pages in total',sh:'rose',pal:'cyan',es:.76,ey:.02},
  {id:'door',n:'Doorstopper',r:'Finish a book over 600 pages',sh:'arch',pal:'bronze',es:.78,ey:.04},
  {id:'quick',n:'Quick Read',r:'Finish a book within 3 days',sh:'slant',pal:'sky',es:.7,ey:0},
  {id:'accept',n:'Challenge Accepted',r:'Start a reading challenge',sh:'tri2',pal:'summit',es:.74,ey:.08},
- {id:'dream',n:'Big Dreamer',r:'Set a challenge of 24 or more books',sh:'cloud',pal:'violet',es:.62,ey:0},
+ {id:'dream',n:'Big Dreamer',r:'Set a challenge of 24 or more books',sh:'cloud',pal:'violet',es:.62,ey:0,k:1.1},
  {id:'champ',n:'Challenge Champion',r:'Complete a challenge',sh:'shield',pal:'gold',es:.6,ey:-.02},
  {id:'early',n:'Early Finisher',r:'Complete a challenge 30 days early',sh:'squircle',pal:'meadow',es:.78,ey:0},
  {id:'hat',n:'Hat Trick',r:'Finish 3 books in one month',sh:'oct',pal:'navy',es:.78,ey:0},
  {id:'owl',n:'Night Owl',r:'Update progress after 10 pm on 5 different nights',sh:'hept',pal:'indigo',es:.64,ey:0},
  {id:'bird',n:'Early Bird',r:'Update progress before 7 am on 5 different mornings',sh:'rose',pal:'sun',es:.7,ey:0},
- {id:'mara',n:'Marathon',r:'Log 200 pages in one day',sh:'shield',pal:'navy',es:.52,ey:0},
+ {id:'mara',n:'Marathon',r:'Log 200 pages in one day',sh:'shield2',pal:'navy',es:.52,ey:0},
  {id:'quote',n:'Quote Keeper',r:'Save 10 quotes',sh:'tab',pal:'ochre',es:.6,ey:-.05},
- {id:'critic',n:'Critic',r:'Write 5 reviews',sh:'pent',pal:'coral',es:.72,ey:.05},
+ {id:'critic',n:'Top Critic',r:'Write 5 reviews',sh:'pent',pal:'coral',es:.72,ey:.05},
  {id:'round',n:'Well Rounded',r:'Finish books by 5 different authors',sh:'hex',pal:'forest',es:.8,ey:0},
- {id:'fan',n:'Author Fan',r:'Finish 3 books by the same author',sh:'heart',pal:'pink',es:.62,ey:.05}
+ {id:'fan',n:'Author Fan',r:'Finish 3 books by the same author',sh:'gem',pal:'pink',es:1,ey:0}
 ];
 var SIL='#001B52',KEY='bm_badges',S=null,Q=[],shown=[],pop=null,popIds=[],popI=0,popT=[],tryT=null,tryN=0,lockedBody=false;
 function def(id){for(var i=0;i<DEFS.length;i++){if(DEFS[i].id===id)return DEFS[i];}return null;}
 
 /* ----- one badge, as markup ----- */
 function badgeHTML(d,size,mode){
+  var kk=d.k||1,sz=Math.round(size*kk*100)/100,off=Math.round((sz-size)/2*100)/100;
   var p=PAL[d.pal],c=CL[d.sh],L=Array.isArray(c),cs=L?c:[c,c,c,c],sil=mode!=='e';
   function st(i){return (L&&i>0?'inset:0;':'')+'clip-path:'+cs[i];}
   var rb=d.rb?'<div class="bgrb bgl"></div><div class="bgrb bgr"></div>':'',inner;
@@ -1885,7 +1967,7 @@ function badgeHTML(d,size,mode){
     var fo=d.foil?'<div class="bgfoil" style="clip-path:'+cs[0]+'">'+foilSVG()+'</div>':'';
     inner=rb+'<div class="bgrim" style="clip-path:'+cs[0]+'"></div><div class="bgfc" style="'+st(1)+'"><em></em><b></b><u></u></div><div class="bgrg" style="'+(L?'inset:0;':'')+'clip-path:'+cs[2]+'"></div><div class="bgin" style="'+st(3)+'"><em></em><b></b></div>'+fo+'<div class="bgemb"><svg viewBox="0 0 100 100" aria-hidden="true">'+EM[d.id](p[3],p[4])+'</svg></div><div class="bgshn" style="clip-path:'+cs[0]+'"><i></i></div>';
   }
-  return '<div class="bgs'+(sil?' bgu':'')+'" style="width:'+size+'px;height:'+(size+Math.round(size*.12))+'px"><div class="bgd" data-bg="'+d.id+'" style="--s:'+size+'px;--es:'+d.es+';--ey:'+d.ey+';--rim:'+p[0]+';--face:'+p[1]+';--ring:'+p[2]+'"><div class="bgfl"><div class="bgps"><div class="bgbi">'+inner+'</div></div></div></div></div>';
+  return '<div class="bgs'+(sil?' bgu':'')+'" style="width:'+size+'px;height:'+(size+Math.round(size*.12))+'px"><div class="bgd" data-bg="'+d.id+'" style="--s:'+sz+'px;'+(kk>1?'left:-'+off+'px;top:-'+off+'px;':'')+'--es:'+d.es+';--ey:'+d.ey+';--rim:'+p[0]+';--face:'+p[1]+';--ring:'+p[2]+'"><div class="bgfl"><div class="bgps"><div class="bgbi">'+inner+'</div></div></div></div></div>';
 }
 function foilSVG(){var c=['#FFF1B8','#FFD34D','#FFB500','#E69B00','#FFE08A'],s='',i;for(i=0;i<14;i++)s+='<rect x="'+(-70+i*14)+'" y="-20" width="14" height="140" fill="'+c[i%5]+'"/>';return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><g class="bgfgo"><g transform="skewX(-22)">'+s+'</g></g></svg>';}
 function an(e,k,o){if(!e||!e.animate)return null;o.fill='both';return e.animate(k,o);}
@@ -2034,15 +2116,15 @@ function view(){
   DEFS.forEach(function(d){(S&&S.earned[d.id]?er:rest).push(d);});
   er.sort(function(a,b){return S.earned[b.id]-S.earned[a.id];});
   var n=er.length,N=DEFS.length,p=Math.round(n/N*100);
-  var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' earned</div><div class="bar" style="height:5px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' more to discover':'You have earned every badge!')+'</div></div>';
+  var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:5px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
   h+='<h2 class="sec">Earned<span class="bgn">'+n+'</span></h2>';
   h+=n?grid(er,true):'<div class="cd"><p class="sm" style="margin:0">Finish a book and your first badge lands here.</p></div>';
-  if(rest.length)h+='<h2 class="sec">Still to earn<span class="bgn">'+rest.length+'</span></h2>'+grid(rest,false);
+  if(rest.length)h+='<h2 class="sec">Still to Earn<span class="bgn">'+rest.length+'</span></h2>'+grid(rest,false);
   return h;
 }
 function sheetHTML(d,e){
-  var h='<div class="bgstage">'+badgeHTML(d,134,e?'e':'u')+'</div><h2 style="text-align:center;margin:12px 0 10px">'+esc(d.n)+'</h2><p class="lb" style="margin:0">'+(e?'Earned by':'How to earn it')+'</p><p style="font-size:15px;margin:2px 0 12px">'+(e?esc(d.r):'It is a mystery. Keep reading and you will find out.')+'</p>';
-  if(e)h+='<div class="bgok"><svg class="tb" width="20" height="20" aria-hidden="true"><use href="#i-check"/></svg>Earned '+esc(fmtDate(S.earned[d.id]))+'</div><button class="ob" data-act="bgreplay" style="margin-top:14px">Replay the unlock</button>';
+  var h='<div class="bgstage">'+badgeHTML(d,134,e?'e':'u')+'</div><h2 style="text-align:center;margin:12px 0 10px">'+esc(d.n)+'</h2><p class="lb" style="margin:0">'+(e?'Earned By':'How to Earn It')+'</p><p style="font-size:15px;margin:2px 0 12px">'+(e?esc(d.r):'It is a mystery. Keep reading and you will find out.')+'</p>';
+  if(e)h+='<div class="bgok"><svg class="tb" width="20" height="20" aria-hidden="true"><use href="#i-check"/></svg>Earned '+esc(fmtDate(S.earned[d.id]))+'</div><button class="ob" data-act="bgreplay" style="margin-top:14px">Replay the Unlock</button>';
   return h;
 }
 function open(id){
