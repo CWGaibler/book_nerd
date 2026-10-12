@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 21:47 UTC">
+<meta name="build" content="2026-10-12 23:55 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -250,13 +250,38 @@ body.noscroll{overflow:hidden}
 .bgpd i{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .bgpd i.on{background:var(--blue)}
 @media (prefers-reduced-motion:reduce){#bgpop,.bgpc,.bgpstage::before{animation:none!important}}
+
+.pf{position:absolute;right:8px;top:calc(var(--sat) - 8px);width:44px;height:44px;display:flex;align-items:center;justify-content:center;z-index:2;padding:0;background:none}
+.pfc{width:30px;height:30px;border-radius:50%;background:var(--line);border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#fff;overflow:hidden;box-sizing:border-box;flex:none}
+.pfc img{width:100%;height:100%;object-fit:cover;display:block}
+.pfc svg{color:#fff}
+.pf.on .pfc{background:#0A5AA6;box-shadow:0 0 0 2px var(--blue)}
+.pfbig{width:68px;height:68px;font-size:30px;border-width:2px}
+.pcard{display:flex;gap:14px;align-items:center;margin-top:12px}
+.pfbtn{position:relative;flex:none;padding:0;background:none}
+.pfcam{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:var(--deep);display:flex;align-items:center;justify-content:center}
+.pfcam svg{color:var(--deep)}
+.pname{font-size:21px;font-weight:500;line-height:1.2;word-break:break-word}
+.plinks{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:4px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stile{display:block;width:100%;text-align:left;background:var(--navy);border-radius:12px;padding:10px 12px;color:#fff}
+.stile b{display:block;font-size:22px;font-weight:500;line-height:1.2}
+.stile span{font-size:12px;color:#ADB1B1}
+.cd.msgp{border-radius:999px;min-height:40px;padding:9px 16px;display:flex;align-items:center}
+.cd.msgp .sm{font-size:14px;line-height:1.35}
+.wph{display:flex;align-items:center;gap:12px;margin:14px 0 2px;text-align:left}
+.wphb{padding:0;background:none;flex:none}
+.pfw{width:56px;height:56px;border-width:2px}
+.wph .lnk{margin:0;padding:2px 0;text-align:left;font-size:14px}
+.wph .sm{margin:0;font-size:12px;color:#ADB1B1}
+nav .ni{flex:1 1 0;min-width:0}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <symbol id="i-logo" viewBox="0 0 24 24"><rect x="3.11" y="5.6" width="3.33" height="13.33" rx="0.6" fill="currentColor" stroke="none"/><rect x="7.92" y="2.65" width="3.33" height="16.28" rx="0.6" fill="currentColor" stroke="none"/><rect x="12.73" y="7.07" width="3.33" height="11.84" rx="0.6" fill="currentColor" stroke="none"/><rect x="17.54" y="4.11" width="3.33" height="14.8" rx="0.6" fill="currentColor" stroke="none"/><rect x="2" y="19.8" width="20" height="1.5" rx="0.75" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-award" viewBox="0 0 24 24"><path d="M12 9m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"/><path d="M12 15l3.4 5.89l1.598 -3.233l3.598 .232l-3.4 -5.889"/><path d="M6.802 12l-3.4 5.89l3.598 -.233l1.598 3.232l3.4 -5.889"/></symbol>
-<symbol id="i-barcode" viewBox="0 0 24 24"><path d="M4 7v-1a2 2 0 0 1 2 -2h2" /> <path d="M4 17v1a2 2 0 0 0 2 2h2" /> <path d="M16 4h2a2 2 0 0 1 2 2v1" /> <path d="M16 20h2a2 2 0 0 0 2 -2v-1" /> <path d="M5 11h1v2h-1z" /> <path d="M10 11l0 2" /> <path d="M14 11h1v2h-1z" /> <path d="M19 11l0 2" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M5 12l14 0" /> <path d="M5 12l6 6" /> <path d="M5 12l6 -6" /></symbol><symbol id="i-dots" viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="i-keyboard" viewBox="0 0 24 24"><path d="M2 6m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z" /> <path d="M6 10l0 .01" /> <path d="M10 10l0 .01" /> <path d="M14 10l0 .01" /> <path d="M18 10l0 .01" /> <path d="M6 14l0 .01" /> <path d="M18 14l0 .01" /> <path d="M10 14l4 .01" /></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 11l5 5l5 -5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 9l5 -5l5 5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /> <path d="M9 11v-5a3 3 0 0 1 6 0v5" /></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /> <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /> <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol><symbol id="i-adjustments-horizontal" viewBox="0 0 24 24"><path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 6l8 0" /> <path d="M16 6l4 0" /> <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 12l2 0" /> <path d="M10 12l10 0" /> <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 18l11 0" /> <path d="M19 18l1 0" /></symbol><symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 9l4 -4l4 4" /> <path d="M7 5v14" /> <path d="M21 15l-4 4l-4 -4" /> <path d="M17 19v-14" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /> <path d="M11 13l9 -9" /> <path d="M15 4h5v5" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" /></symbol>
+<symbol id="i-barcode" viewBox="0 0 24 24"><path d="M4 7v-1a2 2 0 0 1 2 -2h2" /> <path d="M4 17v1a2 2 0 0 0 2 2h2" /> <path d="M16 4h2a2 2 0 0 1 2 2v1" /> <path d="M16 20h2a2 2 0 0 0 2 -2v-1" /> <path d="M5 11h1v2h-1z" /> <path d="M10 11l0 2" /> <path d="M14 11h1v2h-1z" /> <path d="M19 11l0 2" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M5 12l14 0" /> <path d="M5 12l6 6" /> <path d="M5 12l6 -6" /></symbol><symbol id="i-dots" viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="i-keyboard" viewBox="0 0 24 24"><path d="M2 6m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z" /> <path d="M6 10l0 .01" /> <path d="M10 10l0 .01" /> <path d="M14 10l0 .01" /> <path d="M18 10l0 .01" /> <path d="M6 14l0 .01" /> <path d="M18 14l0 .01" /> <path d="M10 14l4 .01" /></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 11l5 5l5 -5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /> <path d="M7 9l5 -5l5 5" /> <path d="M12 4l0 12" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /> <path d="M9 11v-5a3 3 0 0 1 6 0v5" /></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /> <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /> <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol><symbol id="i-adjustments-horizontal" viewBox="0 0 24 24"><path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 6l8 0" /> <path d="M16 6l4 0" /> <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 12l2 0" /> <path d="M10 12l10 0" /> <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /> <path d="M4 18l11 0" /> <path d="M19 18l1 0" /></symbol><symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 9l4 -4l4 4" /> <path d="M7 5v14" /> <path d="M21 15l-4 4l-4 -4" /> <path d="M17 19v-14" /></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol><symbol id="i-person" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /> <path d="M11 13l9 -9" /> <path d="M15 4h5v5" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" /></symbol>
 </svg>
 <div id="app"><header id="topbar"></header><main id="view"></main></div>
 <nav id="nav"><div>
@@ -264,10 +289,10 @@ body.noscroll{overflow:hidden}
 <button class="ni" data-go="library" aria-label="Library"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-logo"/></svg>Library</button>
 <button class="ni" data-go="add" aria-label="Add Book"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg>Add Book</button>
 <button class="ni" data-go="badges" aria-label="Badges"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-award"/></svg>Badges<i class="bgdot" hidden></i></button>
-<button class="ni" data-go="backup" aria-label="Settings"><svg class="tb" width="24" height="24" aria-hidden="true"><use href="#i-settings"/></svg>Settings</button>
 </div></nav>
 <div id="layer"></div>
 <div id="card"></div>
+<input id="photo-in" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">
 <script>
 (function(){
 'use strict';
@@ -287,7 +312,7 @@ var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,
 var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
 try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
 function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
-var scanner=null,handled=false,scanToken=0,pendingRestore=null,pendingName='',pendingChallenge=null,pendingBadges=null;
+var scanner=null,handled=false,scanToken=0,pendingRestore=null,pendingName='',pendingChallenge=null,pendingBadges=null,pendingPhoto='';
 var db=null,memoryOnly=false;
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -346,7 +371,7 @@ function setStatus(b,st){
 
 /* ---------- views ---------- */
 function top(){return '';}
-(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><h1 class="pt" id="ptitle"></h1>';})();
+(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><button class="pf" id="pf" type="button" data-go="backup" aria-label="Profile"></button><h1 class="pt" id="ptitle"></h1>';profSync();})();
 var ptNow='';
 function ptitle(t){ptNow=String(t);return '';}
 function setPT(){var e=document.getElementById('ptitle');if(e&&e.textContent!==ptNow)e.textContent=ptNow;}
@@ -632,19 +657,86 @@ function cardFound(){
 }
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function initialOf(nm){var t=String(nm||'').trim();if(!t)return '';return Array.from(t)[0].toUpperCase();}
+function avatarInner(nm,ph,small){if(ph)return '<img alt="" src="'+ph+'">';var c=initialOf(nm);return c?esc(c):ico('person',small?18:34);}
+var _pgRaw=null,_pgVal='';
+function photoClean(v){if(typeof v!=='string'||v.length>150000||v.indexOf('data:image/jpeg;base64,')!==0)return '';return /^[A-Za-z0-9+\/]+={0,2}$/.test(v.slice(23))?v:'';}
+function photoGet(){var r=lsGet('bm_photo');if(r!==_pgRaw){_pgRaw=r;_pgVal=photoClean(r);}return _pgVal;}
+var PFK='';
+function profSync(){
+  var b=document.getElementById('pf');if(!b)return;
+  var nm=userName(),ph=photoGet(),k=ph?'p'+ph.length+ph.slice(-16):'i'+nm;
+  if(k!==PFK){PFK=k;b.innerHTML='<span class="pfc">'+avatarInner(nm,ph,true)+'</span>';}
+  b.classList.toggle('on',state.view==='backup');
+  b.setAttribute('aria-label','Profile'+(nm?', '+nm:''));
+}
+function wlPhotoSync(){
+  var c=document.getElementById('wl-phc'),l=document.getElementById('wl-phl');if(!c)return;
+  var ph=photoGet();c.innerHTML=ph?'<img alt="" src="'+ph+'">':ico('camera',22);
+  if(l)l.textContent=ph?'Choose Another Photo':'Add a Photo';
+}
+function photoUI(){profSync();if(state.view==='backup')render();wlPhotoSync();}
+function openPhotoPicker(){var i=document.getElementById('photo-in');if(i){i.value='';i.click();}}
+function photoFromFile(file){
+  return new Promise(function(resolve,reject){
+    if(!file||!/^image\//i.test(file.type||'')){reject(new Error('type'));return;}
+    if(file.size>60*1048576){reject(new Error('big'));return;}
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){
+      try{
+        var w=im.naturalWidth,h=im.naturalHeight;
+        if(!(w>0&&h>0)){reject(new Error('decode'));return;}
+        var side=Math.min(w,h),sx=(w-side)/2,sy=(h-side)/2,src=im;
+        if(side>1024){var m=document.createElement('canvas');m.width=m.height=1024;var mx=m.getContext('2d');mx.imageSmoothingQuality='high';mx.drawImage(im,sx,sy,side,side,0,0,1024,1024);src=m;sx=0;sy=0;side=1024;}
+        var c=document.createElement('canvas');c.width=c.height=256;
+        var x=c.getContext('2d');x.fillStyle='#00478E';x.fillRect(0,0,256,256);x.imageSmoothingQuality='high';
+        x.drawImage(src,sx,sy,side,side,0,0,256,256);
+        var d=c.toDataURL('image/jpeg',0.82);
+        if(!photoClean(d)){reject(new Error('decode'));return;}
+        resolve(d);
+      }catch(e){reject(new Error('decode'));}
+      finally{URL.revokeObjectURL(u);}
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);reject(new Error('decode'));};
+    im.src=u;
+  });
+}
+(function(){
+  var pin=document.getElementById('photo-in');if(!pin)return;
+  pin.addEventListener('change',function(){
+    var f=pin.files&&pin.files[0];if(!f)return;
+    photoFromFile(f).then(function(d){
+      lsSet('bm_photo',d);
+      if(lsGet('bm_photo')!==d){toast('The photo could not be saved.');return;}
+      photoUI();toast('Photo Saved');
+    }).catch(function(e){var m=String(e&&e.message);toast(m==='type'?'That file is not a picture.':(m==='big'?'That photo is too large.':'That photo could not be read.'));});
+  });
+})();
+function readingSince(){var t=0;state.books.forEach(function(b){var a=b.addedAt||0;if(a>0&&(!t||a<t))t=a;});if(!t)return '';try{return new Date(t).toLocaleDateString('en-US',{month:'long',year:'numeric'});}catch(e){return '';}}
 function viewBackup(){
   var last=lsGet('bm_last_backup');
   var lastTxt=last?fmtDate(parseInt(last,10)):'Never';
-  return top()+ptitle('Settings')+
-  '<h2 class="sec" style="margin-top:16px">Profile</h2><button class="bt" data-act="editname" aria-label="Change your name">Your Name<small class="nmv">'+esc(userName()||'Not Set')+'</small></button><h2 class="sec">Backup</h2>'+
+  var nm=userName(),ph=photoGet(),since=readingSince(),fin=0,pages=0;
+  state.books.forEach(function(b){if(b.status==='finished')fin++;pages+=Math.max(0,b.currentPage||0);});
+  var bg=BGX.get(),bn=bg?Object.keys(bg.earned).length:0;
+  return top()+ptitle('Profile')+
+  '<div class="cd pcard"><button class="pfbtn" data-act="photopick" aria-label="'+(ph?'Choose another photo':'Add a photo')+'"><span class="pfc pfbig">'+avatarInner(nm,ph,false)+'</span>'+(ph?'':'<span class="pfcam">'+ico('camera',14)+'</span>')+'</button>'+
+  '<div class="pinfo"><div class="pname">'+(nm?esc(nm):'Your Name')+'</div>'+(since?'<div class="sm">Reading since '+esc(since)+'</div>':'')+
+  '<div class="plinks"><button class="alk" data-act="editname">'+(nm?'Change Your Name':'Add Your Name')+'</button>'+(ph?'<button class="alk" data-act="photopick">Choose Another Photo</button><button class="alk" data-act="photoremove">Remove Photo</button>':'<button class="alk" data-act="photopick">Add a Photo</button>')+'</div></div></div>'+
+  '<h2 class="sec">Your Stats</h2><div class="cd"><div class="sgrid">'+
+  '<div class="stile"><b>'+state.books.length+'</b><span>Books in Your Library</span></div>'+
+  '<div class="stile"><b>'+fin+'</b><span>Books Finished</span></div>'+
+  '<div class="stile"><b>'+pages.toLocaleString('en-US')+'</b><span>Pages Read</span></div>'+
+  '<button class="stile" data-go="badges" aria-label="Badges Earned, '+bn+' of '+BGX.defs.length+'"><b>'+bn+' of '+BGX.defs.length+'</b><span>Badges Earned</span></button></div></div>'+
+  '<h2 class="sec">Backup</h2>'+
   '<div class="cd"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
   '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
-  '<div class="sm">Books: '+state.books.length+'</div><div class="sm">Last Backup: '+lastTxt+'</div></div>'+
-  '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="savebackup">Save Backup</button>'+
-  '<button class="pb" data-act="restore">Restore from Backup</button></div>'+
-  '<p class="sm" style="margin-top:16px;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p>'+
+  '<div class="sm">Books: '+state.books.length+'</div><div class="sm" style="margin-bottom:16px">Last Backup: '+lastTxt+'</div>'+
+  '<button class="pb" data-act="savebackup">Save Backup</button>'+
+  '<button class="pb" data-act="restore" style="margin-top:10px">Restore from Backup</button>'+
+  '<p class="sm" style="margin:14px 0 0;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p></div>'+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
-  '<p class="bld">Build '+esc(BUILD)+'</p>';
+  '<p class="bld" style="position:static;pointer-events:auto;padding:16px 0 0;background:none">Build '+esc(BUILD)+'</p>';
 }
 
 /* ---------- motion ---------- */
@@ -682,7 +774,7 @@ function render(){
   var ghost=(lastView!==null&&lastView!==state.view&&state.loaded&&!reduced())?makeGhost(v):null;
   if(!state.loaded&&(state.view==='home'||state.view==='library')){v.innerHTML=top()+ptitle(state.view==='home'?'Home':'Library');}
   else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='search'?viewSearch():state.view==='badges'?BGX.view():viewBackup();}
-  setPT();
+  setPT();profSync();
   var tab=state.view==='search'?'add':state.view;
   var ns=document.querySelectorAll('.ni');
   for(var i=0;i<ns.length;i++){ns[i].classList.toggle('on',ns[i].getAttribute('data-go')===tab);}
@@ -935,6 +1027,7 @@ function saveBackup(){
   if(bn)payload.name=bn;
   var bc=chGet();if(bc)payload.challenge=bc;
   var bj=BGX.exportData();if(bj)payload.badges=bj;
+  var bp=photoGet();if(bp)payload.photo=bp;
   var data=JSON.stringify(payload,null,2);
   var name=backupName();
   var done=function(){lsSet('bm_last_backup',String(Date.now()));toast('Backup Saved');if(state.view==='backup')render();};
@@ -1001,7 +1094,7 @@ function handleRestoreFile(file){
     if(!books.length){toast('That backup has no books in it');return;}
     var fresh=0,newer=0;
     books.forEach(function(b){var e=byId(b.id);if(!e)fresh++;else if(b.updatedAt>e.updatedAt)newer++;});
-    pendingRestore=books;pendingName=cleanName(data.name);pendingChallenge=chClean(data.challenge);pendingBadges=BGX.clean(data.badges);
+    pendingRestore=books;pendingName=cleanName(data.name);pendingChallenge=chClean(data.challenge);pendingBadges=BGX.clean(data.badges);pendingPhoto=photoClean(data.photo);
     openSheet('<h2>Restore Books?</h2><p class="sm" style="margin:0 0 6px">The backup has '+books.length+' book'+(books.length===1?'':'s')+'.</p>'+
       '<p class="sm" style="margin:0 0 16px">'+fresh+' new to this phone'+(newer?', '+newer+' updated':'')+'. Books already on this phone are kept, unless the backup has a newer copy.</p>'+
       '<div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="restoreyes">Restore</button></div>');
@@ -1019,6 +1112,7 @@ function applyRestore(){
   pendingRestore=null;
   if(pendingName&&!userName()){lsSet('bm_name',pendingName);lsSet('bm_name_done','1');}
   pendingName='';
+  if(pendingPhoto&&!photoGet()){lsSet('bm_photo',pendingPhoto);}pendingPhoto='';
   if(pendingChallenge&&!chGet()&&(pendingChallenge.complete||todayStr()<=pendingChallenge.end))chSave(pendingChallenge);
   pendingChallenge=null;BGX.merge(pendingBadges);pendingBadges=null;BGX.catchUp();closeSheet();render();
   toast(n?('Restored '+n+' Book'+(n===1?'':'s')):'Nothing New to Restore');
@@ -1765,6 +1859,8 @@ document.addEventListener('click',function(e){
     if(c0.complete!==was)c0.celebrated=false;
     chSave(c0);closeSheet();refresh();toast('Challenge Updated');chMaybeCelebrate();BGX.check();return;
   }
+  if(a==='photopick'){openPhotoPicker();return;}
+  if(a==='photoremove'){try{localStorage.removeItem('bm_photo');}catch(e){}photoUI();toast('Photo Removed');return;}
   if(a==='editname'){
     openSheet('<h2>Your Name</h2><p class="sm" style="margin:0">We use it to greet you on Home. Leave it empty to remove it.</p><div class="fld"><input id="nm-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name" value="'+esc(userName())+'"></div><div class="row" style="margin-top:16px"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="nmsave" style="padding:10px;font-size:15px">Save</button></div>');
     return;
@@ -1879,7 +1975,7 @@ function wlFirst(){
   var S=2.2,anim=!reduced()&&!!document.documentElement.animate,p=wlLogo(false),el=document.createElement('div');
   el.id='wl';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Welcome to Book Nerd');
   var card=document.createElement('div');card.className='wcard';
-  card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Is Your Name?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk" id="wl-skip" type="button">Skip for Now</button>';
+  card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Is Your Name?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><div class="wph"><button class="wphb" id="wl-ph" type="button" aria-label="Add a photo"><span class="pfc pfw" id="wl-phc">'+ico('camera',22)+'</span></button><div><button class="lnk" id="wl-phl" type="button">Add a Photo</button><div class="sm">Optional. You can change it later.</div></div></div><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk" id="wl-skip" type="button">Skip for Now</button>';
   el.appendChild(p.box);el.appendChild(card);
   var SC=150/104,tg=null;
   if(anim){
@@ -1897,6 +1993,9 @@ function wlFirst(){
     done(v);
   }
   document.getElementById('wl-go').addEventListener('click',go);
+  document.getElementById('wl-ph').addEventListener('click',openPhotoPicker);
+  document.getElementById('wl-phl').addEventListener('click',openPhotoPicker);
+  wlPhotoSync();
   document.getElementById('wl-skip').addEventListener('click',function(){done('');});
   document.getElementById('wl-in').addEventListener('input',function(){document.getElementById('wl-err').textContent='';});
   document.getElementById('wl-in').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();go();}});
@@ -2193,7 +2292,7 @@ function view(){
   var n=er.length,N=DEFS.length,p=Math.round(n/N*100);
   var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:5px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
   h+='<h2 class="sec">Earned<span class="bgn">'+n+'</span></h2>';
-  h+=n?grid(er,true):'<div class="cd"><p class="sm" style="margin:0">Finish a book and your first badge lands here.</p></div>';
+  h+=n?grid(er,true):'<div class="cd msgp"><p class="sm" style="margin:0">Finish a book and your first badge lands here.</p></div>';
   if(rest.length)h+='<h2 class="sec">Still to Earn<span class="bgn">'+rest.length+'</span></h2>'+grid(rest,false);
   return h;
 }
