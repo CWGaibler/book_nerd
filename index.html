@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-13 01:47 UTC">
+<meta name="build" content="2026-10-13 02:30 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -45,13 +45,13 @@ input[type=search]{-webkit-appearance:none;appearance:none}
 .sm{font-size:13px;color:#fff}
 .chips{display:flex;gap:6px;margin:14px -16px 0;padding:0 16px;overflow-x:auto;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.ch{padding:6px 12px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap;background:var(--card);color:#fff;flex:none;border:1px solid transparent}
+.ch{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;line-height:1;white-space:nowrap;background:var(--card);color:#fff;flex:none;border:1px solid transparent}
 .ch.sel{background:var(--line);border-color:var(--blue);color:#fff}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
 .grid.lib{gap:18px}
 .cv{aspect-ratio:2/3;padding:8px;display:flex;align-items:flex-end;font-size:12px;line-height:1.25;font-weight:500;border-radius:4px;background:var(--c);color:var(--t,#fff);overflow:hidden;word-break:break-word;width:100%}
 .cv span{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
-.bar{height:5px;border-radius:3px;background:var(--line);margin-top:8px}
+.bar{height:6px;border-radius:3px;background:var(--line);margin-top:8px}
 .bar b{display:block;height:100%;border-radius:3px;background:var(--green)}
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--navy);border-top:0.5px solid var(--line);padding-bottom:calc(var(--sab) - min(14px,var(--sab)));z-index:5}
 nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;padding:calc(8px + min(14px,var(--sab))) 0 10px}
@@ -66,7 +66,7 @@ nav div{max-width:480px;margin:0 auto;display:flex;justify-content:space-around;
 .bt[disabled]{opacity:.6;cursor:default}
 .bt.sq{border-radius:12px;padding:14px} .bt.c{justify-content:center;text-align:center;border:1px solid transparent}
 .pb{display:block;width:100%;background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid rgba(0,3,60,.35);color:#fff;border-radius:12px;padding:14px;text-align:center;font-size:16px;font-weight:500}
-.ob{display:block;width:100%;border:0.5px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-size:15px;color:#fff}
+.ob{display:block;width:100%;border:0.5px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:15px;color:#fff}
 .pill{display:inline-flex;align-items:center;gap:5px;height:30px;box-sizing:border-box;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;line-height:1;color:#fff;white-space:nowrap}
 .fld{display:block;margin-top:16px}
 .fld input,.fld textarea{width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0}
@@ -121,9 +121,12 @@ body.noscroll{overflow:hidden}
 .toast-act{color:#fff;font-weight:500;text-decoration:underline;padding:4px 6px;font-size:14px}
 .row.btns{gap:8px}
 .row.btns.btns3 .ob{display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1.2;padding:8px 10px;min-height:46px;white-space:normal}
-.row.btns .ob,.row.btns .pb{padding:11px 6px;font-size:14px;white-space:nowrap;min-width:0}
+.row.btns .ob{padding:11px 6px;font-size:14px;white-space:nowrap;min-width:0}
 .row.btns .ob{background:var(--line);background-image:linear-gradient(180deg,#0A5AA6 0%,#00478E 55%,#003C7A 100%);border:1px solid rgba(0,3,60,.35)}
-@media (max-width:359px){.row.btns .ob,.row.btns .pb{font-size:13px;padding:11px 4px}}
+@media (max-width:359px){.row.btns .ob{font-size:13px;padding:11px 4px}}
+.row.btns .ob.ca{height:50px;padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.ob.cn{height:54px;padding:0 14px;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.ob.cn svg{flex:none}
 .sec{font-size:17px;font-weight:500;line-height:1.3;margin:20px 0 10px}
 .lnk{display:block;margin:14px auto 0;font-size:13px;color:#fff;text-decoration:underline;padding:8px}
 .frow{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;margin-top:14px}
@@ -144,7 +147,7 @@ body.noscroll{overflow:hidden}
 .scrim2{position:fixed;inset:0;background:rgba(0,3,60,.72);z-index:25;display:flex;align-items:flex-end;justify-content:center}
 .card2{width:100%;max-width:480px;height:calc(100% - env(safe-area-inset-top,0px) - 44px);background:var(--card);border-radius:22px 22px 0 0;border-top:0.5px solid var(--line);padding:14px 16px 0;display:flex;flex-direction:column}
 .chdr{display:flex;align-items:center;justify-content:space-between;min-height:44px}
-.chdr b{font-size:17px;font-weight:500}
+.chdr b{font-size:18px;font-weight:500}
 .xb{width:56px;height:56px;margin:-6px -16px -6px 0;display:flex;align-items:center;justify-content:center;color:#fff;border-radius:50%}
 .xb.hit,.xb:active{color:var(--blue)}
 .cbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
@@ -163,18 +166,17 @@ body.noscroll{overflow:hidden}
 #celx{position:fixed;inset:0;z-index:36;background:transparent;touch-action:none;animation:celxOff 0s linear 2.6s forwards}
 @keyframes celxOff{to{visibility:hidden}}
 .card2 .bt,.sheet .scan{background:var(--navy)}
-.sheet .scan{border:0.5px solid var(--line);border-radius:999px;justify-content:center}
 .qc{margin-top:10px}
 .qt{font-size:15px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
 .qm{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px}
 .qm .lnk{display:inline-block;margin:0;padding:4px 0 4px 12px;font-size:13px}
 .scanbox{background:var(--navy);border-radius:14px;padding:16px;margin-top:12px}
 .scanbox b{font-weight:500;font-size:16px}
-.scanbox .bar{height:8px;margin-top:10px}
+.scanbox .bar{height:6px;margin-top:10px}
 .scanbox .bar b{background:var(--blue)}
 .warn{color:var(--gold);font-size:13px;margin:8px 0 0}
-#view .sheet .dt,.sheet .dt{min-height:46px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
-.sheet .dtro{min-height:46px;display:flex;align-items:center;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px}
+#view .sheet .dt,.sheet .dt{height:50px;min-height:50px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
+.sheet .dtro{height:50px;min-height:50px;display:flex;align-items:center;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px}
 #view .bt small.nmv,.ghost .bt small.nmv{font-size:14px;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bld{position:fixed;left:0;right:0;bottom:max(var(--navh,62px),calc(var(--sab) + 62px));margin:0;padding:6px 16px;text-align:center;font-size:12px;line-height:1.4;color:#fff;background:var(--navy);z-index:4;pointer-events:none}
 #wl{position:fixed;inset:0;z-index:60;background:var(--navy);display:flex;flex-direction:column;align-items:center;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
@@ -266,7 +268,7 @@ body.noscroll{overflow:hidden}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stile{display:block;width:100%;text-align:left;background:var(--navy);border-radius:12px;padding:10px 12px;color:#fff}
 .stile b{display:block;font-size:22px;font-weight:500;line-height:1.2}
-.stile span{font-size:12px;color:#ADB1B1}
+.stile span{font-size:12px;color:#fff}
 .cd.msgp{border-radius:999px;min-height:40px;padding:9px 16px;display:flex;align-items:center}
 .cd.msgp .sm{font-size:14px;line-height:1.35}
 .wph{display:flex;align-items:center;gap:12px;margin:16px 0;text-align:left}
@@ -274,15 +276,16 @@ body.noscroll{overflow:hidden}
 .wphb{padding:0;background:none;flex:none}
 .pfw{width:56px;height:56px;border-width:1.5px}
 .wph .lnk{margin:0;padding:2px 0;text-align:left;font-size:14px}
-.wph .sm{margin:0;font-size:12px;color:#ADB1B1}
+.wph .sm{margin:0;font-size:12px;color:#fff}
 nav .ni{flex:1 1 0;min-width:0}
 
 .pill,.alk,.lnk,.lk,.toast-act,.ch,.bt,.fb{position:relative}
 .pill::after{content:"";position:absolute;left:-3px;right:-3px;top:-7px;bottom:-7px}
-.ch::after{content:"";position:absolute;left:-4px;right:-4px;top:-4px;bottom:-4px}
+.ch::after{content:"";position:absolute;left:-4px;right:-4px;top:-5.5px;bottom:-5.5px}
 .alk::after,.lnk::after,.lk::after{content:"";position:absolute;left:-6px;right:-6px;top:-8px;bottom:-8px}
 .toast-act::after{content:"";position:absolute;left:-8px;right:-8px;top:-10px;bottom:-10px}
 .bt::after,.fb::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;bottom:-3px}
+.lnk.l14{font-size:14px}
 </style>
 </head>
 <body>
@@ -422,13 +425,13 @@ function viewHomeBase(){
   }
   var p=pct(cur),left=cur.pages>0?Math.max(0,cur.pages-(cur.currentPage||0)):null;
   var meta=cur.startedAt?'Started '+fmtDate(cur.startedAt):'Added '+fmtDate(cur.addedAt);
-  h+='<div class="cd" style="padding:14px;display:block">'+
+  h+='<div class="cd" style="padding:12px;display:block">'+
   '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:96px;flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur))+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
   (cur.author?'<div style="font-size:14px;margin:6px 0 10px">'+authorLinks(cur)+'</div>':'<div style="height:10px"></div>')+
   '<div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
   (p!==null?'<div class="bar" style="height:6px;margin:10px 0 6px"><b style="width:'+p+'%"></b></div><div class="sm">'+left+' page'+(left===1?'':'s')+' left</div>':'')+
-  '<div class="row btns btns3" style="margin-top:12px"><button class="ob" data-act="homeprog" data-bid="'+cur.id+'">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button><button class="ob" data-act="dnfbook" data-bid="'+cur.id+'">Did Not Finish</button></div></div>';
+  '<div class="row btns btns3" style="margin-top:12px"><button class="ob ca" data-act="homeprog" data-bid="'+cur.id+'">Update Progress</button><button class="ob ca" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button><button class="ob ca" data-act="dnfbook" data-bid="'+cur.id+'">Did Not Finish</button></div></div>';
   if(rd.length>1){var n=rd.length-1;h+='<button class="lnk" data-act="seereading">Also reading '+n+' more book'+(n===1?'':'s')+'</button>';}
   return h;
 }
@@ -473,7 +476,7 @@ function libFilter(){
 function libMeta(list){
   var h='<span class="cnt">'+list.length+' Book'+(list.length===1?'':'s')+'</span>';
   if(state.filter!=='all')h+='<button class="ac" data-clr="s" aria-label="Clear the '+STAT[state.filter].label+' filter">'+STAT[state.filter].label+ico('x',14)+'</button>';
-  if(state.own!=='any')h+='<button class="ac" data-clr="o" aria-label="Clear the ownership filter">'+(state.own==='owned'?'Owned':'To Buy')+ico('x',14)+'</button>';
+  if(state.own!=='any')h+='<button class="ac" data-clr="o" aria-label="Clear the ownership filter">'+(state.own==='owned'?'Owned':'Not Owned')+ico('x',14)+'</button>';
   if(state.sort!=='new')h+='<button class="ac" data-clr="k" aria-label="Clear the sort, currently '+SORTL[state.sort]+'">'+ico('sort',14)+SORTL[state.sort]+ico('x',14)+'</button>';
   return h;
 }
@@ -537,7 +540,7 @@ function viewLibrary(){
     h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, or search by title, author or ISBN.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
     return h;
   }
-  h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',16)+'Filter and Sort</button>'+
+  h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',18)+'Filter and Sort</button>'+
     '<label class="sp'+(state.q?' has':'')+'" id="sp">'+ico('search',18)+'<span class="spw"><input id="q" type="search" placeholder="Search Your Books" value="'+esc(state.q)+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-label="Search your books"></span>'+
     '<button type="button" class="spx" data-act="clearq" aria-label="Clear search">'+ico('x',16)+'</button></label></div>'+
     '<div class="meta" id="libmeta">'+libMeta(list)+'</div><div id="libbody">'+libBody(list)+'</div>';
@@ -550,18 +553,18 @@ function updateLib(){
 }
 function filterSheet(){
   var n=state.books.filter(function(b){return (state.pst==='all'||b.status===state.pst)&&(state.pown==='any'||(state.pown==='owned'?isOwned(b):!isOwned(b)));}).length;
-  var h='<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Filter and Sort</h2><button class="lnk" style="margin:0;padding:6px" data-act="clearfilter">Clear</button></div>'+
+  var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="margin:0">Filter and Sort</h2><button class="lnk l14" style="margin:0;padding:6px" data-act="clearfilter">Clear</button></div>'+
   '<div class="fld"><div class="lb">Status</div><div class="chs">';
   [['all','All'],['reading','Reading'],['toread','To Read'],['finished','Finished'],['dnf','Did Not Finish']].forEach(function(c){
-    h+='<button class="ch'+(state.pst===c[0]?' sel':'')+'" data-ps="'+c[0]+'" aria-pressed="'+(state.pst===c[0]?'true':'false')+'">'+c[1]+'</button>';
+    h+='<button class="ch'+(state.pst===c[0]?' sel':'')+'" data-ps="'+c[0]+'" aria-pressed="'+(state.pst===c[0]?'true':'false')+'"'+(state.pst===c[0]&&STAT[c[0]]?' style="background:'+STAT[c[0]].color+';border-color:transparent"':'')+'>'+c[1]+'</button>';
   });
   h+='</div></div><div class="fld"><div class="lb">Ownership</div><div class="chs">';
-  [['any','Any'],['owned','Owned'],['buy','To Buy']].forEach(function(c){
-    h+='<button class="ch'+(state.pown===c[0]?' sel':'')+'" data-po="'+c[0]+'" aria-pressed="'+(state.pown===c[0]?'true':'false')+'">'+c[1]+'</button>';
+  [['any','Any'],['owned','Owned','#D1006F','check'],['buy','Not Owned','#ADB1B1','bag']].forEach(function(c){
+    h+='<button class="ch'+(state.pown===c[0]?' sel':'')+'" data-po="'+c[0]+'" aria-pressed="'+(state.pown===c[0]?'true':'false')+'"'+(state.pown===c[0]&&c[2]?' style="background:'+c[2]+';border-color:transparent"':'')+'>'+(c[3]?ico(c[3],14):'')+c[1]+'</button>';
   });
   h+='</div></div><div class="fld"><div class="lb">Sort By</div><div class="chs">';
   SORTS.forEach(function(k){h+='<button class="ch'+(state.psort===k?' sel':'')+'" data-so="'+k+'" aria-pressed="'+(state.psort===k?'true':'false')+'">'+SORTL[k]+'</button>';});
-  h+='</div></div><div class="row" style="margin-top:20px"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="applyfilter">Show '+n+' Book'+(n===1?'':'s')+'</button></div>';
+  h+='</div></div><div class="row" style="margin-top:20px"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="applyfilter">Show '+n+' Book'+(n===1?'':'s')+'</button></div>';
   return h;
 }
 function addResultsHTML(){
@@ -577,7 +580,7 @@ function addResultsHTML(){
     h+='<button class="cd" data-pick="'+i+'" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left"><div style="width:46px;flex:none">'+coverHTML({title:r.title,status:'toread',coverUrl:r.cover},'border-bottom:0;padding:4px;font-size:8px')+'</div>'+
     '<div style="min-width:0;flex:1"><div style="font-size:15px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word">'+esc(r.title)+'</div>'+
     (r.author?'<div class="sm" style="font-size:14px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.author)+'</div>':'')+
-    (meta?'<div class="sm" style="font-size:12px;margin-top:2px">'+esc(meta)+'</div>':'')+'</div></button>';
+    (meta?'<div class="sm" style="font-size:13px;margin-top:2px">'+esc(meta)+'</div>':'')+'</div></button>';
   });
   return h+'</div>';
 }
@@ -615,10 +618,10 @@ function scrollToSearch(){
   if(y>0)window.scrollTo({top:y,behavior:reduced()?'auto':'smooth'});
 }
 function synHTML(b){
-  if(!b.synopsis){return synBusy[b.id]?'<div class="sm" style="margin-top:14px">Looking for a synopsis\u2026</div>':'';}
+  if(!b.synopsis){return synBusy[b.id]?'<div class="sm" style="margin-top:16px">Looking for a synopsis\u2026</div>':'';}
   var long=b.synopsis.length>240;
-  return '<div style="margin-top:14px"><div class="lb">Synopsis</div><p class="syn'+(long&&!state.synOpen?' clamp':'')+'">'+esc(b.synopsis)+'</p>'+
-    (long?'<button class="lnk l" data-act="synmore">'+(state.synOpen?'Show Less':'Read More')+'</button>':'')+'</div>';
+  return '<div style="margin-top:16px"><div class="lb">Synopsis</div><p class="syn'+(long&&!state.synOpen?' clamp':'')+'">'+esc(b.synopsis)+'</p>'+
+    (long?'<button class="lnk l l14" data-act="synmore">'+(state.synOpen?'Show Less':'Read More')+'</button>':'')+'</div>';
 }
 function cardHead(t){return '<div class="chdr"><b>'+esc(t)+'</b><button class="xb" data-act="closecard" aria-label="Close">'+ico('x',24)+'</button></div>';}
 function cardDetail(){
@@ -632,27 +635,27 @@ function cardDetail(){
   '<div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:76px;flex:none">'+coverHTML(b)+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+authorLinks(b)+'</div>':'<div style="height:10px"></div>')+
   '<div class="pills"><button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button>'+
-  '<button class="pill o '+(own?'pwy':'pwn')+'" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',13)+(own?'Owned':'Not Owned')+'</button></div>'+
+  '<button class="pill o '+(own?'pwy':'pwn')+'" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',14)+(own?'Owned':'Not Owned')+' \u25BE</button></div>'+
   '<div class="sm" style="margin-top:8px">'+meta+'</div></div></div>'+
-  (own?'':'<div class="row btns" style="margin-top:14px"><button class="ob" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',16)+'Buy This Book</a></div>')+
+  (own?'':'<div class="row btns" style="margin-top:16px"><button class="ob ca" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob ca buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',18)+'Buy This Book</a></div>')+
   synHTML(b);
   var s2=b.status,fin=s2==='finished',tr=s2==='toread',started=!tr;
   var hasQ=!!(b.quotes&&b.quotes.length),hasR=(b.rating||0)>0,hasV=!!(typeof b.review==='string'&&b.review.trim());
   if(tr){
-    h+='<div style="margin-top:14px">';
+    h+='<div style="margin-top:16px">';
     if((b.currentPage||0)>0)h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>';
-    h+='<div class="row btns"><button class="ob" data-act="startbook" data-bid="'+b.id+'">Start Reading</button></div><div class="center" style="margin-top:10px"><button class="alk" data-act="alreadyread" data-bid="'+b.id+'">Already Read It? Mark as Finished</button></div></div>';
+    h+='<div class="row btns"><button class="pb" data-act="startbook" data-bid="'+b.id+'">Start Reading</button></div><div class="center" style="margin-top:10px"><button class="alk" data-act="alreadyread" data-bid="'+b.id+'">Already Read It? Mark as Finished</button></div></div>';
   }else if(!fin){
-    h+='<div class="cd" style="margin-top:12px"><div class="lb">Progress</div>';
+    h+='<div class="cd" style="margin-top:16px"><div class="lb">Progress</div>';
     if(state.editProg&&s2==='reading'){
-      h+='<div class="row" style="gap:10px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.currentPage||0)+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label>'+
-    '<label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.pages||'')+'" style="width:100%;background:var(--card);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label></div>'+
-    '<div class="row" style="margin-top:12px"><button class="ob" data-act="progcancel">Cancel</button><button class="pb" data-act="progsave" style="padding:10px;font-size:15px">Save</button></div>';
+      h+='<div class="row" style="gap:10px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.currentPage||0)+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label>'+
+    '<label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(b.pages||'')+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label></div>'+
+    '<div class="row" style="margin-top:12px"><button class="ob cn" data-act="progcancel">Cancel</button><button class="pb" data-act="progsave">Save</button></div>';
     }else{
       h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:500">'+pageText(b)+'</span>'+(p!==null?'<span style="font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
       (p!==null?'<div class="bar" style="height:6px;margin:10px 0 12px"><b style="width:'+p+'%"></b></div>':'<div style="height:12px"></div>');
-      if(s2==='reading')h+='<div class="row btns btns3"><button class="ob" data-act="progedit">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button><button class="ob" data-act="dnfbook" data-bid="'+b.id+'">Did Not Finish</button></div>';
-      else h+='<div class="row btns"><button class="ob" data-act="resumebook" data-bid="'+b.id+'">Pick It Back Up</button></div>';
+      if(s2==='reading')h+='<div class="row btns btns3"><button class="ob ca" data-act="progedit">Update Progress</button><button class="ob ca" data-act="finishbook" data-bid="'+b.id+'">Finished Reading</button><button class="ob ca" data-act="dnfbook" data-bid="'+b.id+'">Did Not Finish</button></div>';
+      else h+='<div class="row btns"><button class="pb" data-act="resumebook" data-bid="'+b.id+'">Pick It Back Up</button></div>';
     }
     h+='</div>';
   }
@@ -660,15 +663,15 @@ function cardDetail(){
   if(started||hasR){h+='<div style="margin-top:16px"><div class="lb">Your Rating</div><div style="display:flex;align-items:center">';h+=starsHTML(b.rating||0,'detail',28);h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>';}
   if(started||hasV)h+='<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>';
   h+='<label class="fld"><span class="lb">Notes</span><textarea id="notes" placeholder="Add a Note">'+esc(b.notes||'')+'</textarea></label>'+
-  (tr&&!(hasQ&&hasR&&hasV)?'<p class="sm" style="margin:12px 0 0">Quotes, Rating and Review appear once you start reading.</p>':'')+
-  '<div class="center" style="margin-top:20px"><button class="tr" data-act="remove">'+ico('trash',18)+'Remove from Library</button></div></div>';
+  (tr&&!(hasQ&&hasR&&hasV)?'<p class="sm" style="margin:16px 0 0">Quotes, Rating and Review appear once you start reading.</p>':'')+
+  '<div class="center" style="margin-top:24px"><button class="tr" data-act="remove">'+ico('trash',18)+'Delete from Library</button></div></div>';
   return h;
 }
 function cardFound(){
   var f=state.found;
   var h=cardHead(f?'Book Found':'No Match Found');
   if(!f){
-    return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:15px">Neither Open Library nor Google Books has ISBN '+esc(state.nf)+'. Try searching for it by title instead, or scan again.</p>'+
+    return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:14px">Neither Open Library nor Google Books has ISBN '+esc(state.nf)+'. Try searching for it by title instead, or scan again.</p>'+
     '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button><button class="bt" data-act="scanagain">'+ico('barcode',22)+'Scan Again</button></div></div>';
   }
   var meta=[f.year,f.pages?f.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
@@ -743,7 +746,7 @@ function photoFromFile(file){
     }).catch(function(e){var m=String(e&&e.message);toast(m==='type'?'That file is not a picture.':(m==='big'?'That photo is too large.':'That photo could not be read.'));});
   });
 })();
-function readingSince(){var t=0;state.books.forEach(function(b){var a=b.addedAt||0;if(a>0&&(!t||a<t))t=a;});if(!t)return '';try{return new Date(t).toLocaleDateString('en-US',{month:'long',year:'numeric'});}catch(e){return '';}}
+function readingSince(){var t=0;state.books.forEach(function(b){var a=b.addedAt||0;if(a>0&&(!t||a<t))t=a;});if(!t)return '';try{return new Date(t).toLocaleDateString('en-US',{month:'short',year:'numeric'});}catch(e){return '';}}
 function viewBackup(){
   var last=lsGet('bm_last_backup');
   var lastTxt=last?fmtDate(parseInt(last,10)):'Never';
@@ -1128,7 +1131,7 @@ function handleRestoreFile(file){
     pendingRestore=books;pendingName=cleanName(data.name);pendingChallenge=chClean(data.challenge);pendingBadges=BGX.clean(data.badges);pendingPhoto=photoClean(data.photo);
     openSheet('<h2>Restore Books?</h2><p class="sm" style="margin:0 0 6px">The backup has '+books.length+' book'+(books.length===1?'':'s')+'.</p>'+
       '<p class="sm" style="margin:0 0 16px">'+fresh+' new to this phone'+(newer?', '+newer+' updated':'')+'. Books already on this phone are kept, unless the backup has a newer copy.</p>'+
-      '<div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="restoreyes">Restore</button></div>');
+      '<div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="restoreyes">Restore</button></div>');
   };
   r.onerror=function(){toast('Could not read that file');};
   r.readAsText(file);
@@ -1180,8 +1183,8 @@ function closeSheet(){
 }
 function reviewSheet(b){
   var r=state.rev.rating;
-  var h='<h2>Finished! How Was It?</h2><p class="sm" style="margin:0 0 12px">Rate it and share your thoughts, or skip. Both are optional.</p><div id="rv-wrap">';h+=starsHTML(r,'rv',30);h+='</div><label class="fld" style="margin-top:12px"><span class="lb">Your Thoughts</span><textarea id="rv-text" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
-  '<div class="row" style="margin-top:16px"><button class="ob" data-act="rvskip">Skip</button><button class="pb" data-act="rvsave">Save</button></div>';
+  var h='<h2>Finished! How Was It?</h2><p class="sm" style="margin:0 0 12px">Rate it and share your thoughts, or skip. Both are optional.</p><div id="rv-wrap">';h+=starsHTML(r,'rv',28);h+='</div><label class="fld" style="margin-top:12px"><span class="lb">Your Thoughts</span><textarea id="rv-text" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>'+
+  '<div class="row" style="margin-top:16px"><button class="ob" data-act="rvskip">Skip for Now</button><button class="pb" data-act="rvsave">Save</button></div>';
   return h;
 }
 function afterReview(){
@@ -1374,7 +1377,7 @@ function chHome(){
   var n=Math.min(c.credits.length,c.target),p=Math.min(100,Math.round(n/c.target*100));
   return h+'<div class="cd" data-act="chopen" role="button" tabindex="0" aria-label="Open your reading challenge" style="cursor:pointer;display:block"><div style="font-size:18px;font-weight:500;line-height:1.3">'+esc(chTitle(c))+'</div>'+
     '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span style="font-size:14px;font-weight:500">'+n+' of '+c.target+'</span><span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span></div>'+
-    '<div class="bar" style="height:8px;margin:8px 0 0"><b style="width:'+p+'%"></b></div>'+
+    '<div class="bar" style="height:6px;margin:8px 0 0"><b style="width:'+p+'%"></b></div>'+
     (c.complete?'<div style="font-size:16px;font-weight:500;color:var(--blue);margin-top:10px">Challenge Complete!</div><div class="row btns" style="margin-top:12px"><button class="ob" data-act="chdone">Done</button></div>':'')+'</div>';
 }
 function cardChallenge(){
@@ -1383,7 +1386,7 @@ function cardChallenge(){
   var n=Math.min(c.credits.length,c.target),p=Math.min(100,Math.round(n/c.target*100));
   var h=cardHead('Reading Challenge')+'<div class="cbody"><div style="font-size:18px;font-weight:500;margin-top:10px">'+esc(chTitle(c))+'</div>'+
     '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><span style="font-weight:500">'+n+' of '+c.target+'</span><span style="font-weight:500;color:var(--green)">'+p+'%</span></div>'+
-    '<div class="bar" style="height:8px;margin:10px 0 0"><b style="width:'+p+'%"></b></div>'+
+    '<div class="bar" style="height:6px;margin:10px 0 0"><b style="width:'+p+'%"></b></div>'+
     (c.complete?'<div style="font-size:16px;font-weight:500;color:var(--blue);margin-top:10px">Challenge Complete!</div>':'')+
     '<div class="row btns" style="margin-top:14px"><button class="ob" data-act="chedit">Edit Challenge</button><button class="ob" data-act="chdel">Delete Challenge</button></div>'+
     '<div class="lb" style="margin-top:20px">Books Counted</div>';
@@ -1400,7 +1403,7 @@ function chSheet(c){
     '<div class="row" style="gap:10px"><div class="fld" style="min-width:0"><span class="lb">Start Date</span>'+(edit?'<div class="dtro" id="ch-sro">'+esc(dlabel(s))+'</div>':'<input id="ch-s" class="dt" type="date" value="'+s+'" aria-label="Start date">')+'</div>'+
     '<div class="fld" style="min-width:0"><span class="lb">End Date</span><input id="ch-e" class="dt" type="date" value="'+e+'" aria-label="End date"></div></div>'+
     '<p class="sm" id="ch-pre" style="margin:12px 0 0"></p><p class="err" id="ch-err" role="alert"></p>'+
-    '<div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="'+(edit?'chsaveedit':'chsavenew')+'">'+(edit?'Save':'Start Challenge')+'</button></div>';
+    '<div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="'+(edit?'chsaveedit':'chsavenew')+'">'+(edit?'Save':'Start Challenge')+'</button></div>';
 }
 function chRead(startFixed){
   var n=($('#ch-n').value||'').replace(/\D/g,''),t=parseInt(n,10)||0;
@@ -1426,7 +1429,7 @@ document.addEventListener('focusin',function(e){if(e.target&&e.target.id==='sq')
 var CAM_ICO='<svg class="tb" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
 function quotesHTML(b){
   var qs=(b.quotes||[]).slice().sort(function(x,y){return y.at-x.at;});
-  var h='<div style="margin-top:18px"><div class="lb">Quotes</div><button class="bt" data-act="qadd">'+ico('plus',22)+'Add Quote</button>';
+  var h='<div style="margin-top:16px"><div class="lb">Quotes</div><button class="bt" data-act="qadd">'+ico('plus',22)+'Add Quote</button>';
   if(!qs.length)h+='<p class="sm" style="margin-top:12px">Save a line you love while you read.</p>';
   qs.forEach(function(q){
     h+='<div class="cd qc"><div class="qt">\u201C'+esc(q.text)+'\u201D</div><div class="qm"><span>'+(q.page?'Page '+q.page+' \u00B7 ':'')+esc(fmtDate(q.at))+'</span><button class="lnk" data-act="qedit" data-qid="'+esc(q.id)+'">Edit</button></div></div>';
@@ -1436,8 +1439,8 @@ function quotesHTML(b){
 function quoteSheet(b,q){
   var edit=!!q,page=edit?(q.page||''):((b.status==='reading'&&b.currentPage>0)?b.currentPage:'');
   return '<h2>'+(edit?'Edit Quote':'Add a Quote')+'</h2>'+
-    '<button class="bt c scan" data-act="qscan" id="q-scanbtn" style="margin-top:12px;width:100%">'+CAM_ICO+(edit?'Scan Another Page':'Scan a Page')+'</button>'+
-    '<button class="lnk" data-act="qpick" id="q-pickbtn" style="margin:10px auto 0">Choose from Photos</button>'+
+    '<button class="bt scan" data-act="qscan" id="q-scanbtn" style="margin-top:12px;width:100%">'+CAM_ICO+(edit?'Scan Another Page':'Scan a Page')+'</button>'+
+    '<button class="lnk l14" data-act="qpick" id="q-pickbtn" style="margin:10px auto 0">Choose from Photos</button>'+
     '<div class="scanbox" id="q-scanbox" style="display:none"><b id="qs-t"></b><p class="sm" id="qs-s" style="margin:4px 0 0"></p><div class="bar"><b id="qs-b" style="width:0%"></b></div><button class="lnk" data-act="qscancancel" style="margin:8px auto 0">Cancel</button></div>'+
     '<input id="q-cam" type="file" accept="image/*" capture="environment" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
     '<input id="q-pick" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
@@ -1445,7 +1448,7 @@ function quoteSheet(b,q){
     '<p class="warn" id="q-note" style="display:none"></p>'+
     '<div class="fld"><span class="lb">Page</span><input id="q-page" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="5" value="'+esc(page)+'" aria-label="Page number"></div>'+
     '<p class="err" id="q-err" role="alert"></p>'+
-    '<div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="qsave"'+(edit?' data-qid="'+esc(q.id)+'"':'')+'>Save Quote</button></div>'+
+    '<div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="qsave"'+(edit?' data-qid="'+esc(q.id)+'"':'')+'>Save Quote</button></div>'+
     (edit?'<button class="lnk" data-act="qdel" data-qid="'+esc(q.id)+'" style="margin:14px auto 0">Delete Quote</button>':'');
 }
 function saveQuote(id){
@@ -1692,10 +1695,10 @@ function cardAuthor(){
     '<div style="min-width:0"><div style="font-size:20px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(A.name)+'</div>'+
     (A.st==='load'?'<div class="sm" style="margin-top:2px">Looking up\u2026</div>':(d&&d.desc?'<div class="sm" style="margin-top:2px">'+esc(d.desc)+'</div>':''))+'</div></div>';
   if(A.st==='load')return h+'<div style="font-size:17px;font-weight:500;line-height:1.3;margin-top:22px">Books</div><div class="grid"><div class="cv skel"></div><div class="cv skel"></div><div class="cv skel"></div></div></div>';
-  if(A.st==='err')return h+'<div class="cd" style="margin-top:22px;padding:16px"><div style="font-weight:500">Could not load this author.</div><p class="sm" style="margin:4px 0 12px">Check your connection and try again.</p><button class="ob" data-act="authretry">Try Again</button></div></div>';
+  if(A.st==='err')return h+'<div class="cd" style="margin-top:22px;padding:12px"><div style="font-weight:500">Could not load this author.</div><p class="sm" style="margin:4px 0 12px">Check your connection and try again.</p><button class="pb" data-act="authretry">Try Again</button></div></div>';
   if(d.bio){
     var long=d.bio.length>240;
-    h+='<p class="syn'+(long&&!A.more?' clamp':'')+'" style="margin-top:14px">'+esc(d.bio)+'</p>'+(long?'<button class="lnk l" data-act="authmore">'+(A.more?'Show Less':'Read More')+'</button>':'');
+    h+='<p class="syn'+(long&&!A.more?' clamp':'')+'" style="margin-top:14px">'+esc(d.bio)+'</p>'+(long?'<button class="lnk l l14" data-act="authmore">'+(A.more?'Show Less':'Read More')+'</button>':'');
   }
   h+='<div style="font-size:17px;font-weight:500;line-height:1.3;margin-top:18px">Books</div>';
   if(!d.books.length)return h+'<p class="sm">No books found.</p></div>';
@@ -1774,7 +1777,7 @@ document.addEventListener('click',function(e){
   if(a==='qadd'){var qb=byId(state.id);if(!qb)return;if((qb.quotes||[]).length>=100){toast('This book has 100 quotes');return;}openSheet(quoteSheet(qb,null));state.lockSheet=true;return;}
   if(a==='qedit'){var eb=byId(state.id),eq=eb&&(eb.quotes||[]).filter(function(q){return q.id===el.getAttribute('data-qid');})[0];if(!eq)return;openSheet(quoteSheet(eb,eq));state.lockSheet=true;return;}
   if(a==='qsave'){saveQuote(el.getAttribute('data-qid'));return;}
-  if(a==='qdel'){openSheet('<h2>Delete This Quote?</h2><p class="sm" style="margin:0 0 16px">The book stays in your library. This can\'t be undone.</p><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="qdelyes" data-qid="'+esc(el.getAttribute('data-qid'))+'">Delete</button></div>');state.lockSheet=false;return;}
+  if(a==='qdel'){openSheet('<h2>Delete This Quote?</h2><p class="sm" style="margin:0 0 16px">The book stays in your library. This can\'t be undone.</p><div class="row"><button class="pb" data-act="closesheet2">Cancel</button><button class="ob cn" data-act="qdelyes" data-qid="'+esc(el.getAttribute('data-qid'))+'">'+ico('trash',18)+'Delete</button></div>');state.lockSheet=false;return;}
   if(a==='qdelyes'){var db2=byId(state.id);if(db2){db2.quotes=(db2.quotes||[]).filter(function(q){return q.id!==el.getAttribute('data-qid');});if(!db2.quotes.length)delete db2.quotes;db2.updatedAt=Date.now();dbPut(db2);}closeSheet();refresh();toast('Quote Deleted');return;}
   if(a==='qscan'){var qc=$('#q-cam');if(qc&&!ocr.busy)qc.click();return;}
   if(a==='qpick'){var qp=$('#q-pick');if(qp&&!ocr.busy)qp.click();return;}
@@ -1786,7 +1789,7 @@ document.addEventListener('click',function(e){
     var abk=state.author&&state.author.d&&state.author.d.books[parseInt(el.getAttribute('data-i'),10)];if(!abk)return;
     var alib=inLib(abk.t);
     if(alib){state.id=alib.id;state.authorBack=false;state.card='detail';state.synOpen=false;state.editProg=false;renderCard();ensureSynopsis(alib);return;}
-    openSheet('<h2 style="word-break:break-word">'+esc(abk.t)+'</h2><p class="sm" style="margin:0 0 4px">'+esc(state.author.name)+'</p><p class="sm" style="margin:0 0 16px">Add this book to your library as To Read?</p><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="authaddyes" data-i="'+esc(el.getAttribute('data-i'))+'">Add to Library</button></div>');
+    openSheet('<h2 style="word-break:break-word">'+esc(abk.t)+'</h2><p class="sm" style="margin:0 0 4px">'+esc(state.author.name)+'</p><p class="sm" style="margin:0 0 16px">Add this book to your library as To Read?</p><div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="authaddyes" data-i="'+esc(el.getAttribute('data-i'))+'">Add to Library</button></div>');
     return;
   }
   if(a==='authaddyes'){
@@ -1810,7 +1813,7 @@ document.addEventListener('click',function(e){
   if(a==='homeprog'){
     var hc=el.closest('[data-open]');var hb=byId(el.getAttribute('data-bid'))||(hc?byId(hc.getAttribute('data-open')):null);if(!hb)return;
     state.id=hb.id;
-    openSheet('<h2>Update Progress</h2><div class="row" style="gap:10px;margin-bottom:14px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.currentPage||0)+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label><label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.pages||'')+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label></div><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="progsave">Save</button></div>');
+    openSheet('<h2>Update Progress</h2><div class="row" style="gap:10px;margin-bottom:14px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.currentPage||0)+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label><label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.pages||'')+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label></div><div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="progsave">Save</button></div>');
     return;
   }
   if(a==='addfound'){if(state.found)makeBook(state.found);return;}
@@ -1822,7 +1825,7 @@ document.addEventListener('click',function(e){
   }
   if(a==='ownsheet'){
     var os=byId(state.id);if(!os)return;var cur=isOwned(os);
-    openSheet('<h2>Change Ownership</h2>'+[['1','Owned',cur],['0','Not Owned',!cur]].map(function(c){return '<button class="opt" data-setown="'+c[0]+'">'+c[1]+(c[2]?'<small>Current</small>':'')+'</button>';}).join('')+'<div class="row" style="margin-top:12px"><button class="ob" data-act="closesheet2">Cancel</button></div>');
+    openSheet('<h2>Change Ownership</h2>'+[['1','Owned',cur],['0','Not Owned',!cur]].map(function(c){return '<button class="opt" data-setown="'+c[0]+'">'+c[1]+(c[2]?'<small>Current</small>':'')+'</button>';}).join('')+'<div class="row" style="margin-top:12px"><button class="ob cn" data-act="closesheet2">Cancel</button></div>');
     return;
   }
   if(a==='finishbook'){finishBook(byId(el.getAttribute('data-bid')||state.id));return;}
@@ -1872,18 +1875,18 @@ document.addEventListener('click',function(e){
     var sb=byId(state.id);if(!sb)return;
     var h='<h2>Change Status</h2>';
     ORDER.forEach(function(k){h+='<button class="opt" data-set="'+k+'"><span class="dot" style="background:'+STAT[k].color+'"></span>'+STAT[k].label+(sb.status===k?'<small>Current</small>':'')+'</button>';});
-    h+='<div class="row" style="margin-top:12px"><button class="ob" data-act="closesheet2">Cancel</button></div>';
+    h+='<div class="row" style="margin-top:12px"><button class="ob cn" data-act="closesheet2">Cancel</button></div>';
     openSheet(h);return;
   }
   if(a==='remove'){
-    openSheet('<h2>Remove This Book?</h2><p class="sm" style="margin:0 0 16px">It will be deleted from this phone. This can\'t be undone.</p><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="removeyes">Remove</button></div>');return;
+    openSheet('<h2>Delete This Book?</h2><p class="sm" style="margin:0 0 16px">It will be deleted from this phone. This can\'t be undone.</p><div class="row"><button class="pb" data-act="closesheet2">Cancel</button><button class="ob cn" data-act="removeyes">'+ico('trash',18)+'Delete</button></div>');return;
   }
   if(a==='closesheet2'){closeSheet();return;}
   if(a==='chnew'){openSheet(chSheet(null));chPreview();return;}
   if(a==='chopen'){openCard('challenge');return;}
   if(a==='chdone'){chSave(null);render();return;}
   if(a==='chedit'){var ce=chGet();if(!ce)return;openSheet(chSheet(ce));chPreview();return;}
-  if(a==='chdel'){openSheet('<h2>Delete This Challenge?</h2><p class="sm" style="margin:0 0 16px">Your books stay in your library. This can\'t be undone.</p><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="chdelyes">Delete</button></div>');return;}
+  if(a==='chdel'){openSheet('<h2>Delete This Challenge?</h2><p class="sm" style="margin:0 0 16px">Your books stay in your library. This can\'t be undone.</p><div class="row"><button class="pb" data-act="closesheet2">Cancel</button><button class="ob cn" data-act="chdelyes">'+ico('trash',18)+'Delete</button></div>');return;}
   if(a==='chdelyes'){chSave(null);closeSheet();closeCard();toast('Challenge Deleted');return;}
   if(a==='chsavenew'){
     var rn=chRead(null);if(rn.err){$('#ch-err').textContent=rn.err;return;}
@@ -1903,7 +1906,7 @@ document.addEventListener('click',function(e){
   if(a==='photopick'){openPhotoPicker();return;}
   if(a==='photoremove'){var prevPh=photoGet();try{localStorage.removeItem('bm_photo');}catch(e){}photoUI();toast('Photo Removed',{label:'Undo',fn:function(){if(prevPh){lsSet('bm_photo',prevPh);photoUI();}}});return;}
   if(a==='editname'){
-    openSheet('<h2>Your Name</h2><p class="sm" style="margin:0">We use it to greet you on Home. Leave it empty to remove it.</p><div class="fld"><input id="nm-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name" value="'+esc(userName())+'"></div><div class="row" style="margin-top:16px"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="nmsave" style="padding:10px;font-size:15px">Save</button></div>');
+    openSheet('<h2>Your Name</h2><p class="sm" style="margin:0">We use it to greet you on Home. Leave it empty to remove it.</p><div class="fld"><input id="nm-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name" value="'+esc(userName())+'"></div><div class="row" style="margin-top:16px"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="nmsave">Save</button></div>');
     return;
   }
   if(a==='nmsave'){
@@ -1913,7 +1916,7 @@ document.addEventListener('click',function(e){
   if(a==='removeyes'){
     var rb=byId(state.id);
     if(rb){state.books=state.books.filter(function(x){return x.id!==rb.id;});dbDel(rb.id);}
-    closeSheet();closeCard();toast('Removed from Library');return;
+    closeSheet();closeCard();toast('Book Deleted');return;
   }
 });
 document.addEventListener('keydown',function(e){
@@ -2018,7 +2021,7 @@ function wlFirst(){
   var S=2.2,anim=!reduced()&&!!document.documentElement.animate,p=wlLogo(false),el=document.createElement('div');
   el.id='wl';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Welcome to Book Nerd');
   var card=document.createElement('div');card.className='wcard';
-  card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Is Your Name?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><div class="wph"><button class="wphb" id="wl-ph" type="button" aria-label="Add a photo"><span class="pfc pfw" id="wl-phc">'+ico('camera',22)+'</span></button><div><button class="lnk" id="wl-phl" type="button">Add a Photo</button><div class="sm">Optional. You can change it later.</div></div></div><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk" id="wl-skip" type="button">Skip for Now</button>';
+  card.innerHTML='<h2>Welcome to Book Nerd!</h2><div class="wq">What Is Your Name?</div><p class="sm" style="margin:0">We will use it to greet you within the app.</p><div class="fld"><input id="wl-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name"></div><p class="err" id="wl-err" role="alert"></p><div class="wph"><button class="wphb" id="wl-ph" type="button" aria-label="Add a photo"><span class="pfc pfw" id="wl-phc">'+ico('camera',22)+'</span></button><div><button class="lnk" id="wl-phl" type="button">Add a Photo</button><div class="sm">Optional. You can change it later.</div></div></div><button class="pb" id="wl-go" type="button">Continue</button><button class="lnk l14" id="wl-skip" type="button">Skip for Now</button>';
   el.appendChild(p.box);el.appendChild(card);
   var SC=150/104,tg=null;
   if(anim){
@@ -2333,14 +2336,14 @@ function view(){
   DEFS.forEach(function(d){(S&&S.earned[d.id]?er:rest).push(d);});
   er.sort(function(a,b){return S.earned[b.id]-S.earned[a.id];});
   var n=er.length,N=DEFS.length,p=Math.round(n/N*100);
-  var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:5px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
+  var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:6px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
   h+='<h2 class="sec">Earned<span class="bgn">'+n+'</span></h2>';
   h+=n?grid(er,true):'<div class="cd msgp"><p class="sm" style="margin:0">Finish a book and your first badge lands here.</p></div>';
   if(rest.length)h+='<h2 class="sec">Still to Earn<span class="bgn">'+rest.length+'</span></h2>'+grid(rest,false);
   return h;
 }
 function sheetHTML(d,e){
-  var h='<div class="bgstage">'+badgeHTML(d,134,e?'e':'u')+'</div><h2 style="text-align:center;margin:12px 0 10px">'+esc(d.n)+'</h2><p class="lb" style="margin:0">'+(e?'Earned By':'How to Earn It')+'</p><p style="font-size:15px;margin:2px 0 12px">'+(e?esc(d.r):'It is a mystery. Keep reading and you will find out.')+'</p>';
+  var h='<div class="bgstage">'+badgeHTML(d,134,e?'e':'u')+'</div><h2 style="text-align:center;margin:12px 0 6px">'+esc(d.n)+'</h2><p class="lb" style="margin:0">'+(e?'Earned By':'How to Earn It')+'</p><p style="font-size:15px;margin:2px 0 12px">'+(e?esc(d.r):'It is a mystery. Keep reading and you will find out.')+'</p>';
   if(e)h+='<div class="bgok"><svg class="tb" width="20" height="20" aria-hidden="true"><use href="#i-check"/></svg>Earned '+esc(fmtDate(S.earned[d.id]))+'</div><button class="ob" data-act="bgreplay" style="margin-top:14px">Replay the Unlock</button>';
   return h;
 }
