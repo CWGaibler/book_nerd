@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-13 02:30 UTC">
+<meta name="build" content="2026-10-13 11:00 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -286,6 +286,10 @@ nav .ni{flex:1 1 0;min-width:0}
 .toast-act::after{content:"";position:absolute;left:-8px;right:-8px;top:-10px;bottom:-10px}
 .bt::after,.fb::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;bottom:-3px}
 .lnk.l14{font-size:14px}
+.spx{position:relative}
+.spx::after{content:"";position:absolute;left:-8px;right:-8px;top:-8px;bottom:-8px}
+.edr{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--navy);border:1.5px solid transparent;border-radius:12px;padding:10px;color:#fff;min-height:84px}
+.edr.sel{border-color:var(--blue)}
 </style>
 </head>
 <body>
@@ -319,7 +323,7 @@ var COVERS=['#3D5A80','#4E5859','#6B8E6B','#7A5C99','#6F6A5E','#2F6F73'];
 var BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0" y="1" width="28" height="26" viewBox="22 24 56 52"><rect x="26" y="33.5" width="9" height="36" rx="1.5" fill="#FFB500"/><rect x="39" y="25.5" width="9" height="44" rx="1.5" fill="#42BB37"/><rect x="52" y="37.5" width="9" height="32" rx="1.5" fill="#00BDF6"/><rect x="65" y="29.5" width="9" height="40" rx="1.5" fill="#009CC6"/><rect x="23" y="71.5" width="54" height="3" rx="1.5" fill="#F0D9B2"/></svg><path transform="translate(38 21.9) scale(0.022)" d="M155 0V-100H356Q409 -100 438.0 -133.0Q467 -166 467 -209Q467 -238 454.0 -263.0Q441 -288 416.0 -303.0Q391 -318 356 -318H155V-418H339Q384 -418 411.0 -441.0Q438 -464 438 -509Q438 -554 411.0 -577.0Q384 -600 339 -600H155V-700H342Q413 -700 460.0 -674.0Q507 -648 530.0 -607.0Q553 -566 553 -519Q553 -464 522.5 -422.0Q492 -380 433 -354L442 -390Q508 -363 545.0 -314.0Q582 -265 582 -199Q582 -145 555.5 -100.0Q529 -55 477.5 -27.5Q426 0 351 0ZM76 0V-700H191V0Z M903 10Q833 10 776.0 -23.5Q719 -57 685.5 -114.0Q652 -171 652 -241Q652 -311 685.5 -367.0Q719 -423 776.0 -456.5Q833 -490 903 -490Q974 -490 1031.0 -457.0Q1088 -424 1121.5 -367.5Q1155 -311 1155 -241Q1155 -171 1121.5 -114.0Q1088 -57 1031.0 -23.5Q974 10 903 10ZM903 -96Q944 -96 975.5 -114.5Q1007 -133 1024.5 -166.0Q1042 -199 1042 -241Q1042 -283 1024.0 -315.0Q1006 -347 975.0 -365.5Q944 -384 903 -384Q863 -384 831.5 -365.5Q800 -347 782.5 -315.0Q765 -283 765 -241Q765 -199 782.5 -166.0Q800 -133 831.5 -114.5Q863 -96 903 -96Z M1466 10Q1396 10 1339.0 -23.5Q1282 -57 1248.5 -114.0Q1215 -171 1215 -241Q1215 -311 1248.5 -367.0Q1282 -423 1339.0 -456.5Q1396 -490 1466 -490Q1537 -490 1594.0 -457.0Q1651 -424 1684.5 -367.5Q1718 -311 1718 -241Q1718 -171 1684.5 -114.0Q1651 -57 1594.0 -23.5Q1537 10 1466 10ZM1466 -96Q1507 -96 1538.5 -114.5Q1570 -133 1587.5 -166.0Q1605 -199 1605 -241Q1605 -283 1587.0 -315.0Q1569 -347 1538.0 -365.5Q1507 -384 1466 -384Q1426 -384 1394.5 -365.5Q1363 -347 1345.5 -315.0Q1328 -283 1328 -241Q1328 -199 1345.5 -166.0Q1363 -133 1394.5 -114.5Q1426 -96 1466 -96Z M2114 0 1911 -245 2113 -480H2244L2012 -216L2017 -279L2254 0ZM1809 0V-720H1919V0Z M2535 0V-700H2615L2650 -568V0ZM3020 0 2601 -547 2615 -700 3034 -153ZM3020 0 2985 -123V-700H3100V0Z M3460 10Q3388 10 3330.5 -22.5Q3273 -55 3239.5 -112.0Q3206 -169 3206 -240Q3206 -311 3239.0 -367.5Q3272 -424 3328.5 -457.0Q3385 -490 3454 -490Q3521 -490 3572.5 -459.0Q3624 -428 3653.5 -374.0Q3683 -320 3683 -251Q3683 -239 3681.5 -226.5Q3680 -214 3677 -199H3283V-289H3620L3579 -253Q3577 -297 3562.0 -327.0Q3547 -357 3519.5 -373.0Q3492 -389 3452 -389Q3410 -389 3379.0 -371.0Q3348 -353 3331.0 -320.5Q3314 -288 3314 -243Q3314 -198 3332.0 -164.0Q3350 -130 3383.0 -111.5Q3416 -93 3459 -93Q3496 -93 3527.5 -106.0Q3559 -119 3581 -144L3651 -73Q3616 -32 3566.0 -11.0Q3516 10 3460 10Z M3771 0V-480H3881V0ZM3881 -267 3843 -286Q3843 -377 3883.5 -433.5Q3924 -490 4006 -490Q4042 -490 4071.0 -477.0Q4100 -464 4125 -435L4053 -361Q4040 -375 4024.0 -381.0Q4008 -387 3987 -387Q3941 -387 3911.0 -358.0Q3881 -329 3881 -267Z M4365 10Q4300 10 4247.5 -23.0Q4195 -56 4164.5 -112.5Q4134 -169 4134 -239Q4134 -310 4164.5 -366.5Q4195 -423 4247.5 -456.5Q4300 -490 4365 -490Q4420 -490 4462.5 -466.5Q4505 -443 4530.0 -402.0Q4555 -361 4555 -309V-171Q4555 -119 4530.5 -78.0Q4506 -37 4463.0 -13.5Q4420 10 4365 10ZM4383 -94Q4424 -94 4454.5 -112.5Q4485 -131 4502.0 -164.0Q4519 -197 4519 -240Q4519 -283 4502.0 -316.0Q4485 -349 4454.5 -367.5Q4424 -386 4384 -386Q4343 -386 4312.5 -367.5Q4282 -349 4264.5 -316.0Q4247 -283 4247 -240Q4247 -197 4264.5 -164.0Q4282 -131 4312.5 -112.5Q4343 -94 4383 -94ZM4622 0H4512V-129L4531 -246L4512 -362V-720H4622Z" fill="#F0D9B2"/></svg>';
 
-var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false};
+var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false,ed:null};
 var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
 try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
 function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
@@ -820,7 +824,7 @@ function renderCard(){
   var el=$('#card');
   if(!state.card){if(!cardClosing)el.innerHTML='';return;}
   var sc=el.querySelector('.scrim2'),c2=el.querySelector('.card2');
-  var html=(state.card==='detail'?cardDetail():state.card==='challenge'?cardChallenge():state.card==='author'?cardAuthor():cardFound());
+  var html=(state.card==='detail'?cardDetail():state.card==='challenge'?cardChallenge():state.card==='author'?cardAuthor():state.card==='edition'?cardEdition():cardFound());
   if(sc&&c2&&!sc.classList.contains('out')){
     var old=c2.querySelector('.cbody'),keep=old?old.scrollTop:0;
     c2.innerHTML=html;
@@ -859,6 +863,7 @@ function go(view){
   if(state.card)closeCard(true);
   var stopped=stopScan();
   if(state.view==='add'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';}
+  if(state.view==='library'&&view!=='library'){state.q='';}
   state.view=view;state.editProg=false;BGX.nav(view);
   if(view==='add'){state.form='choose';state.err='';state.isbn='';state.status='';state.statusErr=false;state.from='';state.scanning=false;}
   if(view==='library'){state.id=null;state.isbn='';}
@@ -984,7 +989,83 @@ function pickResult(i){
   if(ex){toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
   state.found={title:r.title,author:r.author,pages:r.pages,year:r.year,cover:r.cover,isbn:r.isbn,olKey:r.olKey||'',status:'toread'};
   state.nf='';state.isbn=r.isbn||'';state.addAs='toread';state.addOwned=true;state.from='search';
+  if(r.olKey){edOpen(r.olKey);return;}
   openCard('found');
+}
+/* ---------- edition picker ---------- */
+var ED_BAD=/audio|cassette|\bcd\b|mp3|sound|vinyl|\bdisc\b/i;
+function edFmt(s){s=String(s||'').replace(/\s+/g,' ').trim().slice(0,28);return s.toLowerCase().replace(/\b[a-z]/g,function(c){return c.toUpperCase();});}
+function edClean(entries){
+  var map={},out=[];
+  (Array.isArray(entries)?entries:[]).forEach(function(e,idx){
+    if(!e||typeof e!=='object')return;
+    var langs=Array.isArray(e.languages)?e.languages.map(function(l){return l&&l.key;}):[];
+    if(langs.length&&langs.indexOf('/languages/eng')<0)return;
+    if(ED_BAD.test(String(e.physical_format||'')))return;
+    var fmt=edFmt(e.physical_format);
+    var pub=(Array.isArray(e.publishers)&&typeof e.publishers[0]==='string')?e.publishers[0].replace(/\s+/g,' ').trim().slice(0,40):'';
+    var year=yearOf(e.publish_date);
+    var pg=Number(e.number_of_pages);pg=(isFinite(pg)&&pg>0&&pg<10000)?Math.round(pg):0;
+    var cv=0;if(Array.isArray(e.covers)){for(var i=0;i<e.covers.length;i++){if(typeof e.covers[i]==='number'&&e.covers[i]>0){cv=e.covers[i];break;}}}
+    var isbn=pickIsbn(e.isbn_13)||((Array.isArray(e.isbn_10)&&typeof e.isbn_10[0]==='string')?toIsbn13(e.isbn_10[0]):'');
+    if(!fmt&&!pub&&!year)return;
+    var it={fmt:fmt,pub:pub,year:year,pages:pg,cover:cv,isbn:isbn,n:idx};
+    var k=[fmt.toLowerCase(),pub.toLowerCase(),year,pg].join('|');
+    if(map.hasOwnProperty(k)){var o=out[map[k]];if(!o.cover&&it.cover)out[map[k]]=it;return;}
+    map[k]=out.length;out.push(it);
+  });
+  out.sort(function(a,b){var sa=(a.cover?0:2)+(a.pages?0:1),sb=(b.cover?0:2)+(b.pages?0:1);return sa-sb||a.n-b.n;});
+  return out;
+}
+function edOpen(key){
+  state.ed={key:key,st:'load',list:[],shown:6,sel:0};
+  openCard('edition');
+  edFetch(key);
+}
+function edFetch(key){
+  ajget('https://openlibrary.org'+key+'/editions.json?limit=100').then(function(j){
+    if(!state.ed||state.ed.key!==key)return;
+    state.ed.list=edClean(j&&j.entries);state.ed.st='ok';
+    if(state.card==='edition')renderCard();
+  }).catch(function(){
+    if(!state.ed||state.ed.key!==key)return;
+    state.ed.st='err';if(state.card==='edition')renderCard();
+  });
+}
+function edUse(){
+  var E=state.ed,f=state.found;if(!E||!f)return;
+  var e=E.list[E.sel];
+  if(e){
+    if(e.cover)f.cover='https://covers.openlibrary.org/b/id/'+e.cover+'-M.jpg';
+    if(e.pages)f.pages=e.pages;
+    if(e.year)f.year=e.year;
+    if(e.isbn){f.isbn=e.isbn;state.isbn=e.isbn;}
+  }
+  state.ed=null;state.card='found';renderCard();
+}
+function edKeep(){state.ed=null;state.card='found';renderCard();}
+function cardEdition(){
+  var E=state.ed,f=state.found,h=cardHead('Choose Your Edition');
+  if(!E||!f)return h+'<div class="cbody"></div>';
+  h+='<div class="cbody"><div class="sm" style="font-size:14px;margin:10px 0 12px;word-break:break-word">'+esc(f.title)+(f.author?' \u00B7 '+esc(f.author):'')+'</div>';
+  if(E.st==='load')return h+'<p class="sm" style="margin:0">Looking up editions\u2026</p></div>';
+  if(E.st==='err'||!E.list.length){
+    return h+'<p class="sm" style="margin:0 0 16px">'+(E.st==='err'?'Could not load editions. Check your connection and try again, or keep the standard cover.':'No editions to choose from. You can keep the standard cover.')+'</p>'+
+      '<button class="pb" data-act="edkeep">Keep the Standard Cover</button>'+(E.st==='err'?'<button class="lnk l14" data-act="edretry">Try Again</button>':'')+'</div>';
+  }
+  h+='<p class="sm" style="margin:0 0 10px">Tap the one that matches your copy. The cover and page count come from it.</p><div style="display:flex;flex-direction:column;gap:8px">';
+  E.list.slice(0,E.shown).forEach(function(e,i){
+    var cv=e.cover?'<div style="width:44px;flex:none">'+coverHTML({title:f.title,coverUrl:'https://covers.openlibrary.org/b/id/'+e.cover+'-M.jpg'},'padding:4px;font-size:11px')+'</div>':'<div style="width:44px;height:66px;flex:none;border:1px dashed var(--line);border-radius:3px;display:flex;align-items:center;justify-content:center;padding:2px;font-size:11px;line-height:1.2;text-align:center">No cover</div>';
+    var pu=[e.pub,e.year].filter(Boolean).join(' \u00B7 ')||'Publisher not listed';
+    var on=(i===E.sel);
+    h+='<button type="button" class="edr'+(on?' sel':'')+'" data-ed="'+i+'" aria-pressed="'+(on?'true':'false')+'">'+cv+
+      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">'+(e.fmt?esc(e.fmt):'Format not listed')+'</div><div class="sm" style="word-break:break-word">'+esc(pu)+'</div><div class="sm">'+(e.pages?e.pages+' pages':'Pages not listed')+'</div></div>'+
+      '<span style="flex:none;color:var(--blue);'+(on?'':'visibility:hidden')+'">'+ico('check',22)+'</span></button>';
+  });
+  h+='</div>';
+  if(E.list.length>E.shown)h+='<button class="lnk l14" data-act="edmore">Show more editions</button>';
+  h+='<div style="margin-top:6px"><button class="pb" data-act="eduse" style="margin-top:6px">Use This Edition</button><button class="lnk l14" data-act="edkeep">Not Sure? Keep the Standard Cover</button></div></div>';
+  return h;
 }
 function cleanSynopsis(raw){
   if(raw&&typeof raw==='object')raw=raw.value;
@@ -1728,11 +1809,12 @@ document.addEventListener('pointerdown',function(e){
 });
 document.addEventListener('click',function(e){
   var t=e.target;
-  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-so],[data-star],[data-as],[data-act],[data-set],[data-pick]');
+  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-so],[data-star],[data-as],[data-act],[data-set],[data-pick],[data-ed]');
   if(!el){return;}
   if(el.getAttribute('data-act')==='closesheet'){if(t===el&&!state.lockSheet)closeSheet();return;}
   if(el.hasAttribute('data-go')){closeSheet();go(el.getAttribute('data-go'));return;}
   if(el.hasAttribute('data-pick')){pickResult(parseInt(el.getAttribute('data-pick'),10));return;}
+  if(el.hasAttribute('data-ed')){if(state.ed&&state.card==='edition'){state.ed.sel=parseInt(el.getAttribute('data-ed'),10)||0;renderCard();}return;}
   if(el.hasAttribute('data-open')){state.id=el.getAttribute('data-open');openCard('detail');return;}
   if(el.hasAttribute('data-ownc')){state.addOwned=el.getAttribute('data-ownc')==='1';refresh();return;}
   if(el.hasAttribute('data-setown')){
@@ -1773,6 +1855,10 @@ document.addEventListener('click',function(e){
   if(a==='clearq'){state.q='';var cq=$('#q');if(cq){cq.value='';cq.focus();}updateLib();return;}
   if(a==='closecard'){if(Date.now()-xbLast<450)return;cardBack();return;}
   if(a==='rescan'){closeCard();return;}
+  if(a==='eduse'){edUse();return;}
+  if(a==='edkeep'){edKeep();return;}
+  if(a==='edmore'){if(state.ed){state.ed.shown+=6;renderCard();}return;}
+  if(a==='edretry'){if(state.ed){state.ed.st='load';renderCard();edFetch(state.ed.key);}return;}
   if(a==='scanagain'){state.scanning=true;state.sq='';state.sres=[];state.sstat='idle';state.sload='';closeCard();return;}
   if(a==='qadd'){var qb=byId(state.id);if(!qb)return;if((qb.quotes||[]).length>=100){toast('This book has 100 quotes');return;}openSheet(quoteSheet(qb,null));state.lockSheet=true;return;}
   if(a==='qedit'){var eb=byId(state.id),eq=eb&&(eb.quotes||[]).filter(function(q){return q.id===el.getAttribute('data-qid');})[0];if(!eq)return;openSheet(quoteSheet(eb,eq));state.lockSheet=true;return;}
