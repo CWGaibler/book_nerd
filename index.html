@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-12 23:55 UTC">
+<meta name="build" content="2026-10-13 01:47 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -82,7 +82,7 @@ h2{font-size:18px;font-weight:500;margin:0 0 6px}
 
 
 .tr{display:inline-flex;align-items:center;gap:6px;padding:10px;font-size:14px;color:#fff}
-.toast{display:flex;align-items:center;gap:14px;z-index:40;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);background:var(--line);border:0.5px solid var(--blue);border-radius:999px;padding:8px 16px;font-size:14px;max-width:90%}
+.toast{display:flex;align-items:center;gap:14px;z-index:40;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);background:var(--line);border:0.5px solid var(--blue);border-radius:999px;padding:8px 16px;font-size:14px;max-width:90%;width:max-content}
 .ov{position:fixed;inset:0;background:rgba(0,3,60,.7);z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .sheet{width:100%;max-width:480px;background:var(--card);border-radius:16px 16px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 16px);border-top:0.5px solid var(--line)}
 .opt{display:flex;align-items:center;gap:12px;width:100%;padding:14px 4px;border-top:0.5px solid var(--line);font-size:16px;text-align:left}
@@ -251,12 +251,12 @@ body.noscroll{overflow:hidden}
 .bgpd i.on{background:var(--blue)}
 @media (prefers-reduced-motion:reduce){#bgpop,.bgpc,.bgpstage::before{animation:none!important}}
 
-.pf{position:absolute;right:8px;top:calc(var(--sat) - 8px);width:44px;height:44px;display:flex;align-items:center;justify-content:center;z-index:2;padding:0;background:none}
-.pfc{width:30px;height:30px;border-radius:50%;background:var(--line);border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#fff;overflow:hidden;box-sizing:border-box;flex:none}
+.pf{position:absolute;right:8px;top:calc(var(--sat) - 6px);width:44px;height:44px;display:flex;align-items:center;justify-content:center;z-index:2;padding:0;background:none}
+.pfc{width:28px;height:28px;border-radius:50%;background:var(--line);border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#fff;overflow:hidden;box-sizing:border-box;flex:none}
 .pfc img{width:100%;height:100%;object-fit:cover;display:block}
 .pfc svg{color:#fff}
-.pf.on .pfc{background:#0A5AA6;box-shadow:0 0 0 2px var(--blue)}
-.pfbig{width:68px;height:68px;font-size:30px;border-width:2px}
+.pf.on .pfc{background:#0A5AA6}
+.pfbig{width:68px;height:68px;font-size:30px;border-width:1.5px}
 .pcard{display:flex;gap:14px;align-items:center;margin-top:12px}
 .pfbtn{position:relative;flex:none;padding:0;background:none}
 .pfcam{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:var(--deep);display:flex;align-items:center;justify-content:center}
@@ -269,12 +269,20 @@ body.noscroll{overflow:hidden}
 .stile span{font-size:12px;color:#ADB1B1}
 .cd.msgp{border-radius:999px;min-height:40px;padding:9px 16px;display:flex;align-items:center}
 .cd.msgp .sm{font-size:14px;line-height:1.35}
-.wph{display:flex;align-items:center;gap:12px;margin:14px 0 2px;text-align:left}
+.wph{display:flex;align-items:center;gap:12px;margin:16px 0;text-align:left}
+.wcard .err:empty{display:none;min-height:0;margin:0}
 .wphb{padding:0;background:none;flex:none}
-.pfw{width:56px;height:56px;border-width:2px}
+.pfw{width:56px;height:56px;border-width:1.5px}
 .wph .lnk{margin:0;padding:2px 0;text-align:left;font-size:14px}
 .wph .sm{margin:0;font-size:12px;color:#ADB1B1}
 nav .ni{flex:1 1 0;min-width:0}
+
+.pill,.alk,.lnk,.lk,.toast-act,.ch,.bt,.fb{position:relative}
+.pill::after{content:"";position:absolute;left:-3px;right:-3px;top:-7px;bottom:-7px}
+.ch::after{content:"";position:absolute;left:-4px;right:-4px;top:-4px;bottom:-4px}
+.alk::after,.lnk::after,.lk::after{content:"";position:absolute;left:-6px;right:-6px;top:-8px;bottom:-8px}
+.toast-act::after{content:"";position:absolute;left:-8px;right:-8px;top:-10px;bottom:-10px}
+.bt::after,.fb::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;bottom:-3px}
 </style>
 </head>
 <body>
@@ -308,7 +316,7 @@ var COVERS=['#3D5A80','#4E5859','#6B8E6B','#7A5C99','#6F6A5E','#2F6F73'];
 var BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0" y="1" width="28" height="26" viewBox="22 24 56 52"><rect x="26" y="33.5" width="9" height="36" rx="1.5" fill="#FFB500"/><rect x="39" y="25.5" width="9" height="44" rx="1.5" fill="#42BB37"/><rect x="52" y="37.5" width="9" height="32" rx="1.5" fill="#00BDF6"/><rect x="65" y="29.5" width="9" height="40" rx="1.5" fill="#009CC6"/><rect x="23" y="71.5" width="54" height="3" rx="1.5" fill="#F0D9B2"/></svg><path transform="translate(38 21.9) scale(0.022)" d="M155 0V-100H356Q409 -100 438.0 -133.0Q467 -166 467 -209Q467 -238 454.0 -263.0Q441 -288 416.0 -303.0Q391 -318 356 -318H155V-418H339Q384 -418 411.0 -441.0Q438 -464 438 -509Q438 -554 411.0 -577.0Q384 -600 339 -600H155V-700H342Q413 -700 460.0 -674.0Q507 -648 530.0 -607.0Q553 -566 553 -519Q553 -464 522.5 -422.0Q492 -380 433 -354L442 -390Q508 -363 545.0 -314.0Q582 -265 582 -199Q582 -145 555.5 -100.0Q529 -55 477.5 -27.5Q426 0 351 0ZM76 0V-700H191V0Z M903 10Q833 10 776.0 -23.5Q719 -57 685.5 -114.0Q652 -171 652 -241Q652 -311 685.5 -367.0Q719 -423 776.0 -456.5Q833 -490 903 -490Q974 -490 1031.0 -457.0Q1088 -424 1121.5 -367.5Q1155 -311 1155 -241Q1155 -171 1121.5 -114.0Q1088 -57 1031.0 -23.5Q974 10 903 10ZM903 -96Q944 -96 975.5 -114.5Q1007 -133 1024.5 -166.0Q1042 -199 1042 -241Q1042 -283 1024.0 -315.0Q1006 -347 975.0 -365.5Q944 -384 903 -384Q863 -384 831.5 -365.5Q800 -347 782.5 -315.0Q765 -283 765 -241Q765 -199 782.5 -166.0Q800 -133 831.5 -114.5Q863 -96 903 -96Z M1466 10Q1396 10 1339.0 -23.5Q1282 -57 1248.5 -114.0Q1215 -171 1215 -241Q1215 -311 1248.5 -367.0Q1282 -423 1339.0 -456.5Q1396 -490 1466 -490Q1537 -490 1594.0 -457.0Q1651 -424 1684.5 -367.5Q1718 -311 1718 -241Q1718 -171 1684.5 -114.0Q1651 -57 1594.0 -23.5Q1537 10 1466 10ZM1466 -96Q1507 -96 1538.5 -114.5Q1570 -133 1587.5 -166.0Q1605 -199 1605 -241Q1605 -283 1587.0 -315.0Q1569 -347 1538.0 -365.5Q1507 -384 1466 -384Q1426 -384 1394.5 -365.5Q1363 -347 1345.5 -315.0Q1328 -283 1328 -241Q1328 -199 1345.5 -166.0Q1363 -133 1394.5 -114.5Q1426 -96 1466 -96Z M2114 0 1911 -245 2113 -480H2244L2012 -216L2017 -279L2254 0ZM1809 0V-720H1919V0Z M2535 0V-700H2615L2650 -568V0ZM3020 0 2601 -547 2615 -700 3034 -153ZM3020 0 2985 -123V-700H3100V0Z M3460 10Q3388 10 3330.5 -22.5Q3273 -55 3239.5 -112.0Q3206 -169 3206 -240Q3206 -311 3239.0 -367.5Q3272 -424 3328.5 -457.0Q3385 -490 3454 -490Q3521 -490 3572.5 -459.0Q3624 -428 3653.5 -374.0Q3683 -320 3683 -251Q3683 -239 3681.5 -226.5Q3680 -214 3677 -199H3283V-289H3620L3579 -253Q3577 -297 3562.0 -327.0Q3547 -357 3519.5 -373.0Q3492 -389 3452 -389Q3410 -389 3379.0 -371.0Q3348 -353 3331.0 -320.5Q3314 -288 3314 -243Q3314 -198 3332.0 -164.0Q3350 -130 3383.0 -111.5Q3416 -93 3459 -93Q3496 -93 3527.5 -106.0Q3559 -119 3581 -144L3651 -73Q3616 -32 3566.0 -11.0Q3516 10 3460 10Z M3771 0V-480H3881V0ZM3881 -267 3843 -286Q3843 -377 3883.5 -433.5Q3924 -490 4006 -490Q4042 -490 4071.0 -477.0Q4100 -464 4125 -435L4053 -361Q4040 -375 4024.0 -381.0Q4008 -387 3987 -387Q3941 -387 3911.0 -358.0Q3881 -329 3881 -267Z M4365 10Q4300 10 4247.5 -23.0Q4195 -56 4164.5 -112.5Q4134 -169 4134 -239Q4134 -310 4164.5 -366.5Q4195 -423 4247.5 -456.5Q4300 -490 4365 -490Q4420 -490 4462.5 -466.5Q4505 -443 4530.0 -402.0Q4555 -361 4555 -309V-171Q4555 -119 4530.5 -78.0Q4506 -37 4463.0 -13.5Q4420 10 4365 10ZM4383 -94Q4424 -94 4454.5 -112.5Q4485 -131 4502.0 -164.0Q4519 -197 4519 -240Q4519 -283 4502.0 -316.0Q4485 -349 4454.5 -367.5Q4424 -386 4384 -386Q4343 -386 4312.5 -367.5Q4282 -349 4264.5 -316.0Q4247 -283 4247 -240Q4247 -197 4264.5 -164.0Q4282 -131 4312.5 -112.5Q4343 -94 4383 -94ZM4622 0H4512V-129L4531 -246L4512 -362V-720H4622Z" fill="#F0D9B2"/></svg>';
 
-var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',own:'any',addOwned:true,scanning:false};
+var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false};
 var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
 try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
 function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
@@ -420,7 +428,7 @@ function viewHomeBase(){
   '<div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
   (p!==null?'<div class="bar" style="height:6px;margin:10px 0 6px"><b style="width:'+p+'%"></b></div><div class="sm">'+left+' page'+(left===1?'':'s')+' left</div>':'')+
-  '<div class="row btns" style="margin-top:12px"><button class="ob" data-act="homeprog" data-bid="'+cur.id+'">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button></div></div>';
+  '<div class="row btns btns3" style="margin-top:12px"><button class="ob" data-act="homeprog" data-bid="'+cur.id+'">Update Progress</button><button class="ob" data-act="finishbook" data-bid="'+cur.id+'">Finished Reading</button><button class="ob" data-act="dnfbook" data-bid="'+cur.id+'">Did Not Finish</button></div></div>';
   if(rd.length>1){var n=rd.length-1;h+='<button class="lnk" data-act="seereading">Also reading '+n+' more book'+(n===1?'':'s')+'</button>';}
   return h;
 }
@@ -526,7 +534,7 @@ function viewLibrary(){
   var f=libFilter(),all=f.all,list=f.list;
   var h=top()+ptitle('Library');
   if(!all.length){
-    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, enter an ISBN, or search by title.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
+    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, or search by title, author or ISBN.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
     return h;
   }
   h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',16)+'Filter and Sort</button>'+
@@ -553,17 +561,58 @@ function filterSheet(){
   });
   h+='</div></div><div class="fld"><div class="lb">Sort By</div><div class="chs">';
   SORTS.forEach(function(k){h+='<button class="ch'+(state.psort===k?' sel':'')+'" data-so="'+k+'" aria-pressed="'+(state.psort===k?'true':'false')+'">'+SORTL[k]+'</button>';});
-  h+='</div></div><button class="pb" data-act="applyfilter" style="margin-top:20px">Show '+n+' Book'+(n===1?'':'s')+'</button>';
+  h+='</div></div><div class="row" style="margin-top:20px"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="applyfilter">Show '+n+' Book'+(n===1?'':'s')+'</button></div>';
   return h;
+}
+function addResultsHTML(){
+  var st=state.sstat;
+  if(st==='idle')return '<p class="sm" style="margin:14px 0 0">Type a title, an author or an ISBN, then tap Search on the keyboard.</p>';
+  if(st==='loading')return '<p class="sm" style="margin:14px 0 0">'+esc(state.sload||'Searching\u2026')+'</p>';
+  if(st==='err')return '<p class="err" style="margin:14px 0 0">Search is not working right now. Check your connection and try again.</p>';
+  if(st==='isbnbad')return '<p class="err" style="margin:14px 0 0">That does not look like a valid ISBN. Check the digits and try again.</p>';
+  if(st==='empty')return '<p class="sm" style="margin:14px 0 0">No books found. Try fewer words or a different spelling, or scan the barcode.</p>';
+  var h='<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
+  state.sres.forEach(function(r,i){
+    var meta=[r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
+    h+='<button class="cd" data-pick="'+i+'" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left"><div style="width:46px;flex:none">'+coverHTML({title:r.title,status:'toread',coverUrl:r.cover},'border-bottom:0;padding:4px;font-size:8px')+'</div>'+
+    '<div style="min-width:0;flex:1"><div style="font-size:15px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word">'+esc(r.title)+'</div>'+
+    (r.author?'<div class="sm" style="font-size:14px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.author)+'</div>':'')+
+    (meta?'<div class="sm" style="font-size:12px;margin-top:2px">'+esc(meta)+'</div>':'')+'</div></button>';
+  });
+  return h+'</div>';
 }
 function viewAdd(){
   var sc=!!state.scanning,h=top()+ptitle('Add a Book to Your Library');
   if(sc)h+='<div class="cam"><div id="reader"></div></div><p class="stat'+(state.statusErr?' e':'')+'" id="stat">'+esc(state.status)+'</p>';
   h+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:'+(sc?'6px':'16px')+'">'+
-    (sc?'<button class="bt" data-act="scanstop">'+ico('x',22)+'Stop Scanning</button>':'<button class="bt" data-act="scanstart">'+ico('barcode',22)+'Scan Barcode</button>')+
-    '<button class="bt" data-act="isbn">'+ico('keyboard',22)+'Enter ISBN</button>'+
-    '<button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button></div>';
+    (sc?'<button class="bt" data-act="scanstop">'+ico('x',22)+'Stop Scanning</button>':'<button class="bt" data-act="scanstart">'+ico('barcode',22)+'Scan Barcode</button>');
+  if(!sc)h+='<form id="sform" novalidate><label class="sp'+(state.sq?' has':'')+'" id="spa">'+ico('search',18)+'<span class="spw"><input id="sq" type="search" placeholder="Search by Title, Author or ISBN" value="'+esc(state.sq)+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-label="Search by title, author or ISBN"></span><button type="button" class="spx" data-act="clearsq" aria-label="Clear search">'+ico('x',16)+'</button></label></form>';
+  h+='</div>';
+  if(!sc)h+=addResultsHTML();
   return h;
+}
+function toIsbn13(raw){
+  raw=String(raw).toUpperCase();
+  var i,sum;
+  if(/^\d{13}$/.test(raw)){
+    if(!/^97[89]/.test(raw))return '';
+    sum=0;for(i=0;i<13;i++)sum+=(i%2?3:1)*parseInt(raw.charAt(i),10);
+    return sum%10===0?raw:'';
+  }
+  if(/^\d{9}[\dX]$/.test(raw)){
+    sum=0;for(i=0;i<9;i++)sum+=(10-i)*parseInt(raw.charAt(i),10);
+    sum+=(raw.charAt(9)==='X'?10:parseInt(raw.charAt(9),10));
+    if(sum%11!==0)return '';
+    var core='978'+raw.slice(0,9),t=0;for(i=0;i<12;i++)t+=(i%2?3:1)*parseInt(core.charAt(i),10);
+    return core+String((10-t%10)%10);
+  }
+  return '';
+}
+function scrollToSearch(){
+  var l=$('#spa');if(!l)return;
+  var h=document.getElementById('topbar'),hh=h?h.getBoundingClientRect().height:0;
+  var y=l.getBoundingClientRect().top+window.pageYOffset-hh-10;
+  if(y>0)window.scrollTo({top:y,behavior:reduced()?'auto':'smooth'});
 }
 function synHTML(b){
   if(!b.synopsis){return synBusy[b.id]?'<div class="sm" style="margin-top:14px">Looking for a synopsis\u2026</div>':'';}
@@ -615,24 +664,6 @@ function cardDetail(){
   '<div class="center" style="margin-top:20px"><button class="tr" data-act="remove">'+ico('trash',18)+'Remove from Library</button></div></div>';
   return h;
 }
-function viewSearch(){
-  var h=top()+ptitle('Search by Title')+
-  '<form id="sform" novalidate style="margin-top:16px;display:flex;gap:8px"><input id="sq" type="search" placeholder="Title or Author" value="'+esc(state.sq)+'" autocomplete="off" autocapitalize="words" enterkeyhint="search" style="flex:1;min-width:0;background:var(--card);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0">'+
-  '<button type="submit" class="pb" style="width:auto;padding:12px 18px">Search</button></form>';
-  if(state.sstat==='idle'){return h+'<p class="sm" style="margin-top:20px">Type a title, an author, or both, then tap Search.</p>';}
-  if(state.sstat==='loading'){return h+'<p class="sm" style="margin-top:20px">Searching\u2026</p>';}
-  if(state.sstat==='err'){return h+'<p class="err" style="margin-top:20px;font-size:15px">Search is not working right now. Check your connection and try again.</p>';}
-  if(state.sstat==='empty'){return h+'<p class="sm" style="margin-top:20px">No books found. Try fewer words or a different spelling, or scan the barcode.</p>';}
-  h+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">';
-  state.sres.forEach(function(r,i){
-    var meta=[r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
-    h+='<button class="cd" data-pick="'+i+'" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left"><div style="width:46px;flex:none">'+coverHTML({title:r.title,status:'toread',coverUrl:r.cover},'border-bottom:0;padding:4px;font-size:8px')+'</div>'+
-    '<div style="min-width:0;flex:1"><div style="font-size:15px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word">'+esc(r.title)+'</div>'+
-    (r.author?'<div class="sm" style="font-size:14px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.author)+'</div>':'')+
-    (meta?'<div class="sm" style="font-size:12px;margin-top:2px">'+esc(meta)+'</div>':'')+'</div></button>';
-  });
-  return h+'</div>';
-}
 function cardFound(){
   var f=state.found;
   var h=cardHead(f?'Book Found':'No Match Found');
@@ -647,11 +678,11 @@ function cardFound(){
   (meta?'<div class="sm" style="margin-top:10px">'+esc(meta)+'</div>':'')+
   (f.isbn?'<div class="sm" style="font-size:12px;margin-top:4px">ISBN '+esc(f.isbn)+'</div>':'')+'</div>'+
   '<div class="fld"><div class="lb">Add As</div><div class="row" style="gap:6px;flex-wrap:wrap">';
-  ['toread','reading','finished'].forEach(function(k){
-    h+='<button type="button" class="ch" data-as="'+k+'" style="flex:none;'+(state.addAs===k?'background:'+STAT[k].color+';color:#00033C;border-color:transparent':'')+'">'+STAT[k].label+'</button>';
+  ['toread','reading','finished','dnf'].forEach(function(k){
+    h+='<button type="button" class="ch" data-as="'+k+'" aria-pressed="'+(state.addAs===k?'true':'false')+'" style="flex:none;'+(state.addAs===k?'background:'+STAT[k].color+';color:#fff;border-color:transparent':'')+'">'+STAT[k].label+'</button>';
   });
   h+='</div></div><div class="fld"><div class="lb">Do You Own It?</div><div class="row" style="gap:6px;flex-wrap:wrap">'+
-  [['1','Owned',state.addOwned],['0','Not Owned',!state.addOwned]].map(function(c){return '<button type="button" class="ch'+(c[2]?' sel':'')+'" data-ownc="'+c[0]+'" aria-pressed="'+(c[2]?'true':'false')+'" style="flex:none">'+c[1]+'</button>';}).join('')+
+  [['1','Owned',state.addOwned,'#D1006F','check'],['0','Not Owned',!state.addOwned,'#ADB1B1','bag']].map(function(c){return '<button type="button" class="ch" data-ownc="'+c[0]+'" aria-pressed="'+(c[2]?'true':'false')+'" style="flex:none;display:inline-flex;align-items:center;gap:5px;'+(c[2]?'background:'+c[3]+';color:#fff;border-color:transparent':'')+'">'+ico(c[4],14)+c[1]+'</button>';}).join('')+
   '</div></div><div style="margin-top:20px"><button class="pb" data-act="addfound">Add to Library</button><button class="lk" data-act="rescan">Not the Right Book?</button></div></div>';
   return h;
 }
@@ -722,7 +753,7 @@ function viewBackup(){
   return top()+ptitle('Profile')+
   '<div class="cd pcard"><button class="pfbtn" data-act="photopick" aria-label="'+(ph?'Choose another photo':'Add a photo')+'"><span class="pfc pfbig">'+avatarInner(nm,ph,false)+'</span>'+(ph?'':'<span class="pfcam">'+ico('camera',14)+'</span>')+'</button>'+
   '<div class="pinfo"><div class="pname">'+(nm?esc(nm):'Your Name')+'</div>'+(since?'<div class="sm">Reading since '+esc(since)+'</div>':'')+
-  '<div class="plinks"><button class="alk" data-act="editname">'+(nm?'Change Your Name':'Add Your Name')+'</button>'+(ph?'<button class="alk" data-act="photopick">Choose Another Photo</button><button class="alk" data-act="photoremove">Remove Photo</button>':'<button class="alk" data-act="photopick">Add a Photo</button>')+'</div></div></div>'+
+  '<div class="plinks"><button class="alk" data-act="editname">'+(nm?'Change Your Name':'Add Your Name')+'</button>'+(ph?'<button class="alk" data-act="photoremove">Remove Photo</button>':'<button class="alk" data-act="photopick">Add a Photo</button>')+'</div></div></div>'+
   '<h2 class="sec">Your Stats</h2><div class="cd"><div class="sgrid">'+
   '<div class="stile"><b>'+state.books.length+'</b><span>Books in Your Library</span></div>'+
   '<div class="stile"><b>'+fin+'</b><span>Books Finished</span></div>'+
@@ -773,9 +804,9 @@ function render(){
   var v=$('#view');
   var ghost=(lastView!==null&&lastView!==state.view&&state.loaded&&!reduced())?makeGhost(v):null;
   if(!state.loaded&&(state.view==='home'||state.view==='library')){v.innerHTML=top()+ptitle(state.view==='home'?'Home':'Library');}
-  else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='search'?viewSearch():state.view==='badges'?BGX.view():viewBackup();}
+  else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='badges'?BGX.view():viewBackup();}
   setPT();profSync();
-  var tab=state.view==='search'?'add':state.view;
+  var tab=state.view;
   var ns=document.querySelectorAll('.ni');
   for(var i=0;i<ns.length;i++){ns[i].classList.toggle('on',ns[i].getAttribute('data-go')===tab);}
   lastView=state.view;
@@ -824,7 +855,7 @@ function refresh(){if(state.card)renderCard();else render();}
 function go(view){
   if(state.card)closeCard(true);
   var stopped=stopScan();
-  if(state.view==='search'&&view!=='search'){state.sq='';state.sres=[];state.sstat='idle';}
+  if(state.view==='add'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';}
   state.view=view;state.editProg=false;BGX.nav(view);
   if(view==='add'){state.form='choose';state.err='';state.isbn='';state.status='';state.statusErr=false;state.from='';state.scanning=false;}
   if(view==='library'){state.id=null;state.isbn='';}
@@ -849,7 +880,7 @@ function stopScan(){
 function startScan(){
   handled=false;
   if(state.view!=='add'||state.form!=='choose'||!$('#reader'))return;
-  if(typeof Html5Qrcode==='undefined'){setStat('The scanner did not load. Check your connection, or use Enter ISBN or Search by Title.',true);return;}
+  if(typeof Html5Qrcode==='undefined'){setStat('The scanner did not load. Check your connection, or search by title, author or ISBN.',true);return;}
   setStat('Starting the camera\u2026');
   var s=new Html5Qrcode('reader',{
     formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A],
@@ -899,12 +930,12 @@ function findBook(isbn){
 function doLookup(isbn){
   closeSheet();
   var ex=null;for(var i=0;i<state.books.length;i++){if(state.books[i].isbn===isbn){ex=state.books[i];break;}}
-  if(ex){stopScan();toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
+  if(ex){stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
   setStat('Found ISBN '+isbn+'. Looking up the book\u2026');
   findBook(isbn).then(function(book){
     state.isbn=isbn;state.addAs='toread';state.addOwned=true;state.from='';
     if(book){book.isbn=isbn;book.status='toread';state.found=book;state.nf='';}else{state.found=null;state.nf=isbn;}
-    stopScan();openCard('found');
+    stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}openCard('found');
   });
 }
 function pickIsbn(arr){if(!arr)return '';for(var i=0;i<arr.length;i++){if(/^97[89][0-9]{10}$/.test(arr[i]))return arr[i];}return '';}
@@ -933,10 +964,10 @@ function searchBooks(q){
 function doSearch(q){
   state.sq=q;state.sstat='loading';state.sres=[];render();
   searchBooks(q).then(function(list){
-    if(state.sq!==q||state.view!=='search')return;
+    if(state.sq!==q||state.view!=='add'||state.scanning)return;
     state.sres=list;state.sstat=list.length?'done':'empty';render();
   }).catch(function(){
-    if(state.sq!==q||state.view!=='search')return;
+    if(state.sq!==q||state.view!=='add'||state.scanning)return;
     state.sstat='err';render();
   });
 }
@@ -1183,7 +1214,7 @@ function finishBook(fb){
   });
 }
 function restoreBook(fb,p){
-  fb.status=p.status;
+  fb.status=p.status;if(p.currentPage!==undefined)fb.currentPage=p.currentPage;
   ['startedAt','finishedAt'].forEach(function(k){if(p[k]===undefined)delete fb[k];else fb[k]=p[k];});
   fb.updatedAt=Date.now();dbPut(fb);refresh();
 }
@@ -1388,6 +1419,8 @@ function chPreview(){
 }
 document.addEventListener('input',function(e){var id=e.target&&e.target.id;if(id==='ch-n'||id==='ch-s'||id==='ch-e'){var er=$('#ch-err');if(er)er.textContent='';chPreview();}});
 document.addEventListener('change',function(e){var id=e.target&&e.target.id;if(id==='ch-s'||id==='ch-e')chPreview();});
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='sq'){var l=$('#spa');if(l)l.classList.toggle('has',!!e.target.value);}});
+document.addEventListener('focusin',function(e){if(e.target&&e.target.id==='sq')setTimeout(scrollToSearch,280);});
 
 /* ---------- quotes (saved inside each book) ---------- */
 var CAM_ICO='<svg class="tb" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
@@ -1701,7 +1734,11 @@ document.addEventListener('click',function(e){
   if(el.hasAttribute('data-ownc')){state.addOwned=el.getAttribute('data-ownc')==='1';refresh();return;}
   if(el.hasAttribute('data-setown')){
     var so=byId(state.id);if(!so)return;
-    so.owned=el.getAttribute('data-setown')==='1';so.updatedAt=Date.now();dbPut(so);closeSheet();refresh();BGX.check();return;
+    var wasOwn=isOwned(so),nowOwn=el.getAttribute('data-setown')==='1';
+    if(nowOwn===wasOwn){closeSheet();return;}
+    so.owned=nowOwn;so.updatedAt=Date.now();dbPut(so);closeSheet();refresh();BGX.check();
+    toast('Marked as '+(nowOwn?'Owned':'Not Owned'),{label:'Undo',fn:function(){so.owned=wasOwn;so.updatedAt=Date.now();dbPut(so);refresh();}});
+    return;
   }
   if(el.hasAttribute('data-rv')){
     var rn=parseInt(el.getAttribute('data-rv'),10);
@@ -1721,13 +1758,19 @@ document.addEventListener('click',function(e){
   }
   if(el.hasAttribute('data-set')){
     var bk=byId(state.id);if(!bk)return;
-    state.editProg=false;setStatus(bk,el.getAttribute('data-set'));closeSheet();refresh();chMaybeCelebrate();BGX.check();return;
+    var nst=el.getAttribute('data-set');state.editProg=false;
+    if(nst===bk.status){closeSheet();return;}
+    if(nst==='finished'){closeSheet();alreadyRead(bk);return;}
+    var pst={status:bk.status,currentPage:bk.currentPage,startedAt:bk.startedAt,finishedAt:bk.finishedAt};
+    setStatus(bk,nst);closeSheet();refresh();chMaybeCelebrate();BGX.check();
+    toast('Marked as '+STAT[nst].label,{label:'Undo',fn:function(){restoreBook(bk,pst);}});
+    return;
   }
   var a=el.getAttribute('data-act');
   if(a==='clearq'){state.q='';var cq=$('#q');if(cq){cq.value='';cq.focus();}updateLib();return;}
   if(a==='closecard'){if(Date.now()-xbLast<450)return;cardBack();return;}
   if(a==='rescan'){closeCard();return;}
-  if(a==='scanagain'){state.scanning=true;closeCard();return;}
+  if(a==='scanagain'){state.scanning=true;state.sq='';state.sres=[];state.sstat='idle';state.sload='';closeCard();return;}
   if(a==='qadd'){var qb=byId(state.id);if(!qb)return;if((qb.quotes||[]).length>=100){toast('This book has 100 quotes');return;}openSheet(quoteSheet(qb,null));state.lockSheet=true;return;}
   if(a==='qedit'){var eb=byId(state.id),eq=eb&&(eb.quotes||[]).filter(function(q){return q.id===el.getAttribute('data-qid');})[0];if(!eq)return;openSheet(quoteSheet(eb,eq));state.lockSheet=true;return;}
   if(a==='qsave'){saveQuote(el.getAttribute('data-qid'));return;}
@@ -1755,9 +1798,10 @@ document.addEventListener('click',function(e){
     }
     closeSheet();renderCard();toast('Added to Library');return;
   }
-  if(a==='scanstart'){state.scanning=true;render();startScan();return;}
+  if(a==='scanstart'){state.scanning=true;state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();startScan();return;}
   if(a==='scanstop'){state.scanning=false;stopScan().then(function(){setStat('');});render();return;}
-  if(a==='searchtitle'){stopScan();if(state.card)closeCard(true);state.view='search';render();window.scrollTo(0,0);return;}
+  if(a==='searchtitle'){stopScan();state.scanning=false;if(state.card)closeCard(true);if(state.view!=='add')go('add');else render();var si=$('#sq');if(si){si.focus();setTimeout(scrollToSearch,280);}return;}
+  if(a==='clearsq'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();var cs=$('#sq');if(cs)cs.focus();return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='seereading'){state.filter='reading';state.own='any';go('library');return;}
   if(a==='openfilter'){state.pst=state.filter;state.pown=state.own;state.psort=state.sort;openSheet(filterSheet());return;}
@@ -1769,10 +1813,6 @@ document.addEventListener('click',function(e){
     openSheet('<h2>Update Progress</h2><div class="row" style="gap:10px;margin-bottom:14px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.currentPage||0)+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label><label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.pages||'')+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:10px;padding:10px;outline:0"></label></div><div class="row"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="progsave">Save</button></div>');
     return;
   }
-  if(a==='isbn'){
-    openSheet('<h2>Enter ISBN</h2><p class="sm" style="margin:0 0 12px">Type the 13 digits that start with 978 or 979.</p><form id="isbnform" novalidate><input id="isbn-in" type="text" inputmode="numeric" placeholder="9780000000000" autocomplete="off" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"><p class="err" id="isbn-err"></p><div class="row"><button type="button" class="ob" data-act="closesheet2">Cancel</button><button type="submit" class="pb">Look Up</button></div></form>');
-    return;
-  }
   if(a==='addfound'){if(state.found)makeBook(state.found);return;}
   if(a==='markowned'){
     var mb=byId(el.getAttribute('data-bid')||state.id);if(!mb||isOwned(mb))return;
@@ -1782,7 +1822,7 @@ document.addEventListener('click',function(e){
   }
   if(a==='ownsheet'){
     var os=byId(state.id);if(!os)return;var cur=isOwned(os);
-    openSheet('<h2>Change Ownership</h2>'+[['1','Owned',cur],['0','Not Owned',!cur]].map(function(c){return '<button class="opt" data-setown="'+c[0]+'">'+c[1]+(c[2]?'<small>Current</small>':'')+'</button>';}).join(''));
+    openSheet('<h2>Change Ownership</h2>'+[['1','Owned',cur],['0','Not Owned',!cur]].map(function(c){return '<button class="opt" data-setown="'+c[0]+'">'+c[1]+(c[2]?'<small>Current</small>':'')+'</button>';}).join('')+'<div class="row" style="margin-top:12px"><button class="ob" data-act="closesheet2">Cancel</button></div>');
     return;
   }
   if(a==='finishbook'){finishBook(byId(el.getAttribute('data-bid')||state.id));return;}
@@ -1832,6 +1872,7 @@ document.addEventListener('click',function(e){
     var sb=byId(state.id);if(!sb)return;
     var h='<h2>Change Status</h2>';
     ORDER.forEach(function(k){h+='<button class="opt" data-set="'+k+'"><span class="dot" style="background:'+STAT[k].color+'"></span>'+STAT[k].label+(sb.status===k?'<small>Current</small>':'')+'</button>';});
+    h+='<div class="row" style="margin-top:12px"><button class="ob" data-act="closesheet2">Cancel</button></div>';
     openSheet(h);return;
   }
   if(a==='remove'){
@@ -1860,7 +1901,7 @@ document.addEventListener('click',function(e){
     chSave(c0);closeSheet();refresh();toast('Challenge Updated');chMaybeCelebrate();BGX.check();return;
   }
   if(a==='photopick'){openPhotoPicker();return;}
-  if(a==='photoremove'){try{localStorage.removeItem('bm_photo');}catch(e){}photoUI();toast('Photo Removed');return;}
+  if(a==='photoremove'){var prevPh=photoGet();try{localStorage.removeItem('bm_photo');}catch(e){}photoUI();toast('Photo Removed',{label:'Undo',fn:function(){if(prevPh){lsSet('bm_photo',prevPh);photoUI();}}});return;}
   if(a==='editname'){
     openSheet('<h2>Your Name</h2><p class="sm" style="margin:0">We use it to greet you on Home. Leave it empty to remove it.</p><div class="fld"><input id="nm-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name" value="'+esc(userName())+'"></div><div class="row" style="margin-top:16px"><button class="ob" data-act="closesheet2">Cancel</button><button class="pb" data-act="nmsave" style="padding:10px;font-size:15px">Save</button></div>');
     return;
@@ -1903,13 +1944,15 @@ document.addEventListener('submit',function(e){
     var q=($('#sq').value||'').trim();
     if(q.length<2)return;
     try{document.activeElement.blur();}catch(x){}
+    var raw=q.replace(/[\s-]/g,'');
+    if(/^(\d{9}[\dXx]|\d{13})$/.test(raw)){
+      var code=toIsbn13(raw);
+      state.sq=q;state.sres=[];
+      if(!code){state.sstat='isbnbad';render();return;}
+      state.sstat='loading';state.sload='Looking up that ISBN\u2026';render();
+      doLookup(code);return;
+    }
     doSearch(q);return;
-  }
-  if(e.target.id==='isbnform'){
-    e.preventDefault();
-    var code=($('#isbn-in').value||'').replace(/[^0-9Xx]/g,'');
-    if(!/^97[89][0-9]{10}$/.test(code)){$('#isbn-err').textContent='Enter a 13-digit ISBN that starts with 978 or 979.';return;}
-    doLookup(code);return;
   }
 });
 window.addEventListener('pagehide',function(){var n=$('#notes'),rv=$('#review');if((n||rv)&&state.id){var b=byId(state.id);if(b){if(n)b.notes=n.value;if(rv){if(rv.value)b.review=rv.value;else delete b.review;}dbPut(b);}}});
