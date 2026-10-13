@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-13 16:36 UTC">
+<meta name="build" content="2026-10-13 17:03 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -286,6 +286,7 @@ nav .ni{flex:1 1 0;min-width:0}
 .toast-act::after{content:"";position:absolute;left:-8px;right:-8px;top:-10px;bottom:-10px}
 .bt::after,.fb::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;bottom:-3px}
 .lnk.l14{font-size:14px}
+.card2 .dt{height:50px;min-height:50px;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;color:#fff;font-size:16px;line-height:1.2}
 .spx{position:relative}
 .spx::after{content:"";position:absolute;left:-8px;right:-8px;top:-8px;bottom:-8px}
 .hq{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px 0;border-top:0.5px solid var(--line);border-bottom:0.5px solid var(--line)}
@@ -329,7 +330,7 @@ var COVERS=['#3D5A80','#4E5859','#6B8E6B','#7A5C99','#6F6A5E','#2F6F73'];
 var BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0" y="1" width="28" height="26" viewBox="22 24 56 52"><rect x="26" y="33.5" width="9" height="36" rx="1.5" fill="#FFB500"/><rect x="39" y="25.5" width="9" height="44" rx="1.5" fill="#42BB37"/><rect x="52" y="37.5" width="9" height="32" rx="1.5" fill="#00BDF6"/><rect x="65" y="29.5" width="9" height="40" rx="1.5" fill="#009CC6"/><rect x="23" y="71.5" width="54" height="3" rx="1.5" fill="#F0D9B2"/></svg><path transform="translate(38 21.9) scale(0.022)" d="M155 0V-100H356Q409 -100 438.0 -133.0Q467 -166 467 -209Q467 -238 454.0 -263.0Q441 -288 416.0 -303.0Q391 -318 356 -318H155V-418H339Q384 -418 411.0 -441.0Q438 -464 438 -509Q438 -554 411.0 -577.0Q384 -600 339 -600H155V-700H342Q413 -700 460.0 -674.0Q507 -648 530.0 -607.0Q553 -566 553 -519Q553 -464 522.5 -422.0Q492 -380 433 -354L442 -390Q508 -363 545.0 -314.0Q582 -265 582 -199Q582 -145 555.5 -100.0Q529 -55 477.5 -27.5Q426 0 351 0ZM76 0V-700H191V0Z M903 10Q833 10 776.0 -23.5Q719 -57 685.5 -114.0Q652 -171 652 -241Q652 -311 685.5 -367.0Q719 -423 776.0 -456.5Q833 -490 903 -490Q974 -490 1031.0 -457.0Q1088 -424 1121.5 -367.5Q1155 -311 1155 -241Q1155 -171 1121.5 -114.0Q1088 -57 1031.0 -23.5Q974 10 903 10ZM903 -96Q944 -96 975.5 -114.5Q1007 -133 1024.5 -166.0Q1042 -199 1042 -241Q1042 -283 1024.0 -315.0Q1006 -347 975.0 -365.5Q944 -384 903 -384Q863 -384 831.5 -365.5Q800 -347 782.5 -315.0Q765 -283 765 -241Q765 -199 782.5 -166.0Q800 -133 831.5 -114.5Q863 -96 903 -96Z M1466 10Q1396 10 1339.0 -23.5Q1282 -57 1248.5 -114.0Q1215 -171 1215 -241Q1215 -311 1248.5 -367.0Q1282 -423 1339.0 -456.5Q1396 -490 1466 -490Q1537 -490 1594.0 -457.0Q1651 -424 1684.5 -367.5Q1718 -311 1718 -241Q1718 -171 1684.5 -114.0Q1651 -57 1594.0 -23.5Q1537 10 1466 10ZM1466 -96Q1507 -96 1538.5 -114.5Q1570 -133 1587.5 -166.0Q1605 -199 1605 -241Q1605 -283 1587.0 -315.0Q1569 -347 1538.0 -365.5Q1507 -384 1466 -384Q1426 -384 1394.5 -365.5Q1363 -347 1345.5 -315.0Q1328 -283 1328 -241Q1328 -199 1345.5 -166.0Q1363 -133 1394.5 -114.5Q1426 -96 1466 -96Z M2114 0 1911 -245 2113 -480H2244L2012 -216L2017 -279L2254 0ZM1809 0V-720H1919V0Z M2535 0V-700H2615L2650 -568V0ZM3020 0 2601 -547 2615 -700 3034 -153ZM3020 0 2985 -123V-700H3100V0Z M3460 10Q3388 10 3330.5 -22.5Q3273 -55 3239.5 -112.0Q3206 -169 3206 -240Q3206 -311 3239.0 -367.5Q3272 -424 3328.5 -457.0Q3385 -490 3454 -490Q3521 -490 3572.5 -459.0Q3624 -428 3653.5 -374.0Q3683 -320 3683 -251Q3683 -239 3681.5 -226.5Q3680 -214 3677 -199H3283V-289H3620L3579 -253Q3577 -297 3562.0 -327.0Q3547 -357 3519.5 -373.0Q3492 -389 3452 -389Q3410 -389 3379.0 -371.0Q3348 -353 3331.0 -320.5Q3314 -288 3314 -243Q3314 -198 3332.0 -164.0Q3350 -130 3383.0 -111.5Q3416 -93 3459 -93Q3496 -93 3527.5 -106.0Q3559 -119 3581 -144L3651 -73Q3616 -32 3566.0 -11.0Q3516 10 3460 10Z M3771 0V-480H3881V0ZM3881 -267 3843 -286Q3843 -377 3883.5 -433.5Q3924 -490 4006 -490Q4042 -490 4071.0 -477.0Q4100 -464 4125 -435L4053 -361Q4040 -375 4024.0 -381.0Q4008 -387 3987 -387Q3941 -387 3911.0 -358.0Q3881 -329 3881 -267Z M4365 10Q4300 10 4247.5 -23.0Q4195 -56 4164.5 -112.5Q4134 -169 4134 -239Q4134 -310 4164.5 -366.5Q4195 -423 4247.5 -456.5Q4300 -490 4365 -490Q4420 -490 4462.5 -466.5Q4505 -443 4530.0 -402.0Q4555 -361 4555 -309V-171Q4555 -119 4530.5 -78.0Q4506 -37 4463.0 -13.5Q4420 10 4365 10ZM4383 -94Q4424 -94 4454.5 -112.5Q4485 -131 4502.0 -164.0Q4519 -197 4519 -240Q4519 -283 4502.0 -316.0Q4485 -349 4454.5 -367.5Q4424 -386 4384 -386Q4343 -386 4312.5 -367.5Q4282 -349 4264.5 -316.0Q4247 -283 4247 -240Q4247 -197 4264.5 -164.0Q4282 -131 4312.5 -112.5Q4343 -94 4383 -94ZM4622 0H4512V-129L4531 -246L4512 -362V-720H4622Z" fill="#F0D9B2"/></svg>';
 
-var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false,ed:null,hq:null};
+var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false,ed:null,hq:null,addWhen:'past',addDate:'',fw:null};
 var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
 try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
 function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
@@ -380,12 +381,12 @@ function toast(msg,act){
   document.body.appendChild(t);
   setTimeout(function(){t.remove();},act?6000:2200);
 }
-function setStatus(b,st){
+function setStatus(b,st,fin){
   var now=Date.now();
   if(b.status==='finished'&&st!=='finished'){b.currentPage=0;if(st==='reading')b.startedAt=now;else delete b.startedAt;}
   b.status=st;
   if(st==='reading'&&!b.startedAt)b.startedAt=now;
-  if(st==='finished'){b.finishedAt=now;if(b.pages>0)b.currentPage=b.pages;}
+  if(st==='finished'){if(fin){if(fin.at){b.finishedAt=fin.at;b.startedAt=fin.at;}else{delete b.finishedAt;delete b.startedAt;}}else b.finishedAt=now;if(b.pages>0)b.currentPage=b.pages;}
   b.updatedAt=now;dbPut(b);
   if(st==='finished')chLast=chCredit(b);
 }
@@ -423,6 +424,35 @@ function greeting(){
   return [n?'Still up, '+n+'?':'Still up?','One more chapter won\'t hurt.'];
 }
 function viewHome(){chExpire();return viewHomeBase()+chHome();}
+/* ---------- When Did You Finish It? ---------- */
+function finWhen(when,date){
+  if(when==='today')return {at:Date.now()};
+  if(when==='past')return {at:null};
+  if(when==='date'){
+    var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(date||''));if(!m)return null;
+    if(+m[1]<1900||String(date)>dstr(Date.now()))return null;
+    var t=new Date(+m[1],+m[2]-1,+m[3],12,0,0).getTime();if(!isFinite(t))return null;
+    return {at:Math.min(t,Date.now())};
+  }
+  return null;
+}
+var FIN_OPTS=[['today','Today'],['date','Pick a Date'],['past','In the Past']];
+function finRowHTML(){
+  if(state.addAs!=='finished')return '';
+  var w=state.addWhen||'past',h='<div class="fld"><div class="lb">When Did You Finish It?</div><div class="row" style="gap:6px;flex-wrap:wrap">';
+  FIN_OPTS.forEach(function(c){h+='<button type="button" class="ch'+(w===c[0]?' sel':'')+'" data-aw="'+c[0]+'" aria-pressed="'+(w===c[0]?'true':'false')+'" style="flex:none">'+c[1]+'</button>';});
+  h+='</div>';
+  if(w==='date')h+='<label class="fld" style="margin-top:10px"><span class="lb">Finish Date</span><input id="aw-date" class="dt" type="date" value="'+esc(state.addDate||dstr(Date.now()))+'" max="'+dstr(Date.now())+'" aria-label="Finish date"></label>';
+  return h+'</div>';
+}
+function finSheet(fb){
+  var w=state.fw.when,h='<h2>When Did You Finish It?</h2><p class="sm" style="margin:0 0 10px">In the Past keeps it out of your challenge and year totals.</p><div class="row" style="gap:6px;flex-wrap:wrap">';
+  FIN_OPTS.forEach(function(c){h+='<button type="button" class="ch'+(w===c[0]?' sel':'')+'" data-fw="'+c[0]+'" aria-pressed="'+(w===c[0]?'true':'false')+'" style="flex:none">'+c[1]+'</button>';});
+  h+='</div><label class="fld" id="fw-wrap" style="'+(w==='date'?'':'display:none')+'"><span class="lb">Finish Date</span><input id="fw-date" class="dt" type="date" value="'+esc(state.fw.date)+'" max="'+dstr(Date.now())+'" aria-label="Finish date"></label>';
+  h+='<div class="row" style="margin-top:18px"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="fwsave" data-bid="'+esc(fb.id)+'">Save</button></div>';
+  return h;
+}
+['change','input'].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;if(t&&t.id==='aw-date')state.addDate=t.value||'';});});
 /* ---------- quote on the Currently Reading card ---------- */
 function hqCur(){var rd=state.books.filter(function(b){return b.status==='reading';}).sort(function(a,b){return b.updatedAt-a.updatedAt;});return rd[0]||null;}
 function hqQuote(cur){
@@ -663,7 +693,7 @@ function cardDetail(){
   var st=STAT[b.status];
   var p=pct(b);
   var own=isOwned(b);
-  var meta=(b.status==='finished'&&b.finishedAt)?'Finished '+fmtDate(b.finishedAt):(b.startedAt?'Started '+fmtDate(b.startedAt):'Added '+fmtDate(b.addedAt));
+  var meta=b.status==='finished'?(b.finishedAt?'Finished '+fmtDate(b.finishedAt):'Finished in the Past'):(b.startedAt?'Started '+fmtDate(b.startedAt):'Added '+fmtDate(b.addedAt));
   var h=cardHead('Book Detail')+'<div class="cbody">'+
   '<div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:76px;flex:none">'+coverHTML(b)+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+authorLinks(b)+'</div>':'<div style="height:10px"></div>')+
@@ -717,7 +747,7 @@ function cardFound(){
   ['toread','reading','finished','dnf'].forEach(function(k){
     h+='<button type="button" class="ch" data-as="'+k+'" aria-pressed="'+(state.addAs===k?'true':'false')+'" style="flex:none;'+(state.addAs===k?'background:'+STAT[k].color+';color:#fff;border-color:transparent':'')+'">'+STAT[k].label+'</button>';
   });
-  h+='</div></div><div class="fld"><div class="lb">Do You Own It?</div><div class="row" style="gap:6px;flex-wrap:wrap">'+
+  h+='</div></div>'+finRowHTML()+'<div class="fld"><div class="lb">Do You Own It?</div><div class="row" style="gap:6px;flex-wrap:wrap">'+
   [['1','Owned',state.addOwned,'#D1006F','check'],['0','Not Owned',!state.addOwned,'#ADB1B1','bag']].map(function(c){return '<button type="button" class="ch" data-ownc="'+c[0]+'" aria-pressed="'+(c[2]?'true':'false')+'" style="flex:none;display:inline-flex;align-items:center;gap:5px;'+(c[2]?'background:'+c[3]+';color:#fff;border-color:transparent':'')+'">'+ico(c[4],14)+c[1]+'</button>';}).join('')+
   '</div></div><div style="margin-top:20px"><button class="pb" data-act="addfound">Add to Library</button><button class="lk" data-act="rescan">Not the Right Book?</button></div></div>';
   return h;
@@ -971,7 +1001,7 @@ function doLookup(isbn){
   if(ex){stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
   setStat('Found ISBN '+isbn+'. Looking up the book\u2026');
   findBook(isbn).then(function(book){
-    state.isbn=isbn;state.addAs='toread';state.addOwned=true;state.from='';
+    state.isbn=isbn;state.addAs='toread';state.addWhen='past';state.addDate='';state.addOwned=true;state.from='';
     if(book){book.isbn=isbn;book.status='toread';state.found=book;state.nf='';}else{state.found=null;state.nf=isbn;}
     stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}openCard('found');
   });
@@ -1018,7 +1048,7 @@ function pickResult(i){
   }
   if(ex){toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
   state.found={title:r.title,author:r.author,pages:r.pages,year:r.year,cover:r.cover,isbn:r.isbn,olKey:r.olKey||'',status:'toread'};
-  state.nf='';state.isbn=r.isbn||'';state.addAs='toread';state.addOwned=true;state.from='search';
+  state.nf='';state.isbn=r.isbn||'';state.addAs='toread';state.addWhen='past';state.addDate='';state.addOwned=true;state.from='search';
   if(r.olKey){edOpen(r.olKey);return;}
   openCard('found');
 }
@@ -1157,10 +1187,10 @@ function makeBook(f){
   var b={id:uid(),title:f.title,author:f.author||'',pages:f.pages||0,status:state.addAs,currentPage:0,rating:0,notes:'',owned:state.addOwned!==false,addedAt:now,updatedAt:now};
   if(f.isbn)b.isbn=f.isbn;if(f.cover)b.coverUrl=f.cover;if(f.year)b.year=f.year;if(f.olKey)b.olKey=f.olKey;
   if(b.status==='reading')b.startedAt=now;
-  if(b.status==='finished'){b.startedAt=now;b.finishedAt=now;if(b.pages>0)b.currentPage=b.pages;}
+  if(b.status==='finished'){var fw=finWhen(state.addWhen,state.addDate)||{at:null};if(fw.at){b.startedAt=fw.at;b.finishedAt=fw.at;}if(b.pages>0)b.currentPage=b.pages;}
   state.books.push(b);dbPut(b);ensureSynopsis(b);
   if(b.status==='finished')chCredit(b);
-  state.addAs='toread';state.addOwned=true;state.filter='all';state.own='any';state.q='';state.search=false;state.err='';state.found=null;
+  state.addAs='toread';state.addWhen='past';state.addDate='';state.addOwned=true;state.filter='all';state.own='any';state.q='';state.search=false;state.err='';state.found=null;
   go('library');toast('Added to Library');
   chMaybeCelebrate();
   BGX.check();
@@ -1355,10 +1385,11 @@ function resumeBook(fb){
   toast('Back to Currently Reading',{label:'Undo',fn:function(){restoreBook(fb,p);}});
   BGX.check();
 }
-function alreadyRead(fb){
+function alreadyRead(fb,fin){
   if(!fb||fb.status==='finished')return;
+  if(!fin&&fb.status==='toread'){state.fw={id:fb.id,when:'past',date:dstr(Date.now())};openSheet(finSheet(fb));return;}
   var prev={status:fb.status,currentPage:fb.currentPage,startedAt:fb.startedAt,finishedAt:fb.finishedAt,rating:fb.rating,review:fb.review};
-  chLast=null;setStatus(fb,'finished');refresh();
+  chLast=null;setStatus(fb,'finished',fin);refresh();
   state.rev={id:fb.id,rating:fb.rating||0,prev:prev,cr:chLast};
   openSheet(reviewSheet(fb),afterReview);
 }
@@ -1839,11 +1870,13 @@ document.addEventListener('pointerdown',function(e){
 });
 document.addEventListener('click',function(e){
   var t=e.target;
-  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-so],[data-star],[data-as],[data-act],[data-set],[data-pick],[data-ed]');
+  var el=t.closest('[data-go],[data-open],[data-ownc],[data-setown],[data-rv],[data-clr],[data-ps],[data-po],[data-so],[data-star],[data-as],[data-act],[data-set],[data-pick],[data-ed],[data-aw],[data-fw]');
   if(!el){return;}
   if(el.getAttribute('data-act')==='closesheet'){if(t===el&&!state.lockSheet)closeSheet();return;}
   if(el.hasAttribute('data-go')){closeSheet();go(el.getAttribute('data-go'));return;}
   if(el.hasAttribute('data-pick')){pickResult(parseInt(el.getAttribute('data-pick'),10));return;}
+  if(el.hasAttribute('data-aw')){state.addWhen=el.getAttribute('data-aw');if(state.addWhen==='date'&&!state.addDate)state.addDate=dstr(Date.now());refresh();return;}
+  if(el.hasAttribute('data-fw')){var fwv=el.getAttribute('data-fw');if(state.fw)state.fw.when=fwv;document.querySelectorAll('[data-fw]').forEach(function(c){var on=c.getAttribute('data-fw')===fwv;c.classList.toggle('sel',on);c.setAttribute('aria-pressed',on?'true':'false');});var fwr=$('#fw-wrap');if(fwr)fwr.style.display=(fwv==='date')?'':'none';return;}
   if(el.hasAttribute('data-ed')){if(state.ed&&state.card==='edition'){state.ed.sel=parseInt(el.getAttribute('data-ed'),10)||0;renderCard();}return;}
   if(el.hasAttribute('data-open')){state.id=el.getAttribute('data-open');openCard('detail');return;}
   if(el.hasAttribute('data-ownc')){state.addOwned=el.getAttribute('data-ownc')==='1';refresh();return;}
@@ -1923,6 +1956,7 @@ document.addEventListener('click',function(e){
   if(a==='clearsq'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();var cs=$('#sq');if(cs)cs.focus();return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='hqshuf'){hqShuffle();return;}
+  if(a==='fwsave'){var fwb=byId(el.getAttribute('data-bid')),fws=state.fw;if(!fwb||!fws)return;var fwi=$('#fw-date');if(fws.when==='date'&&fwi)fws.date=fwi.value;var fwf=finWhen(fws.when,fws.date);if(!fwf){toast('Pick a finish date that is not in the future.');return;}state.fw=null;closeSheet();alreadyRead(fwb,fwf);return;}
   if(a==='seereading'){state.filter='reading';state.own='any';go('library');return;}
   if(a==='openfilter'){state.pst=state.filter;state.pown=state.own;state.psort=state.sort;openSheet(filterSheet());return;}
   if(a==='clearfilter'){state.pst='all';state.pown='any';state.psort='new';openSheet(filterSheet());return;}
@@ -1933,7 +1967,7 @@ document.addEventListener('click',function(e){
     openSheet('<h2>Update Progress</h2><div class="row" style="gap:10px;margin-bottom:14px"><label><span class="lb">Current Page</span><input id="p-cur" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.currentPage||0)+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label><label><span class="lb">Total Pages</span><input id="p-tot" type="text" inputmode="numeric" pattern="[0-9]*" value="'+(hb.pages||'')+'" style="width:100%;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;outline:0"></label></div><div class="row"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="progsave">Save</button></div>');
     return;
   }
-  if(a==='addfound'){if(state.found)makeBook(state.found);return;}
+  if(a==='addfound'){if(!state.found)return;if(state.addAs==='finished'&&state.addWhen==='date'&&!finWhen('date',state.addDate)){toast('Pick a finish date that is not in the future.');return;}makeBook(state.found);return;}
   if(a==='markowned'){
     var mb=byId(el.getAttribute('data-bid')||state.id);if(!mb||isOwned(mb))return;
     mb.owned=true;mb.updatedAt=Date.now();dbPut(mb);refresh();
