@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-14 11:16 UTC">
+<meta name="build" content="2026-10-15 00:16 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -286,6 +286,11 @@ nav .ni{flex:1 1 0;min-width:0}
 .toast-act::after{content:"";position:absolute;left:-8px;right:-8px;top:-10px;bottom:-10px}
 .bt::after,.fb::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;bottom:-3px}
 .lnk.l14{font-size:14px}
+.cst{position:absolute;right:calc(8px + 44px + 2px);top:calc(var(--sat) + 3px);width:26px;height:26px;padding:0;background:none;border:0;z-index:2;display:flex;align-items:center;justify-content:center}
+.cst[hidden]{display:none}
+.cst::after{content:"";position:absolute;left:-4px;right:-4px;top:-9px;bottom:-9px}
+.clmsg.err{color:#FF6B8A}
+.clmsg.ok{color:var(--green)}
 /* one cover size for Library, Book Detail and Book Found: (screen width capped at 480, minus 32 padding, minus 2 gaps of 18) / 3 */
 :root{--tile:calc((min(100vw,480px) - 68px)/3)}
 .ybtn{display:flex;justify-content:space-between;align-items:center;width:100%;height:44px;margin-top:12px;border-radius:999px;border:0.5px solid var(--line);background:var(--navy);padding:0 16px;font-size:14px;color:#fff;text-align:left}
@@ -371,7 +376,7 @@ var LOCKUP='<svg class="logo" viewBox="0 0 143 28" aria-hidden="true"><svg x="0"
 var state={sort:'new',psort:'new',synOpen:false,rev:null,loaded:false,card:null,pst:'all',pown:'any',books:[],view:'home',filter:'all',q:'',search:false,id:null,form:'choose',editProg:false,addAs:'toread',err:'',found:null,nf:'',isbn:'',status:'',statusErr:false,from:'',sq:'',sres:[],sstat:'idle',sload:'',own:'any',addOwned:true,scanning:false,ed:null,hq:null,addWhen:'past',addDate:'',fw:null,cf:null};
 var SORTS=['new','old','title','author','rating','fin'],SORTL={new:'Newest Added',old:'Oldest Added',title:'Title',author:'Author',rating:'Rating',fin:'Recently Finished'};
 try{var _sv=localStorage.getItem('bm_sort');if(SORTS.indexOf(_sv)>=0)state.sort=_sv;}catch(e){}
-function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}}
+function sortSave(){try{localStorage.setItem('bm_sort',state.sort);}catch(e){}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onSetting('bm_sort');}catch(e){}}
 var scanner=null,handled=false,scanToken=0,pendingRestore=null,pendingName='',pendingChallenge=null,pendingBadges=null,pendingPhoto='';
 var db=null,memoryOnly=false;
 
@@ -392,8 +397,8 @@ function dbAll(){return new Promise(function(res,rej){
   var q=db.transaction('books','readonly').objectStore('books').getAll();
   q.onsuccess=function(){res(q.result||[]);};q.onerror=function(){rej(q.error);};
 });}
-function dbPut(b){if(memoryOnly)return;try{var t=db.transaction('books','readwrite');t.objectStore('books').put(b);t.onerror=function(){toast('Could not save that change');};}catch(e){toast('Could not save that change');}}
-function dbDel(id){if(memoryOnly)return;try{db.transaction('books','readwrite').objectStore('books').delete(id);}catch(e){}}
+function dbPut(b){if(memoryOnly)return;try{var t=db.transaction('books','readwrite');t.objectStore('books').put(b);t.onerror=function(){toast('Could not save that change');};}catch(e){toast('Could not save that change');}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onPut(b);}catch(e){}}
+function dbDel(id){if(memoryOnly)return;try{db.transaction('books','readwrite').objectStore('books').delete(id);}catch(e){}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onDel(id);}catch(e){}}
 
 /* ---------- helpers ---------- */
 function byId(id){for(var i=0;i<state.books.length;i++){if(state.books[i].id===id)return state.books[i];}return null;}
@@ -431,7 +436,7 @@ function setStatus(b,st,fin){
 
 /* ---------- views ---------- */
 function top(){return '';}
-(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><button class="pf" id="pf" type="button" data-go="backup" aria-label="Profile"></button><h1 class="pt" id="ptitle"></h1>';profSync();})();
+(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><button class="pf" id="pf" type="button" data-go="backup" aria-label="Profile"></button><button class="cst" id="cloudst" type="button" data-go="backup" aria-label="Cloud backup" hidden></button><h1 class="pt" id="ptitle"></h1>';profSync();})();
 var ptNow='';
 function ptitle(t){ptNow=String(t);return '';}
 function setPT(){var e=document.getElementById('ptitle');if(e&&e.textContent!==ptNow)e.textContent=ptNow;}
@@ -877,6 +882,322 @@ var YIB=(function(){
 })();
 
 try{window.__yib=YIB;}catch(e){}
+/* ================= Cloud Sync ================= */
+var CLOUD=(function(){
+  var FB_VER='12.19.0',CFG={"apiKey": "AIzaSyAUHvK-7kV3CeT1S62BvKB6GfzXyJsYeKE", "authDomain": "book-nerd-85c7f.firebaseapp.com", "projectId": "book-nerd-85c7f", "storageBucket": "book-nerd-85c7f.firebasestorage.app", "messagingSenderId": "370297686967", "appId": "1:370297686967:web:aa008c0a40a6758645b632"};
+  var UID_KEY='bm_cloud_uid',EM_KEY='bm_cloud_email',CU_KEY='bm_cloud_cu',TB_KEY='bm_cloud_tomb',SU_KEY='bm_cloud_su',LAST_KEY='bm_cloud_last';
+  var SETKEYS={bm_name:'name',bm_photo:'photo',bm_sort:'sort',bm_challenge:'challenge',bm_badges:'badges'};
+  var GREEN='#42BB37',AMBER='#FFB500',PINK='#FF6B8A',GREY='#9FB3D1';
+  var S={sdk:null,app:null,auth:null,fs:null,user:null,authReady:false,loading:null,attached:false,sync:false,firstDone:false,metaDone:false,pend:0,err:'',unB:null,unM:null,applying:false,
+    timers:{},setTimer:null,dirty:{},refreshTimer:null,mode:'signin',copy:null,busy:false,lastAck:0,pendingUser:null,saveT:null};
+  function jparse(k){try{var o=JSON.parse(localStorage.getItem(k)||'{}');return (o&&typeof o==='object')?o:{};}catch(e){return {};}}
+  var CU=jparse(CU_KEY),TOMB=jparse(TB_KEY),SU=jparse(SU_KEY),LH=jparse('bm_cloud_lh');
+  function sig(b){var c={},k;for(k in b){if(k!=='synopsis'&&k!=='synopsisChecked')c[k]=b[k];}var t=JSON.stringify(c),h=5381,i;for(i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return String(h);}
+  function persist(){clearTimeout(S.saveT);S.saveT=setTimeout(function(){try{localStorage.setItem(CU_KEY,JSON.stringify(CU));localStorage.setItem(TB_KEY,JSON.stringify(TOMB));localStorage.setItem(SU_KEY,JSON.stringify(SU));localStorage.setItem('bm_cloud_lh',JSON.stringify(LH));}catch(e){}},300);}
+  function linked(){return lsGet(UID_KEY)||'';}
+  function now(){return Date.now();}
+  function lu(b){return CU[b.id]||b.updatedAt||b.addedAt||0;}
+  function msg(id,cls,t){var e=document.getElementById(id);if(e){e.className='sm clmsg'+(cls?' '+cls:'');e.textContent=t||'';}}
+  var ERR={
+    'auth/email-already-in-use':'That email already has an account. Tap Sign In instead.','auth/invalid-credential':'The email or password is not right.','auth/wrong-password':'The email or password is not right.','auth/user-not-found':'The email or password is not right.',
+    'auth/invalid-email':'That email address does not look right.','auth/missing-password':'Please enter a password.','auth/weak-password':'The password needs at least 6 characters.',
+    'auth/network-request-failed':'No connection. Try again when you are online.','auth/too-many-requests':'Too many tries. Wait a minute and try again.','auth/operation-not-allowed':'Email sign-in is not switched on for this project.',
+    'auth/unauthorized-domain':'This website address is not allowed yet in Firebase.','auth/invalid-api-key':'The cloud settings look wrong.'};
+  function human(e){return ERR[e&&e.code]||('Something went wrong. '+((e&&e.code)||(e&&e.message)||''));}
+  /* ---------- loading the Firebase SDK on demand ---------- */
+  function loadSDK(){
+    if(S.sdk)return Promise.resolve(S.sdk);
+    if(S.loading)return S.loading;
+    var base='https://www.gstatic.com/firebasejs/'+FB_VER+'/';
+    S.loading=Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]).then(function(m){
+      var A=m[0],U=m[1],F=m[2],app=A.initializeApp(CFG),auth=U.getAuth(app),fs;
+      try{fs=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})});}catch(e){fs=F.getFirestore(app);}
+      if(window.__bmEmu){U.connectAuthEmulator(auth,window.__bmEmu.auth,{disableWarnings:true});F.connectFirestoreEmulator(fs,window.__bmEmu.fsHost,window.__bmEmu.fsPort);}
+      S.sdk={A:A,U:U,F:F};S.app=app;S.auth=auth;S.fs=fs;return S.sdk;
+    });
+    S.loading.catch(function(){S.loading=null;});
+    return S.loading;
+  }
+  function attach(){
+    if(S.attached)return;S.attached=true;
+    S.sdk.U.onAuthStateChanged(S.auth,function(u){
+      S.user=u;S.authReady=true;
+      if(u){
+        if(linked()&&linked()===u.uid){S.err='';startSync();}
+        else if(linked()&&linked()!==u.uid){S.sdk.U.signOut(S.auth);}
+      }else{stopSync();}
+      ui();
+    },function(e){S.err=(e&&e.code)||'auth';ui();});
+  }
+  /* ---------- the sync engine ---------- */
+  function startSync(){
+    if(S.sync||!S.user||!state.loaded)return;
+    S.sync=true;S.firstDone=false;S.metaDone=false;var F=S.sdk.F,uid=S.user.uid;
+    S.unB=F.onSnapshot(F.collection(S.fs,'users',uid,'books'),{includeMetadataChanges:true},onBooks,onSnapErr);
+    S.unM=F.onSnapshot(F.doc(S.fs,'users',uid,'meta','settings'),{includeMetadataChanges:true},onMeta,onSnapErr);
+    ui();
+  }
+  function stopSync(){if(S.unB){S.unB();S.unB=null;}if(S.unM){S.unM();S.unM=null;}S.sync=false;S.firstDone=false;S.metaDone=false;}
+  function onSnapErr(e){var c=(e&&e.code)||'error';if(c==='unavailable'||c==='cancelled')return;S.err=c;ui();}
+  function applyBook(id,R){
+    var L=byId(id),lt=L?lu(L):(TOMB[id]||0),u=R.u||0;
+    if(R.d){
+      if(L){if(lt<=u){state.books=state.books.filter(function(x){return x.id!==id;});dbDel(id);TOMB[id]=u;delete CU[id];if(state.id===id&&state.card)state.closeAfter=true;}else{queueBook(id);}}
+      else{TOMB[id]=Math.max(TOMB[id]||0,u);}
+      return;
+    }
+    var nb=null;try{nb=JSON.parse(R.j);}catch(e){return;}
+    if(!nb||nb.id!==id)return;
+    if(!L){
+      if(TOMB[id]&&TOMB[id]>=u){pushTomb(id,TOMB[id]);return;}
+      delete TOMB[id];state.books.push(nb);dbPut(nb);CU[id]=u;LH[id]=sig(nb);return;
+    }
+    if(u>lt){var i=state.books.indexOf(L);state.books[i]=nb;dbPut(nb);CU[id]=u;LH[id]=sig(nb);}
+    else if(u<lt){queueBook(id);}
+  }
+  function onBooks(snap){
+    var ch=snap.docChanges(),touched=false;
+    if(ch.length){
+      S.applying=true;
+      try{ch.forEach(function(c){if(c.type==='removed')return;var d=c.doc;if(d.metadata.hasPendingWrites)return;applyBook(d.id,d.data());touched=true;});}finally{S.applying=false;}
+      if(touched){persist();softRefresh();}
+    }
+    if(!snap.metadata.fromCache&&!S.firstDone){
+      S.firstDone=true;
+      var remote={};snap.forEach(function(d){remote[d.id]=1;});
+      var ids=[];state.books.forEach(function(b){if(!remote[b.id])ids.push(b.id);});
+      if(S.copy)S.copy.left=ids.length;
+      if(ids.length)pushMany(ids);
+      Object.keys(TOMB).forEach(function(id){if(!remote[id])pushTomb(id,TOMB[id]);});
+    }
+    ui();
+  }
+  function bookData(b,id){return {j:JSON.stringify(b),u:CU[id]||now(),d:0};}
+  function ref(id){return S.sdk.F.doc(S.fs,'users',S.user.uid,'books',id);}
+  function ack(n){S.pend=Math.max(0,S.pend-1);S.err='';S.lastAck=now();try{localStorage.setItem(LAST_KEY,String(S.lastAck));}catch(e){}if(S.copy&&n)S.copy.left=Math.max(0,S.copy.left-n);ui();}
+  function fail(e){S.pend=Math.max(0,S.pend-1);var c=(e&&e.code)||'error';if(c!=='unavailable')S.err=c;ui();}
+  function pushMany(ids){
+    if(!S.user||!S.sync)return;var F=S.sdk.F;
+    for(var i=0;i<ids.length;i+=100){
+      var chunk=ids.slice(i,i+100),batch=F.writeBatch(S.fs),n=0;
+      chunk.forEach(function(id){var b=byId(id);if(!b)return;if(!CU[id])CU[id]=lu(b)||now();LH[id]=sig(b);batch.set(ref(id),bookData(b,id));n++;});
+      if(!n)continue;S.pend++;(function(n){batch.commit().then(function(){ack(n);},fail);})(n);
+    }
+    persist();ui();
+  }
+  function queueBook(id){
+    clearTimeout(S.timers[id]);
+    S.timers[id]=setTimeout(function(){delete S.timers[id];pushBook(id);},500);ui();
+  }
+  function pushBook(id){
+    var b=byId(id);if(!b||!S.user||!S.sync){ui();return;}
+    LH[id]=sig(b);S.pend++;S.sdk.F.setDoc(ref(id),bookData(b,id)).then(function(){ack(0);},fail);ui();
+  }
+  function pushTomb(id,u){
+    if(!S.user||!S.sync)return;S.pend++;
+    S.sdk.F.setDoc(ref(id),{j:'',u:u||now(),d:1}).then(function(){ack(0);},fail);
+  }
+  /* ---------- hooks called by the app ---------- */
+  function onPut(b){
+    if(!b||!b.id)return;
+    if(LH[b.id]&&LH[b.id]===sig(b)&&!TOMB[b.id])return;
+    CU[b.id]=now();delete TOMB[b.id];persist();
+    if(linked())queueBook(b.id);
+  }
+  function onDel(id){
+    TOMB[id]=now();delete CU[id];persist();clearTimeout(S.timers[id]);delete S.timers[id];
+    if(linked()&&S.user&&S.sync)pushTomb(id,TOMB[id]);ui();
+  }
+  function onSetting(k){
+    var f=SETKEYS[k];if(!f)return;SU[f]=now();S.dirty[f]=1;persist();
+    if(linked()){clearTimeout(S.setTimer);S.setTimer=setTimeout(pushSettings,600);ui();}
+  }
+  function setVal(f){
+    if(f==='name')return lsGet('bm_name')||'';
+    if(f==='photo'){var p=lsGet('bm_photo')||'';return p.length>700000?'':p;}
+    if(f==='sort')return lsGet('bm_sort')||'';
+    if(f==='challenge')return lsGet('bm_challenge')||'';
+    if(f==='badges')return lsGet('bm_badges')||'';
+    return '';
+  }
+  function pushSettings(){
+    S.setTimer=null;if(!S.user||!S.sync)return;var d={},any=false;
+    Object.keys(S.dirty).forEach(function(f){d[f]={v:setVal(f),u:SU[f]||now()};any=true;});
+    S.dirty={};if(!any)return;
+    S.pend++;S.sdk.F.setDoc(S.sdk.F.doc(S.fs,'users',S.user.uid,'meta','settings'),d,{merge:true}).then(function(){ack(0);},fail);ui();
+  }
+  function mergeCh(L,R){
+    if(!L)return R;if(!R)return L;
+    if((L.created||0)!==(R.created||0))return ((L.created||0)>(R.created||0))?L:R;
+    var seen={},cr=[];(L.credits||[]).concat(R.credits||[]).forEach(function(c){if(c&&!seen[c.id]){seen[c.id]=1;cr.push(c);}});
+    var m=JSON.parse(JSON.stringify(L));m.credits=cr;m.complete=!!(L.complete||R.complete);m.celebrated=!!(L.celebrated||R.celebrated);return chClean(m);
+  }
+  function onMeta(snap){
+    if(snap.metadata.hasPendingWrites)return;
+    var D=snap.exists()?snap.data():{},ch=false;
+    S.applying=true;
+    try{
+      ['name','photo','sort'].forEach(function(f){
+        var R=D[f],key='bm_'+f;if(!R)return;
+        if((R.u||0)>(SU[f]||0)){if((lsGet(key)||'')!==R.v){if(R.v===''&&f==='photo')localStorage.removeItem(key);else localStorage.setItem(key,R.v);if(f==='name'&&R.v)localStorage.setItem('bm_name_done','1');if(f==='sort'&&typeof SORTS!=='undefined'&&SORTS.indexOf(R.v)>=0)state.sort=R.v;ch=true;}SU[f]=R.u;}
+        else if((R.u||0)<(SU[f]||0)){S.dirty[f]=1;}
+      });
+      if(D.challenge){
+        var Lc=chGet(),Rc=null;try{Rc=D.challenge.v?chClean(JSON.parse(D.challenge.v)):null;}catch(e){}
+        var M=mergeCh(Lc,Rc),mj=M?JSON.stringify(M):'';
+        if(mj!==(lsGet('bm_challenge')||'')){chSave(M);ch=true;}
+        if(mj!==(D.challenge.v||''))S.dirty.challenge=1;SU.challenge=Math.max(SU.challenge||0,D.challenge.u||0);
+      }
+      if(D.badges){
+        var before=lsGet('bm_badges')||'';try{if(D.badges.v)BGX.merge(JSON.parse(D.badges.v));}catch(e){}
+        var after=lsGet('bm_badges')||'';if(after!==before)ch=true;
+        if(after!==(D.badges.v||''))S.dirty.badges=1;SU.badges=Math.max(SU.badges||0,D.badges.u||0);
+      }
+    }finally{S.applying=false;}
+    if(!snap.metadata.fromCache&&!S.metaDone){
+      S.metaDone=true;
+      Object.keys(SETKEYS).forEach(function(k){var f=SETKEYS[k];if(!D[f]&&setVal(f))S.dirty[f]=1;});
+    }
+    if(Object.keys(S.dirty).length){clearTimeout(S.setTimer);S.setTimer=setTimeout(pushSettings,300);}
+    if(ch){persist();try{profSync();}catch(e){}softRefresh();}
+    ui();
+  }
+  /* ---------- refresh without disturbing the person ---------- */
+  function softRefresh(){if(S.refreshTimer)return;S.refreshTimer=setTimeout(tick,150);}
+  function tick(){
+    S.refreshTimer=null;var ae=document.activeElement,typing=ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+    if(typing||document.querySelector('#layer .ov:not(.out)')||document.getElementById('yib')){S.refreshTimer=setTimeout(tick,1200);return;}
+    try{if(state.closeAfter){state.closeAfter=false;if(state.card&&!byId(state.id))closeCard(true);}refresh();}catch(e){}
+  }
+  /* ---------- status and the pieces you see ---------- */
+  function queued(){return Object.keys(S.timers).length;}
+  function status(){
+    if(!linked())return {k:'none'};
+    if(!S.authReady){if(S.err)return {k:'problem',err:S.err};return navigator.onLine?{k:'saving',n:0}:{k:'offline',n:0};}
+    if(!S.user)return {k:'signedout'};
+    if(S.err)return {k:'problem',err:S.err};
+    var n=S.pend+queued();
+    if(!navigator.onLine)return {k:'offline',n:n};
+    if(n>0||!S.firstDone||!S.metaDone)return {k:'saving',n:n};
+    return {k:'saved'};
+  }
+  function icon(k,sz){
+    var P={saved:[GREEN,'<path d="M9.3 13.2l2 2 3.6-3.8" stroke-width="2"/>'],saving:[AMBER,'<path d="M12 16v-4.2M10.2 13.4L12 11.6l1.8 1.8" stroke-width="2"/>'],offline:[AMBER,'<path d="M12 16v-4.2M10.2 13.4L12 11.6l1.8 1.8" stroke-width="2"/>'],problem:[PINK,'<path d="M12 11.2v2.6M12 16v.1" stroke-width="2.2"/>'],signedout:[GREY,'<path d="M5 5l14 14" stroke-width="1.8"/>']}[k];
+    if(!P)return '';
+    return '<svg width="'+(sz||26)+'" height="'+(sz||26)+'" viewBox="0 0 24 24" fill="none" stroke="'+P[0]+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .6-7.96A5.5 5.5 0 0 0 7.2 9.3 4.4 4.4 0 0 0 7 18z"/>'+P[1]+'</svg>';
+  }
+  var LABEL={saved:'Cloud backup: saved',saving:'Cloud backup: saving',offline:'Cloud backup: waiting for a connection',problem:'Cloud backup: problem',signedout:'Cloud backup: signed out'};
+  function ago(t){if(!t)return '';var s=Math.max(0,Math.round((now()-t)/1000));if(s<10)return 'Just now';if(s<60)return s+' seconds ago';var m=Math.round(s/60);if(m<60)return m+(m===1?' minute ago':' minutes ago');var h=Math.round(m/60);if(h<24)return h+(h===1?' hour ago':' hours ago');return new Date(t).toLocaleDateString();}
+  function cardInner(){
+    var st=status(),n=state.books.length,em=esc(lsGet(EM_KEY)||'');
+    var chk='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="'+GREEN+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    var dot=function(c){return '<span style="width:14px;height:14px;border-radius:50%;background:'+c+';flex:none"></span>';};
+    var signedAs='<div class="sm" style="margin-top:12px;opacity:.85">Signed in as '+em+'</div><button class="ob" data-act="cloudout" style="margin-top:12px;width:100%">Sign Out</button>';
+    if(st.k==='none')return '<div style="font-weight:500;margin-bottom:6px">Keep Your Books Safe in the Cloud</div><p class="sm" style="margin:0 0 14px">Sign in once and your books save to the cloud by themselves, and stay in sync on all your devices. No more backup files.</p><button class="pb" data-act="cloudopen">Sign In or Create Account</button>';
+    if(st.k==='signedout')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(GREY)+'<span>Signed out</span></div><p class="sm" style="margin:6px 0 14px">Your books stay on this phone. Sign in to start saving to the cloud again.</p><button class="pb" data-act="cloudopen">Sign In</button>';
+    if(st.k==='problem')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(PINK)+'<span>The cloud is not answering</span></div><p class="sm" style="margin:6px 0 0">Your books are safe on this phone. Nothing is lost.</p><button class="ob" data-act="cloudretry" style="margin-top:12px;width:100%">Try Again</button>'+signedAs.replace('<button class="ob" data-act="cloudout" style="margin-top:12px;width:100%">','<button class="ob" data-act="cloudout" style="margin-top:10px;width:100%">');
+    if(st.k==='offline')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(AMBER)+'<span>Waiting for a connection</span></div><p class="sm" style="margin:6px 0 0">'+(st.n?(st.n+(st.n===1?' change':' changes')+' will save as soon as you are back online. '):'')+'Your books are safe on this phone.</p>'+signedAs;
+    if(st.k==='saving')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(AMBER)+'<span>Saving…</span></div><p class="sm" style="margin:6px 0 0">Your books are syncing with the cloud.</p>'+signedAs;
+    return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+chk+'<span>All '+n+(n===1?' book is':' books are')+' saved to the cloud</span></div><div class="sm" style="margin-top:6px">Last saved: '+esc(ago(S.lastAck||Number(lsGet(LAST_KEY))||0)||'Just now')+'</div>'+signedAs;
+  }
+  function cardHTML(){return '<div id="cloudsec"><h2 class="sec">Cloud Backup</h2><div class="cd">'+cardInner()+'</div></div>';}
+  var lastKey='';
+  function ui(){
+    var st=status(),b=document.getElementById('cloudst');
+    if(b){var show=st.k!=='none';b.hidden=!show;if(show){var key=st.k;if(key!==lastKey){b.innerHTML=icon(key,26);b.setAttribute('aria-label',LABEL[key]||'Cloud backup');lastKey=key;}}}
+    var sec=document.getElementById('cloudsec');if(sec){var c=sec.querySelector('.cd');if(c){var h=cardInner();if(c._h!==h){c.innerHTML=h;c._h=h;}}}
+    var pr=document.getElementById('cl-prog');if(pr&&S.copy){updateProgress();}
+    if(S.copy&&S.copy.active&&S.firstDone&&S.metaDone&&S.pend===0&&queued()===0&&!S.err)copyFinished();
+  }
+  function onNet(){ui();if(linked()&&!S.sdk&&!S.loading){loadSDK().then(function(){attach();ui();}).catch(function(){});}}
+  /* ---------- sheets ---------- */
+  function sheetSignIn(mode,keep){
+    S.mode=mode;var su=mode==='signup',em=keep&&document.getElementById('cl-email')?document.getElementById('cl-email').value:'';
+    openSheet('<h2>'+(su?'Create Account':'Sign In')+'</h2><p class="sm" style="margin:0 0 4px">'+(su?'Choose an email and a password you will remember (at least 6 characters).':'Use the email and password for your Book Nerd account.')+'</p>'+
+      '<label class="fld"><span class="lb">Email</span><input class="dt" id="cl-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(em)+'"></label>'+
+      '<label class="fld"><span class="lb">Password</span><input class="dt" id="cl-pw" type="password" autocomplete="'+(su?'new-password':'current-password')+'"></label>'+
+      '<div class="sm clmsg" id="cl-msg" role="alert" aria-live="assertive" style="min-height:20px;margin-top:8px"></div>'+
+      '<div class="row" style="margin-top:8px"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="clgo" id="cl-go">'+(su?'Create Account':'Sign In')+'</button></div>'+
+      (su?'':'<button class="lnk l14" data-act="clforgot">Forgot Password?</button>')+
+      '<button class="lnk l14" data-act="clmode" style="margin-top:6px">'+(su?'I Already Have an Account. Sign In.':'I Do Not Have an Account. Create One.')+'</button>');
+  }
+  function submit(){
+    var e=document.getElementById('cl-email'),p=document.getElementById('cl-pw');if(!e||!p||S.busy)return;
+    var em=e.value.trim(),pw=p.value;if(!em||!pw){msg('cl-msg','err',!em?'Please enter your email.':'Please enter a password.');return;}
+    S.busy=true;var go=document.getElementById('cl-go');if(go)go.disabled=true;msg('cl-msg','','Working…');
+    loadSDK().then(function(){attach();var U=S.sdk.U;return S.mode==='signup'?U.createUserWithEmailAndPassword(S.auth,em,pw):U.signInWithEmailAndPassword(S.auth,em,pw);})
+      .then(function(c){S.busy=false;afterAuth(c.user,em);})
+      .catch(function(er){S.busy=false;var g=document.getElementById('cl-go');if(g)g.disabled=false;msg('cl-msg','err',human(er));});
+  }
+  function forgot(){
+    var e=document.getElementById('cl-email'),em=e?e.value.trim():'';if(!em){msg('cl-msg','err','Type your email above first.');return;}
+    loadSDK().then(function(){return S.sdk.U.sendPasswordResetEmail(S.auth,em);}).then(function(){msg('cl-msg','ok','If that email has an account, a reset link is on its way. Check your inbox.');}).catch(function(er){msg('cl-msg','err',human(er));});
+  }
+  function afterAuth(user,em){
+    if(linked()&&linked()!==user.uid){S.sdk.U.signOut(S.auth);sheetOther();return;}
+    if(linked()===user.uid){closeSheet();toast('Signed In');return;}
+    var F=S.sdk.F;
+    F.getDocs(F.collection(S.fs,'users',user.uid,'books')).then(function(snap){
+      var m=0;snap.forEach(function(d){if(!d.data().d)m++;});var n=state.books.length;S.pendingUser={uid:user.uid,email:em||user.email||'',n:n,m:m};
+      if(!n&&!m){doLink();closeSheet();toast('Signed In');}
+      else if(n&&!m)sheetCopy(n);
+      else if(!n&&m)doLink(true);
+      else sheetCombine(n,m);
+    }).catch(function(er){msg('cl-msg','err',human(er));});
+  }
+  function sheetCopy(n){openSheet('<h2>Copy Your Books to the Cloud</h2><p class="sm" style="margin:0 0 4px">You have <b style="font-weight:500">'+n+(n===1?' book':' books')+'</b> on this phone, and your cloud account is empty.</p><p class="sm" style="margin:8px 0 0">Copying them now keeps them safe even if you lose this phone, and every change after this saves by itself.</p><button class="pb" data-act="clcopy" style="margin-top:18px">Copy '+n+(n===1?' Book':' Books')+'</button><button class="lnk l14" data-act="clnot">Not Now</button>');}
+  function sheetCombine(n,m){openSheet('<h2>Combine Your Books</h2><p class="sm" style="margin:0 0 4px">This phone has <b style="font-weight:500">'+n+(n===1?' book':' books')+'</b> and your cloud has <b style="font-weight:500">'+m+'</b>.</p><p class="sm" style="margin:8px 0 0">Combining keeps every book from both places. If the same book was changed in both, the newest change wins.</p><button class="pb" data-act="clcopy" style="margin-top:18px">Combine Books</button><button class="lnk l14" data-act="clnot">Not Now</button>');}
+  function sheetOther(){openSheet('<h2>This Phone Belongs to Another Account</h2><p class="sm" style="margin:0 0 4px">The books on this phone are linked to <b style="font-weight:500">'+esc(lsGet(EM_KEY)||'another account')+'</b>.</p><p class="sm" style="margin:8px 0 0">Sign in with that account instead. To use a different account, save a backup file first.</p><button class="pb" data-act="closesheet2" style="margin-top:18px">OK</button>');}
+  function sheetProgress(){
+    var c=S.copy||{};
+    openSheet('<h2>'+(c.total?'Copying Your Books…':'Getting Your Books…')+'</h2><div id="cl-prog"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span id="cl-pt" style="font-size:14px;font-weight:500"></span><span id="cl-pp" style="font-size:14px;font-weight:500;color:var(--green)"></span></div><div class="bar" style="height:6px;margin:8px 0 0"><b id="cl-pb" style="width:0%"></b></div></div><p class="sm" style="margin:16px 0 0">Keep Book Nerd open until this finishes. It only takes a moment.</p><div style="height:60px"></div>');
+    updateProgress();
+  }
+  function updateProgress(){
+    var c=S.copy;if(!c)return;var t=document.getElementById('cl-pt'),p=document.getElementById('cl-pp'),b=document.getElementById('cl-pb');if(!t)return;
+    if(c.total){var d=Math.max(0,c.total-c.left),pc=Math.round(d/c.total*100);t.textContent=d+' of '+c.total+' books';p.textContent=pc+'%';b.style.width=pc+'%';}
+    else{t.textContent='Downloading from the cloud…';p.textContent='';b.style.width='60%';}
+  }
+  function doLink(showProg){
+    var pu=S.pendingUser;if(!pu)return;
+    lsSetRaw(UID_KEY,pu.uid);lsSetRaw(EM_KEY,pu.email);
+    S.copy={active:true,total:pu.n,left:pu.n,shown:true};S.pendingUser=null;
+    if(showProg||pu.n)sheetProgress();
+    startSync();ui();
+  }
+  function lsSetRaw(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function copyFinished(){
+    var c=S.copy;if(!c||!c.active)return;c.active=false;S.copy=null;
+    var n=state.books.length,sheetOpen=document.getElementById('cl-prog');
+    if(sheetOpen)openSheet('<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="'+GREEN+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><h2 style="margin:0">All '+n+(n===1?' Book Is':' Books Are')+' in the Cloud</h2></div><p class="sm" style="margin:0">From now on, every change saves by itself, on every device where you are signed in.</p><button class="pb" data-act="closesheet2" style="margin-top:18px">Done</button>');
+    softRefresh();
+  }
+  function signOut(){
+    var go=function(){stopSync();ui();toast('Signed Out');};
+    if(S.sdk&&S.auth)S.sdk.U.signOut(S.auth).then(go,go);else go();
+  }
+  function retry(){S.err='';stopSync();if(!S.sdk){location.reload();return;}if(S.user)startSync();ui();}
+  function act(a,el){
+    if(a==='cloudopen'){sheetSignIn('signin');return true;}
+    if(a==='clmode'){sheetSignIn(S.mode==='signup'?'signin':'signup',true);return true;}
+    if(a==='clgo'){submit();return true;}
+    if(a==='clforgot'){forgot();return true;}
+    if(a==='clcopy'){doLink(true);return true;}
+    if(a==='clnot'){S.pendingUser=null;if(S.sdk&&S.auth)S.sdk.U.signOut(S.auth);closeSheet();return true;}
+    if(a==='cloudout'){signOut();return true;}
+    if(a==='cloudretry'){retry();return true;}
+    return false;
+  }
+  function boot(){
+    addEventListener('online',onNet);addEventListener('offline',onNet);
+    if(linked()){loadSDK().then(function(){attach();ui();}).catch(function(){S.err=navigator.onLine?'sdk':'';ui();});}
+    ui();
+  }
+  var api={boot:boot,onPut:onPut,onDel:onDel,onSetting:onSetting,applying:function(){return S.applying;},cardHTML:cardHTML,ui:ui,act:act,submit:submit,status:status,linked:linked};
+  if(window.__bmEmu)window.__cloud={S:S,CU:CU,TOMB:TOMB,SU:SU,api:api};
+  return api;
+})();
+
 function viewHome(){chExpire();return viewHomeBase()+chHome();}
 /* ---------- When Did You Finish It? ---------- */
 function finWhen(when,date){
@@ -1260,7 +1581,7 @@ function cardFound(){
   return h;
 }
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onSetting(k);}catch(e){}}
 function initialOf(nm){var t=String(nm||'').trim();if(!t)return '';return Array.from(t)[0].toUpperCase();}
 function avatarInner(nm,ph,small){if(ph)return '<img alt="" src="'+ph+'">';var c=initialOf(nm);return c?esc(c):ico('person',small?18:34);}
 var _pgRaw=null,_pgVal='';
@@ -1332,7 +1653,7 @@ function viewBackup(){
   '<div class="stile"><b>'+fin+'</b><span>Books Finished</span></div>'+
   '<div class="stile"><b>'+pages.toLocaleString('en-US')+'</b><span>Pages Read</span></div>'+
   '<button class="stile" data-go="badges" aria-label="Badges Earned, '+bn+' of '+BGX.defs.length+'"><b>'+bn+' of '+BGX.defs.length+'</b><span>Badges Earned</span></button></div>'+YIB.entryHTML()+'</div>'+
-  '<h2 class="sec">Backup</h2>'+
+  CLOUD.cardHTML()+'<h2 class="sec">Backup</h2>'+
   '<div class="cd"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
   '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
   '<div class="sm">Books: '+state.books.length+'</div><div class="sm" style="margin-bottom:16px">Last Backup: '+lastTxt+'</div>'+
@@ -2465,6 +2786,7 @@ document.addEventListener('click',function(e){
   if(a==='clearsq'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();var cs=$('#sq');if(cs)cs.focus();return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='hqshuf'){hqShuffle();return;}
+  if(CLOUD.act(a,el))return;
   if(a==='yibopen'){YIB.openEntry();return;}
   if(a==='yibwatch'){YIB.launch(parseInt(el.getAttribute('data-y'),10));return;}
   if(a==='yibnotnow'){YIB.snooze(parseInt(el.getAttribute('data-y'),10));return;}
@@ -2570,7 +2892,7 @@ document.addEventListener('click',function(e){
     chSave(c0);closeSheet();refresh();toast('Challenge Updated');chMaybeCelebrate();BGX.check();return;
   }
   if(a==='photopick'){openPhotoPicker();return;}
-  if(a==='photoremove'){var prevPh=photoGet();try{localStorage.removeItem('bm_photo');}catch(e){}photoUI();toast('Photo Removed',{label:'Undo',fn:function(){if(prevPh){lsSet('bm_photo',prevPh);photoUI();}}});return;}
+  if(a==='photoremove'){var prevPh=photoGet();try{localStorage.removeItem('bm_photo');}catch(e){}try{CLOUD.onSetting('bm_photo');}catch(e){}photoUI();toast('Photo Removed',{label:'Undo',fn:function(){if(prevPh){lsSet('bm_photo',prevPh);photoUI();}}});return;}
   if(a==='editname'){
     openSheet('<h2>Your Name</h2><p class="sm" style="margin:0">We use it to greet you on Home. Leave it empty to remove it.</p><div class="fld"><input id="nm-in" type="text" maxlength="30" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="Your First Name" aria-label="Your first name" value="'+esc(userName())+'"></div><div class="row" style="margin-top:16px"><button class="ob cn" data-act="closesheet2">Cancel</button><button class="pb" data-act="nmsave">Save</button></div>');
     return;
@@ -2586,6 +2908,7 @@ document.addEventListener('click',function(e){
   }
 });
 document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&e.target&&(e.target.id==='cl-email'||e.target.id==='cl-pw')){e.preventDefault();CLOUD.submit();return;}
   if(e.key==='Enter'&&e.target&&e.target.id==='q'){e.preventDefault();e.target.blur();return;}
   if(e.key==='Escape'&&state.card&&!$('#layer .ov:not(.out)')){cardBack();return;}
   if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.getAttribute&&e.target.getAttribute('role')==='button'&&e.target.hasAttribute('data-open')){e.preventDefault();e.target.click();}
@@ -3079,7 +3402,7 @@ function start(){
   navH();
   welcome();
   if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().catch(function(){});}
-  openDB().then(function(d){db=d;return dbAll();}).then(function(rows){state.books=rows;state.loaded=true;BGX.init();render();})
+  openDB().then(function(d){db=d;return dbAll();}).then(function(rows){state.books=rows;state.loaded=true;BGX.init();render();CLOUD.boot();})
   .catch(function(){memoryOnly=true;state.loaded=true;BGX.init();render();toast('This browser mode can\'t save books');});
 }
 start();
