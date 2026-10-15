@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-15 16:14 UTC">
+<meta name="build" content="2026-10-15 19:42 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -340,6 +340,32 @@ nav .ni{flex:1 1 0;min-width:0}
 .hq-s::after{content:"";position:absolute;left:-10px;right:-10px;top:-10px;bottom:-10px}
 .edr{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--navy);border:1.5px solid transparent;border-radius:12px;padding:10px;color:#fff;min-height:84px}
 .edr.sel{border-color:var(--blue)}
+
+/* ----- Build 15: phone-view helpers (look identical to Build 14) ----- */
+.dwide,.drest{display:block}
+.dtop{display:flex;gap:14px;margin-top:10px;align-items:center}
+.dcov{width:var(--tile);flex:none}
+.dinfo{min-width:0}
+/* ----- Build 15: the wide layout (iPad and Mac). Nothing below applies to a phone. ----- */
+@media (min-width:700px) and (min-height:560px){
+  :root{--cardw:min(880px,calc(100vw - 48px));--dcov:calc(var(--cardw)*.295);--tile:var(--dcov);--col:min(90vw,960px);--hcov:calc(var(--col)*.2)}
+  #app{max-width:none}
+  #view{max-width:calc(var(--col) + 32px);margin:0 auto}
+  #app[data-v="library"] #view{max-width:none}
+  .grid.lib{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .card2{max-width:var(--cardw)}
+  .card2 .grid{grid-template-columns:repeat(auto-fill,minmax(137px,1fr))}
+  .dwide{display:grid;grid-template-columns:var(--dcov) minmax(0,1fr);column-gap:20px;align-items:start;margin-top:10px}
+  .dtop{display:contents}
+  .dcov{width:auto;grid-column:1;grid-row:1/span 2}
+  .dinfo{grid-column:2;grid-row:1}
+  .drest{display:block;grid-column:2;grid-row:2}
+  .bgg{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px 12px;padding:18px 12px 14px}
+  .ares{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #app[data-v="add"] .bt[data-act="scanstart"]{width:auto;align-self:flex-start}
+  .cam{max-width:480px;margin-left:auto;margin-right:auto}
+}
 </style>
 </head>
 <body>
@@ -361,6 +387,8 @@ nav .ni{flex:1 1 0;min-width:0}
 <script>
 (function(){
 'use strict';
+var WIDEMQ=window.matchMedia?window.matchMedia('(min-width:700px) and (min-height:560px)'):{matches:false};
+if(WIDEMQ.addEventListener)WIDEMQ.addEventListener('change',function(){try{if(state.loaded){render();if(state.card)renderCard();}}catch(e){}});
 window.addEventListener('unhandledrejection',function(e){var m=String((e.reason&&e.reason.message)||e.reason||'');if(/play\(\) request was interrupted/i.test(m))e.preventDefault();});
 var STAT={
   toread:{label:'To Read',color:'#FFB500'},
@@ -1438,7 +1466,7 @@ function viewHomeBase(){
   var p=pct(cur),left=cur.pages>0?Math.max(0,cur.pages-(cur.currentPage||0)):null;
   var meta=cur.startedAt?'Started '+fmtDate(cur.startedAt):'Added '+fmtDate(cur.addedAt);
   h+='<div class="cd" style="padding:12px;display:block">'+
-  '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:96px;flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur))+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
+  '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:var(--hcov,96px);flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur))+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
   (cur.author?'<div style="font-size:14px;margin:6px 0 10px">'+authorLinks(cur)+'</div>':'<div style="height:10px"></div>')+
   '<div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+hqHTML(cur)+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
@@ -1586,7 +1614,7 @@ function addResultsHTML(){
   if(st==='err')return '<p class="err" style="margin:14px 0 0">Search is not working right now. Check your connection and try again.</p>';
   if(st==='isbnbad')return '<p class="err" style="margin:14px 0 0">That does not look like a valid ISBN. Check the digits and try again.</p>';
   if(st==='empty')return '<p class="sm" style="margin:14px 0 0">No books found. Try fewer words or a different spelling, or scan the barcode.</p>';
-  var h='<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
+  var h='<div class="ares" style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
   state.sres.forEach(function(r,i){
     var meta=[r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
     h+='<button class="cd" data-pick="'+i+'" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left"><div style="width:46px;flex:none">'+coverHTML({title:r.title,status:'toread',coverUrl:r.cover},'border-bottom:0;padding:4px;font-size:8px')+'</div>'+
@@ -1643,12 +1671,11 @@ function cardDetail(){
   var p=pct(b);
   var own=isOwned(b);
   var meta=b.status==='finished'?(b.finishedAt?'Finished '+fmtDate(b.finishedAt):'Finished in the Past'):(b.startedAt?'Started '+fmtDate(b.startedAt):'Added '+fmtDate(b.addedAt));
-  var h=cardHead('Book Detail')+'<div class="cbody">'+
-  '<div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:var(--tile);flex:none">'+coverHTML(b)+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
+  var h=cardHead('Book Detail')+'<div class="cbody"><div class="dwide"><div class="dtop"><div class="dcov">'+coverHTML(b)+'</div><div class="dinfo"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(b.title)+'</div>'+
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+authorLinks(b)+'</div>':'<div style="height:10px"></div>')+
   '<div class="pills"><button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button>'+
   '<button class="pill o '+(own?'pwy':'pwn')+'" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',14)+(own?'Owned':'Not Owned')+' \u25BE</button></div>'+
-  '<div class="sm" style="margin-top:8px">'+meta+(b.status==='finished'?'<button type="button" class="alk" data-act="chgfin" data-bid="'+b.id+'" style="margin-left:8px;font-size:14px">Change</button>':'')+'</div></div></div>'+
+  '<div class="sm" style="margin-top:8px">'+meta+(b.status==='finished'?'<button type="button" class="alk" data-act="chgfin" data-bid="'+b.id+'" style="margin-left:8px;font-size:14px">Change</button>':'')+'</div></div></div><div class="drest">'+
   (own?'':'<div class="row btns" style="margin-top:16px"><button class="ob ca" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob ca buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',18)+'Buy This Book</a></div>')+
   synHTML(b);
   var s2=b.status,fin=s2==='finished',tr=s2==='toread',started=!tr;
@@ -1671,6 +1698,7 @@ function cardDetail(){
     }
     h+='</div>';
   }
+  h+='</div></div>';
   if(started||hasQ)h+=quotesHTML(b);
   if(started||hasR){h+='<div style="margin-top:16px"><div class="lb">Your Rating</div><div style="display:flex;align-items:center">';h+=starsHTML(b.rating||0,'detail',28);h+='<span class="sm" style="margin-left:8px">'+((b.rating||0)?b.rating+' out of 5':'Not Rated')+'</span></div></div>';}
   if(started||hasV)h+='<label class="fld"><span class="lb">Your Review</span><textarea id="review" placeholder="What did you think?">'+esc(b.review||'')+'</textarea></label>';
@@ -1811,6 +1839,7 @@ function startFade(v,g){
 function render(){
   var v=$('#view');
   var ghost=(lastView!==null&&lastView!==state.view&&state.loaded&&!reduced())?makeGhost(v):null;
+  var apE=document.getElementById('app');if(apE)apE.setAttribute('data-v',state.view);
   if(!state.loaded&&(state.view==='home'||state.view==='library')){v.innerHTML=top()+ptitle(state.view==='home'?'Home':'Library');}
   else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='badges'?BGX.view():viewBackup();}
   setPT();profSync();
@@ -3431,7 +3460,7 @@ function nav(v){
 }
 function cell(d,e){
   var isNew=e&&shown.indexOf(d.id)>=0,when=e?fmtDate(S.earned[d.id]):'';
-  return '<button class="bgc" data-act="bgopen" data-bgid="'+d.id+'" aria-label="'+esc(d.n)+(e?', earned '+esc(when):', not yet earned')+'">'+badgeHTML(d,88,e?'e':'u')+'<span class="bgnm">'+esc(d.n)+'</span>'+(e?'<span class="bgsub">'+esc(when)+'</span>':'')+(isNew?'<span class="bgnw">NEW</span>':'')+'</button>';
+  return '<button class="bgc" data-act="bgopen" data-bgid="'+d.id+'" aria-label="'+esc(d.n)+(e?', earned '+esc(when):', not yet earned')+'">'+badgeHTML(d,WIDEMQ.matches?128:88,e?'e':'u')+'<span class="bgnm">'+esc(d.n)+'</span>'+(e?'<span class="bgsub">'+esc(when)+'</span>':'')+(isNew?'<span class="bgnw">NEW</span>':'')+'</button>';
 }
 function grid(list,e){return '<div class="bgg">'+list.map(function(d){return cell(d,e);}).join('')+'</div>';}
 function view(){
