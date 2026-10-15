@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-15 13:44 UTC">
+<meta name="build" content="2026-10-15 16:14 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -436,7 +436,7 @@ function setStatus(b,st,fin){
 
 /* ---------- views ---------- */
 function top(){return '';}
-(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><button class="pf" id="pf" type="button" data-go="backup" aria-label="Profile"></button><button class="cst" id="cloudst" type="button" data-go="backup" aria-label="Cloud backup" hidden></button><h1 class="pt" id="ptitle"></h1>';profSync();})();
+(function(){var h=document.getElementById('topbar');if(h)h.innerHTML='<div role="img" aria-label="Book Nerd">'+LOCKUP+'</div><button class="pf" id="pf" type="button" data-go="backup" aria-label="Profile"></button><button class="cst" id="cloudst" type="button" data-go="backup" aria-label="Cloud sync" hidden></button><h1 class="pt" id="ptitle"></h1>';profSync();})();
 var ptNow='';
 function ptitle(t){ptNow=String(t);return '';}
 function setPT(){var e=document.getElementById('ptitle');if(e&&e.textContent!==ptNow)e.textContent=ptNow;}
@@ -1086,22 +1086,32 @@ var CLOUD=(function(){
     if(!P)return '';
     return '<svg width="'+(sz||26)+'" height="'+(sz||26)+'" viewBox="0 0 24 24" fill="none" stroke="'+P[0]+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .6-7.96A5.5 5.5 0 0 0 7.2 9.3 4.4 4.4 0 0 0 7 18z"/>'+P[1]+'</svg>';
   }
-  var LABEL={saved:'Cloud backup: saved',saving:'Cloud backup: saving',offline:'Cloud backup: waiting for a connection',problem:'Cloud backup: problem',signedout:'Cloud backup: signed out'};
+  var LABEL={saved:'Cloud sync: saved',saving:'Cloud sync: saving',offline:'Cloud sync: waiting for a connection',problem:'Cloud sync: problem',signedout:'Cloud sync: signed out'};
   function ago(t){if(!t)return '';var s=Math.max(0,Math.round((now()-t)/1000));if(s<10)return 'Just now';if(s<60)return s+' seconds ago';var m=Math.round(s/60);if(m<60)return m+(m===1?' minute ago':' minutes ago');var h=Math.round(m/60);if(h<24)return h+(h===1?' hour ago':' hours ago');return new Date(t).toLocaleDateString();}
-  function cardInner(){
+  function cardInner(){return syncInner()+backupBlock();}
+  function syncInner(){
     var st=status(),n=state.books.length,em=esc(lsGet(EM_KEY)||'');
     var chk='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="'+GREEN+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
     var dot=function(c){return '<span style="width:14px;height:14px;border-radius:50%;background:'+c+';flex:none"></span>';};
-    var more='<button class="lnk l14" data-act="clunlink">Unlink This Phone</button><button class="lnk l14" data-act="cldelete">Delete My Cloud Data</button>';
+    var more='<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:0 16px;margin-top:6px"><button class="lnk l14" data-act="clunlink" style="margin:0;padding:8px 4px;white-space:nowrap">Unlink This Phone</button><button class="lnk l14" data-act="cldelete" style="margin:0;padding:8px 4px;white-space:nowrap">Delete My Cloud Data</button></div>';
     var signedAs='<div class="sm" style="margin-top:12px;opacity:.85">Signed in as '+em+'</div><button class="ob" data-act="cloudout" style="margin-top:12px;width:100%">Sign Out</button>'+more;
-    if(st.k==='none')return '<div style="font-weight:500;margin-bottom:6px">Keep Your Books Safe in the Cloud</div><p class="sm" style="margin:0 0 14px">Sign in once and your books save to the cloud by themselves, and stay in sync on all your devices. No more backup files.</p><button class="pb" data-act="cloudopen">Sign In or Create Account</button>';
+    if(st.k==='none')return '<div style="font-weight:500;margin-bottom:6px">Keep Your Books Safe in the Cloud</div><p class="sm" style="margin:0 0 14px">Sign in once and your books save to the cloud by themselves, and stay in sync on all your devices.</p><button class="pb" data-act="cloudopen">Sign In or Create Account</button>';
     if(st.k==='signedout')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(GREY)+'<span>Signed out</span></div><p class="sm" style="margin:6px 0 14px">Your books stay on this phone. Sign in to start saving to the cloud again.</p><button class="pb" data-act="cloudopen">Sign In</button>'+more;
     if(st.k==='problem')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(PINK)+'<span>The cloud is not answering</span></div><p class="sm" style="margin:6px 0 0">Your books are safe on this phone. Nothing is lost.</p><button class="ob" data-act="cloudretry" style="margin-top:12px;width:100%">Try Again</button>'+signedAs.replace('<button class="ob" data-act="cloudout" style="margin-top:12px;width:100%">','<button class="ob" data-act="cloudout" style="margin-top:10px;width:100%">');
     if(st.k==='offline')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(AMBER)+'<span>Waiting for a connection</span></div><p class="sm" style="margin:6px 0 0">'+(st.n?(st.n+(st.n===1?' change':' changes')+' will save as soon as you are back online. '):'')+'Your books are safe on this phone.</p>'+signedAs;
     if(st.k==='saving')return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+dot(AMBER)+'<span>Saving…</span></div><p class="sm" style="margin:6px 0 0">Your books are syncing with the cloud.</p>'+signedAs;
     return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+chk+'<span>All '+n+(n===1?' book is':' books are')+' saved to the cloud</span></div><div class="sm" style="margin-top:6px">Last saved: '+esc(ago(S.lastAck||Number(lsGet(LAST_KEY))||0)||'Just now')+'</div>'+signedAs;
   }
-  function cardHTML(){return '<div id="cloudsec"><h2 class="sec">Cloud Backup</h2><div class="cd">'+cardInner()+'</div></div>';}
+
+  /* the backup file block, inside the Cloud Sync card (Build 14) */
+  function backupBlock(){
+    var last=lsGet('bm_last_backup'),lt=last?fmtDate(parseInt(last,10)):'Never',lk=!!linked();
+    var hr='<div style="height:1px;background:var(--line);margin:16px 0 14px"></div>';
+    var btns='<div style="display:flex;gap:10px;margin-top:12px"><button class="pb" data-act="savebackup" style="flex:1;width:auto;min-width:0;padding:14px 8px;white-space:nowrap">Save Backup</button><button class="pb" data-act="restore" style="flex:1;width:auto;min-width:0;padding:14px 8px;white-space:nowrap">Restore</button></div><p class="sm" style="margin:10px 0 0;font-size:12px">When the share sheet opens, choose Save to Files.</p>';
+    if(lk)return hr+'<div style="font-weight:500;font-size:14px;margin-bottom:6px">Backup File</div><p class="sm" style="margin:0">A separate copy you keep yourself, in case a mistake syncs to every device.</p><div class="sm" style="margin-top:6px">Last Backup: '+esc(lt)+'</div>'+btns;
+    return hr+'<div style="font-weight:500;font-size:14px;margin-bottom:6px">Your Books Are Saved on This Phone</div><p class="sm" style="margin:0">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p><div class="sm" style="margin-top:6px">Books: '+state.books.length+' &middot; Last Backup: '+esc(lt)+'</div>'+btns;
+  }
+  function cardHTML(){return '<div id="cloudsec"><h2 class="sec">Cloud Sync</h2><div class="cd">'+cardInner()+'</div></div>';}
 
   /* ---------- the one-time invitation on Home (Build 12) ---------- */
   var INV_N='bm_inv_n',INV_SNZ='bm_inv_snz',INV_MS=3*86400000;
@@ -1123,7 +1133,7 @@ var CLOUD=(function(){
   var lastKey='';
   function ui(){
     var st=status(),b=document.getElementById('cloudst');
-    if(b){var show=st.k!=='none';b.hidden=!show;if(show){var key=st.k;if(key!==lastKey){b.innerHTML=icon(key,26);b.setAttribute('aria-label',LABEL[key]||'Cloud backup');lastKey=key;}}}
+    if(b){var show=st.k!=='none';b.hidden=!show;if(show){var key=st.k;if(key!==lastKey){b.innerHTML=icon(key,26);b.setAttribute('aria-label',LABEL[key]||'Cloud sync');lastKey=key;}}}
     var sec=document.getElementById('cloudsec');if(sec){var c=sec.querySelector('.cd');if(c){var h=cardInner();if(c._h!==h){c.innerHTML=h;c._h=h;}}}
     var pr=document.getElementById('cl-prog');if(pr&&S.copy){updateProgress();}
     if(S.copy&&S.copy.active&&S.firstDone&&S.metaDone&&S.pend===0&&queued()===0&&!S.err)copyFinished();
@@ -1251,7 +1261,7 @@ var CLOUD=(function(){
   }
   function sheetCopy(n){openSheet('<h2>Copy Your Books to the Cloud</h2><p class="sm" style="margin:0 0 4px">You have <b style="font-weight:500">'+n+(n===1?' book':' books')+'</b> on this phone, and your cloud account is empty.</p><p class="sm" style="margin:8px 0 0">Copying them now keeps them safe even if you lose this phone, and every change after this saves by itself.</p><button class="pb" data-act="clcopy" style="margin-top:18px">Copy '+n+(n===1?' Book':' Books')+'</button><button class="lnk l14" data-act="clnot">Not Now</button>');}
   function sheetCombine(n,m){openSheet('<h2>Combine Your Books</h2><p class="sm" style="margin:0 0 4px">This phone has <b style="font-weight:500">'+n+(n===1?' book':' books')+'</b> and your cloud has <b style="font-weight:500">'+m+'</b>.</p><p class="sm" style="margin:8px 0 0">Combining keeps every book from both places. If the same book was changed in both, the newest change wins.</p><button class="pb" data-act="clcopy" style="margin-top:18px">Combine Books</button><button class="lnk l14" data-act="clnot">Not Now</button>');}
-  function sheetOther(){openSheet('<h2>This Phone Belongs to Another Account</h2><p class="sm" style="margin:0 0 4px">The books on this phone are linked to <b style="font-weight:500">'+esc(lsGet(EM_KEY)||'another account')+'</b>.</p><p class="sm" style="margin:8px 0 0">Sign in with that account instead. To use a different account, save a backup file first.</p><button class="pb" data-act="closesheet2" style="margin-top:18px">OK</button>');}
+  function sheetOther(){openSheet('<h2>This Phone Belongs to Another Account</h2><p class="sm" style="margin:0 0 4px">The books on this phone are linked to <b style="font-weight:500">'+esc(lsGet(EM_KEY)||'another account')+'</b>.</p><p class="sm" style="margin:8px 0 0">Sign in with that account instead, or tap Unlink This Phone on your Profile page to use a different one.</p><button class="pb" data-act="closesheet2" style="margin-top:18px">OK</button>');}
   function sheetProgress(){
     var c=S.copy||{};
     openSheet('<h2>'+(c.total?'Copying Your Books…':'Getting Your Books…')+'</h2><div id="cl-prog"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span id="cl-pt" style="font-size:14px;font-weight:500"></span><span id="cl-pp" style="font-size:14px;font-weight:500;color:var(--green)"></span></div><div class="bar" style="height:6px;margin:8px 0 0"><b id="cl-pb" style="width:0%"></b></div></div><p class="sm" style="margin:16px 0 0">Keep Book Nerd open until this finishes. It only takes a moment.</p><div style="height:60px"></div>');
@@ -1763,13 +1773,7 @@ function viewBackup(){
   '<div class="stile"><b>'+fin+'</b><span>Books Finished</span></div>'+
   '<div class="stile"><b>'+pages.toLocaleString('en-US')+'</b><span>Pages Read</span></div>'+
   '<button class="stile" data-go="badges" aria-label="Badges Earned, '+bn+' of '+BGX.defs.length+'"><b>'+bn+' of '+BGX.defs.length+'</b><span>Badges Earned</span></button></div>'+YIB.entryHTML()+'</div>'+
-  CLOUD.cardHTML()+'<h2 class="sec">Backup</h2>'+
-  '<div class="cd"><div style="font-weight:500;margin-bottom:6px">Your Books Are Saved on This Phone</div>'+
-  '<p class="sm" style="margin:0 0 10px">Clearing Safari\'s website data, or deleting the Home Screen app, erases them. A backup file keeps them safe.</p>'+
-  '<div class="sm">Books: '+state.books.length+'</div><div class="sm" style="margin-bottom:16px">Last Backup: '+lastTxt+'</div>'+
-  '<button class="pb" data-act="savebackup">Save Backup</button>'+
-  '<button class="pb" data-act="restore" style="margin-top:10px">Restore from Backup</button>'+
-  '<p class="sm" style="margin:14px 0 0;font-size:13px">When the share sheet opens, choose Save to Files. To restore, tap Restore from Backup and pick that file.</p></div>'+
+  CLOUD.cardHTML()+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="bld" style="position:static;pointer-events:auto;padding:16px 0 0;background:none">Build '+esc(BUILD)+'</p>';
 }
