@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-15 00:16 UTC">
+<meta name="build" content="2026-10-15 01:18 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -1101,6 +1101,24 @@ var CLOUD=(function(){
     return '<div style="display:flex;align-items:center;gap:8px;font-weight:500">'+chk+'<span>All '+n+(n===1?' book is':' books are')+' saved to the cloud</span></div><div class="sm" style="margin-top:6px">Last saved: '+esc(ago(S.lastAck||Number(lsGet(LAST_KEY))||0)||'Just now')+'</div>'+signedAs;
   }
   function cardHTML(){return '<div id="cloudsec"><h2 class="sec">Cloud Backup</h2><div class="cd">'+cardInner()+'</div></div>';}
+
+  /* ---------- the one-time invitation on Home (Build 12) ---------- */
+  var INV_N='bm_inv_n',INV_SNZ='bm_inv_snz',INV_MS=3*86400000;
+  function inviteHTML(){
+    if(linked()||!state.loaded||!state.books.length)return '';
+    if(lsGet('bm_name_done')!=='1')return '';
+    if((parseInt(lsGet(INV_N)||'0',10)||0)>=2)return '';
+    if((parseInt(lsGet(INV_SNZ)||'0',10)||0)>now())return '';
+    var ic='<svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="'+GREEN+'" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto"><path d="M7 18h10a4 4 0 0 0 .6-7.96A5.5 5.5 0 0 0 7.2 9.3 4.4 4.4 0 0 0 7 18z"/><path d="M9.3 13.2l2 2 3.6-3.8" stroke-width="1.9"/></svg>';
+    return '<div class="cd" id="cloudinv" role="region" aria-label="Keep your books safe in the cloud" style="margin-top:14px;padding:14px">'+ic+
+      '<div style="font-size:18px;font-weight:500;margin-top:8px;text-align:center">Keep Your Books Safe</div>'+
+      '<div class="sm" style="margin:4px 0 14px;text-align:center">Sign in once and your books save to the cloud and stay in sync on all your devices.</div>'+
+      '<button class="pb" data-act="cloudopen">Sign In or Create Account</button><button class="lnk l14" data-act="invnotnow">Not Now</button></div>';
+  }
+  function inviteNotNow(){
+    var n=(parseInt(lsGet(INV_N)||'0',10)||0)+1;
+    lsSetRaw(INV_N,String(n));lsSetRaw(INV_SNZ,String(now()+INV_MS));render();
+  }
   var lastKey='';
   function ui(){
     var st=status(),b=document.getElementById('cloudst');
@@ -1179,6 +1197,7 @@ var CLOUD=(function(){
   function retry(){S.err='';stopSync();if(!S.sdk){location.reload();return;}if(S.user)startSync();ui();}
   function act(a,el){
     if(a==='cloudopen'){sheetSignIn('signin');return true;}
+    if(a==='invnotnow'){inviteNotNow();return true;}
     if(a==='clmode'){sheetSignIn(S.mode==='signup'?'signin':'signup',true);return true;}
     if(a==='clgo'){submit();return true;}
     if(a==='clforgot'){forgot();return true;}
@@ -1193,7 +1212,7 @@ var CLOUD=(function(){
     if(linked()){loadSDK().then(function(){attach();ui();}).catch(function(){S.err=navigator.onLine?'sdk':'';ui();});}
     ui();
   }
-  var api={boot:boot,onPut:onPut,onDel:onDel,onSetting:onSetting,applying:function(){return S.applying;},cardHTML:cardHTML,ui:ui,act:act,submit:submit,status:status,linked:linked};
+  var api={boot:boot,onPut:onPut,onDel:onDel,onSetting:onSetting,applying:function(){return S.applying;},cardHTML:cardHTML,inviteHTML:inviteHTML,ui:ui,act:act,submit:submit,status:status,linked:linked};
   if(window.__bmEmu)window.__cloud={S:S,CU:CU,TOMB:TOMB,SU:SU,api:api};
   return api;
 })();
@@ -1306,8 +1325,8 @@ function hqHTML(cur){
     (n>1?'<button type="button" class="hq-s" data-act="hqshuf" aria-label="Show another quote">'+ico('shuffle',18)+'</button>':'')+'</div>';
 }
 function viewHomeBase(){
-  var g=greeting();
-  var h=top()+ptitle('Home')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500">'+esc(g[0])+'</div><div style="font-size:14px;margin-top:4px">'+esc(g[1])+'</div></div>'+YIB.cardHTML()+'<h2 class="sec">Currently Reading</h2>';
+  var g=greeting(),yc='';
+  var h=top()+ptitle('Home')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500">'+esc(g[0])+'</div><div style="font-size:14px;margin-top:4px">'+esc(g[1])+'</div></div>'+(yc=YIB.cardHTML())+(yc?'':CLOUD.inviteHTML())+'<h2 class="sec">Currently Reading</h2>';
   var rd=state.books.filter(function(b){return b.status==='reading';}).sort(function(a,b){return b.updatedAt-a.updatedAt;});
   var cur=rd[0];
   if(!cur){
@@ -1427,7 +1446,7 @@ document.addEventListener('keydown',function(e){
 });
 function viewLibrary(){
   var f=libFilter(),all=f.all,list=f.list;
-  var h=top()+ptitle('Library');
+  var h=top()+ptitle('Your Library');
   if(!all.length){
     h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, or search by title, author or ISBN.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
     return h;
@@ -3325,7 +3344,7 @@ function view(){
   DEFS.forEach(function(d){(S&&S.earned[d.id]?er:rest).push(d);});
   er.sort(function(a,b){return S.earned[b.id]-S.earned[a.id];});
   var n=er.length,N=DEFS.length,p=Math.round(n/N*100);
-  var h=ptitle('Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:6px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
+  var h=ptitle('Your Badges')+'<div class="cd" style="margin-top:14px"><div style="font-size:18px;font-weight:500" id="bgsum">'+n+' of '+N+' Earned</div><div class="bar" style="height:6px;margin:8px 0 0"><b style="width:'+p+'%"></b></div><div class="sm" style="margin-top:8px">'+(rest.length?rest.length+' More to Discover':'You have earned every badge!')+'</div></div>';
   h+='<h2 class="sec">Earned<span class="bgn">'+n+'</span></h2>';
   h+=n?grid(er,true):'<div class="cd msgp"><p class="sm" style="margin:0">Finish a book and your first badge lands here.</p></div>';
   if(rest.length)h+='<h2 class="sec">Still to Earn<span class="bgn">'+rest.length+'</span></h2>'+grid(rest,false);
