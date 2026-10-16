@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-16 12:14 UTC">
+<meta name="build" content="2026-10-16 18:27 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -383,6 +383,13 @@ nav .ni{flex:1 1 0;min-width:0}
 .chm{font-size:14px;margin:0 0 14px;line-height:1.45}
 @media (prefers-reduced-motion:reduce){#chend,.chec{animation:none!important}}
 @media (min-width:700px) and (min-height:560px){.chhero{height:170px}}
+
+.imo{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;background:var(--navy);border:0.5px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;font-size:14px;color:#fff}
+.imo.sel{border-color:var(--blue);box-shadow:0 0 0 1.5px var(--blue)}
+.imr{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--navy);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14px;color:#fff}
+.imr.warn{box-shadow:inset 0 0 0 1px var(--gold)}
+.imr small{display:block;font-size:12px}
+.imok{width:44px;height:44px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex:none}
 </style>
 </head>
 <body>
@@ -401,6 +408,7 @@ nav .ni{flex:1 1 0;min-width:0}
 <div id="layer"></div>
 <div id="card"></div>
 <input id="photo-in" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">
+<input id="impfile" type="file" accept=".csv,text/csv,text/comma-separated-values,application/csv,application/vnd.ms-excel,text/plain" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">
 <script>
 (function(){
 'use strict';
@@ -443,6 +451,16 @@ function dbAll(){return new Promise(function(res,rej){
   q.onsuccess=function(){res(q.result||[]);};q.onerror=function(){rej(q.error);};
 });}
 function dbPut(b){if(memoryOnly)return;try{var t=db.transaction('books','readwrite');t.objectStore('books').put(b);t.onerror=function(){toast('Could not save that change');};}catch(e){toast('Could not save that change');}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onPut(b);}catch(e){}}
+function dbPutMany(list){
+  if(memoryOnly||!list.length)return;
+  try{var t=db.transaction('books','readwrite'),os=t.objectStore('books');list.forEach(function(b){os.put(b);});t.onerror=function(){toast('Could not save that change');};}catch(e){toast('Could not save that change');}
+  try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying()&&CLOUD.onPutMany)CLOUD.onPutMany(list);}catch(e){}
+}
+function dbDelMany(ids){
+  if(memoryOnly||!ids.length)return;
+  try{var t=db.transaction('books','readwrite'),os=t.objectStore('books');ids.forEach(function(id){os.delete(id);});}catch(e){}
+  try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying()&&CLOUD.onDelMany)CLOUD.onDelMany(ids);}catch(e){}
+}
 function dbDel(id){if(memoryOnly)return;try{db.transaction('books','readwrite').objectStore('books').delete(id);}catch(e){}try{if(typeof CLOUD!=='undefined'&&CLOUD&&!CLOUD.applying())CLOUD.onDel(id);}catch(e){}}
 
 /* ---------- helpers ---------- */
@@ -451,7 +469,7 @@ function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;
 function coverHTML(b,extra,bag){
   var c=COVERS[hash(b.title)%COVERS.length];
   var t=(c==='#6B8E6B')?'#00033C':'#fff';
-  var img=b.coverUrl?'<img src="'+esc(b.coverUrl)+'" alt="" onerror="this.remove()">':'';
+  var img=b.coverUrl?'<img src="'+esc(b.coverUrl)+'" alt="" loading="lazy" decoding="async" onerror="this.remove()">':'';
   return '<div class="cv" style="--c:'+c+';--t:'+t+';'+(extra||'')+'">'+img+'<span>'+esc(b.title)+'</span>'+(bag?'<div class="badge" role="img" aria-label="Not owned">'+ico('bag',13)+'</div>':'')+'</div>';
 }
 function fmtDate(ts){
@@ -1353,12 +1371,36 @@ var CLOUD=(function(){
     if(a==='cloudretry'){retry();return true;}
     return false;
   }
+  function onPutMany(list){
+    var ids=[];
+    list.forEach(function(b){
+      if(!b||!b.id)return;
+      if(LH[b.id]&&LH[b.id]===sig(b)&&!TOMB[b.id])return;
+      CU[b.id]=now();delete TOMB[b.id];ids.push(b.id);
+    });
+    persist();
+    if(linked()&&ids.length)pushMany(ids);
+  }
+  function onDelMany(ids){
+    var t=now(),i;
+    ids.forEach(function(id){TOMB[id]=t;delete CU[id];clearTimeout(S.timers[id]);delete S.timers[id];});
+    persist();
+    if(linked()&&S.user&&S.sync){
+      var F=S.sdk.F;
+      for(i=0;i<ids.length;i+=100){
+        var batch=F.writeBatch(S.fs),chunk=ids.slice(i,i+100);
+        chunk.forEach(function(id){batch.set(ref(id),{j:'',u:TOMB[id],d:1});});
+        S.pend++;batch.commit().then(function(){ack(0);},fail);
+      }
+    }
+    ui();
+  }
   function boot(){
     addEventListener('online',onNet);addEventListener('offline',onNet);
     if(linked()){loadSDK().then(function(){attach();ui();}).catch(function(){S.err=navigator.onLine?'sdk':'';ui();});}
     ui();
   }
-  var api={boot:boot,onPut:onPut,onDel:onDel,onSetting:onSetting,applying:function(){return S.applying;},cardHTML:cardHTML,inviteHTML:inviteHTML,ui:ui,act:act,submit:submit,status:status,linked:linked};
+  var api={boot:boot,onPut:onPut,onDel:onDel,onPutMany:onPutMany,onDelMany:onDelMany,onSetting:onSetting,applying:function(){return S.applying;},cardHTML:cardHTML,inviteHTML:inviteHTML,ui:ui,act:act,submit:submit,status:status,linked:linked};
   if(window.__bmEmu)window.__cloud={S:S,CU:CU,TOMB:TOMB,SU:SU,api:api};
   return api;
 })();
@@ -1420,7 +1462,7 @@ function cfHelp(b,when,date){
 function chSync(b){
   var c=chGet();if(!c)return;
   var has=c.credits.some(function(q){return q.id===b.id;});
-  var inW=!!(b.status==='finished'&&b.finishedAt&&dstr(b.finishedAt)>=c.start&&dstr(b.finishedAt)<=c.end);
+  var inW=!!(b.status==='finished'&&b.finishedAt&&!b.imp&&dstr(b.finishedAt)>=c.start&&dstr(b.finishedAt)<=c.end);
   if(has&&!inW){chUncredit(b.id,c.complete);}
   else if(has&&inW){c.credits.forEach(function(q){if(q.id===b.id)q.finishedAt=b.finishedAt;});chSave(c);}
   else if(!has&&inW){chCredit(b);}
@@ -1594,7 +1636,7 @@ function viewLibrary(){
   var f=libFilter(),all=f.all,list=f.list;
   var h=top()+ptitle('Your Library');
   if(!all.length){
-    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, or search by title, author or ISBN.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button></div>';
+    h+='<div class="empty"><h2>Start Your Library</h2><p class="sm">Tap Add Book, then scan a barcode, or search by title, author or ISBN.</p><button class="pb" style="max-width:240px;margin:0 auto" data-go="add">Add Book</button><button class="lnk l14" data-act="impopen">Coming from Goodreads or Hardcover? Import Your Books</button></div>';
     return h;
   }
   h+='<div class="frow"><button class="fb" data-act="openfilter">'+ico('adjustments-horizontal',18)+'Filter and Sort</button>'+
@@ -1824,7 +1866,7 @@ function viewBackup(){
   '<div class="stile"><b>'+fin+'</b><span>Books Finished</span></div>'+
   '<div class="stile"><b>'+pages.toLocaleString('en-US')+'</b><span>Pages Read</span></div>'+
   '<button class="stile" data-go="badges" aria-label="Badges Earned, '+bn+' of '+BGX.defs.length+'"><b>'+bn+' of '+BGX.defs.length+'</b><span>Badges Earned</span></button></div>'+YIB.entryHTML()+'</div>'+
-  CLOUD.cardHTML()+
+  CLOUD.cardHTML()+impProfileHTML()+
   '<input id="restorefile" type="file" accept=".json,application/json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">'+
   '<p class="bld" style="position:static;pointer-events:auto;padding:16px 0 0;background:none">Build '+esc(BUILD)+'</p>';
 }
@@ -1877,7 +1919,7 @@ function renderCard(){
   var el=$('#card');
   if(!state.card){if(!cardClosing)el.innerHTML='';return;}
   var sc=el.querySelector('.scrim2'),c2=el.querySelector('.card2');
-  var html=(state.card==='detail'?cardDetail():state.card==='challenge'?cardChallenge():state.card==='author'?cardAuthor():state.card==='edition'?cardEdition():cardFound());
+  var html=(state.card==='detail'?cardDetail():state.card==='challenge'?cardChallenge():state.card==='author'?cardAuthor():state.card==='edition'?cardEdition():state.card==='import'?cardImport():cardFound());
   if(sc&&c2&&!sc.classList.contains('out')){
     var old=c2.querySelector('.cbody'),keep=old?old.scrollTop:0;
     c2.innerHTML=html;
@@ -1896,8 +1938,10 @@ function openCard(type){
 var lastClose=0;
 function closeCard(silent){
   if(!state.card&&!silent&&Date.now()-lastClose<400)return;
+  if(state.card==='import'&&state.imp&&state.imp.step==='work'&&!silent)return;
   lastClose=Date.now();state.authorBack=false;
   var was=state.card;
+  if(was==='import')state.imp=null;
   state.card=null;state.editProg=false;
   document.body.classList.remove('noscroll');
   var el=$('#card'),sc=el.querySelector('.scrim2');
@@ -2250,6 +2294,381 @@ function ensureSynopsis(b){
     if(state.card==='detail'&&state.id===b.id)renderCard();
   });
 }
+
+/* ---------- Import Your Books (Build 20): Goodreads and Hardcover files ---------- */
+var IMPK='bm_last_import',impSrc='goodreads';
+var IMP_STEPS={
+  goodreads:['On a computer, go to goodreads.com. The export is not in the phone app.','Click My Books in the top menu.','Under Tools: Import / Export, click Export Library.','When the download link appears, save the file. Then move it to this phone with AirDrop, iCloud Drive or email.'],
+  hardcover:['Go to hardcover.app and sign in.','Choose your profile icon at the top right, then Settings.','Choose Export Your Data and save the file.','Make sure the file is on this phone, in the Files app.']
+};
+function impName(src){return src==='hardcover'?'Hardcover':'Goodreads';}
+function impLast(){var r=lsGet(IMPK);if(!r)return null;try{var o=JSON.parse(r);return (o&&o.id)?o:null;}catch(e){return null;}}
+function impLive(){
+  var o=impLast();if(!o)return null;
+  var n=0,i;for(i=0;i<state.books.length;i++){if(state.books[i].imp===o.id)n++;}
+  if(!n){lsSet(IMPK,'');return null;}
+  o.live=n;return o;
+}
+function impParseCSV(text){
+  if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+  var rows=[],row=[],f='',q=false,i=0,n=text.length,c;
+  while(i<n){
+    c=text.charAt(i);
+    if(q){
+      if(c==='"'){if(text.charAt(i+1)==='"'){f+='"';i+=2;continue;}q=false;i++;continue;}
+      f+=c;i++;continue;
+    }
+    if(c==='"'&&f===''){q=true;i++;continue;}
+    if(c===','){row.push(f);f='';i++;continue;}
+    if(c==='\r'){if(text.charAt(i+1)==='\n')i++;row.push(f);rows.push(row);row=[];f='';i++;continue;}
+    if(c==='\n'){row.push(f);rows.push(row);row=[];f='';i++;continue;}
+    f+=c;i++;
+  }
+  if(f!==''||row.length){row.push(f);rows.push(row);}
+  return rows;
+}
+function impDetect(rows){
+  if(!rows.length)return null;
+  var H={},h=rows[0],i;
+  for(i=0;i<h.length;i++){var k=String(h[i]==null?'':h[i]).trim().toLowerCase();if(k&&H[k]===undefined)H[k]=i;}
+  if(H['title']===undefined||H['author']===undefined)return null;
+  if(H['exclusive shelf']!==undefined)return {src:'goodreads',H:H};
+  if(H['status']!==undefined&&(H['hardcover book id']!==undefined||(H['date finished']!==undefined&&H['isbn 13']!==undefined)))return {src:'hardcover',H:H};
+  return null;
+}
+function impCell(r,H,k){var i=H[k];if(i===undefined)return '';var v=r[i];return v==null?'':String(v).trim();}
+function impDate(v){
+  v=String(v||'').trim();if(!v)return 0;
+  var m=v.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/),y,mo,d;
+  if(m){y=+m[1];mo=+m[2];d=+m[3];}
+  else{
+    m=v.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);if(!m)return 0;
+    var a=+m[1],b=+m[2];y=+m[3];if(a>12){d=a;mo=b;}else{mo=a;d=b;}
+  }
+  if(y<1900||mo<1||mo>12||d<1||d>31)return 0;
+  var t=new Date(y,mo-1,d,12,0,0).getTime();
+  if(!isFinite(t)||new Date(t).getMonth()!==mo-1)return 0;
+  return Math.min(t,Date.now());
+}
+function impIsbn(a,b){
+  var c=[a,b],k;
+  for(k=0;k<2;k++){var raw=String(c[k]||'').replace(/[^0-9Xx]/g,'').toUpperCase();var r=toIsbn13(raw);if(r)return r;}
+  return '';
+}
+function impNorm(v){
+  v=String(v||'').toLowerCase();
+  try{v=v.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}
+  return v.replace(/\s*\([^)]*\)\s*$/,'').replace(/^(the|a|an)\s+/,'').replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'');
+}
+function impAuthKey(a){
+  var first=String(a||'').split(/,|;|&| and /)[0].trim().toLowerCase();
+  try{first=first.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}
+  var w=first.split(/\s+/).filter(Boolean);
+  return w.length?w[w.length-1].replace(/[^a-z0-9]+/g,''):'';
+}
+function impText(v){
+  return String(v||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").trim();
+}
+function impRating(v){var n=parseFloat(String(v||'').replace(',','.'));if(!isFinite(n)||n<=0)return 0;return Math.min(5,Math.round(n*2)/2);}
+function impPages(v){var n=parseInt(String(v||'').replace(/[^0-9]/g,''),10);return (isFinite(n)&&n>0&&n<100000)?n:0;}
+function impYear(v){var m=String(v||'').match(/(1[5-9]|20)\d\d/);return m?m[0]:'';}
+function impMapShelf(raw){
+  var s=String(raw||'').trim().toLowerCase().replace(/[_\s]+/g,'-');
+  if(s==='read')return 'finished';
+  if(s==='to-read'||s==='want-to-read')return 'toread';
+  if(s==='currently-reading')return 'reading';
+  if(s==='did-not-finish'||s==='dnf')return 'dnf';
+  return '';
+}
+function impFields(src,H,r){
+  var f={};
+  if(src==='goodreads'){
+    f.title=impCell(r,H,'title');
+    var au=impCell(r,H,'author'),ad=impCell(r,H,'additional authors');
+    f.author=ad?(au?au+', '+ad:ad):au;
+    f.pages=impPages(impCell(r,H,'number of pages'));
+    f.year=impYear(impCell(r,H,'original publication year'))||impYear(impCell(r,H,'year published'));
+    f.isbn=impIsbn(impCell(r,H,'isbn13'),impCell(r,H,'isbn'));
+    f.rating=impRating(impCell(r,H,'my rating'));
+    f.review=impText(impCell(r,H,'my review'));
+    f.notes=impText(impCell(r,H,'private notes'));
+    f.finish=impDate(impCell(r,H,'date read'));f.start=0;
+    f.added=impDate(impCell(r,H,'date added'));
+    f.shelf=impCell(r,H,'exclusive shelf');f.ownFile=null;
+  }else{
+    f.title=impCell(r,H,'title');f.author=impCell(r,H,'author');
+    f.pages=impPages(impCell(r,H,'pages'));
+    f.year=impYear(impCell(r,H,'publish date'));
+    f.isbn=impIsbn(impCell(r,H,'isbn 13'),impCell(r,H,'isbn 10'));
+    f.rating=impRating(impCell(r,H,'rating'));
+    f.review=impText(impCell(r,H,'review'));
+    f.notes=impText(impCell(r,H,'private notes'));
+    f.finish=impDate(impCell(r,H,'date finished'));f.start=impDate(impCell(r,H,'date started'));
+    f.added=impDate(impCell(r,H,'date added'));
+    f.shelf=impCell(r,H,'status');
+    f.ownFile=(H['owned']!==undefined)?(impCell(r,H,'owned').toLowerCase()==='true'):null;
+  }
+  f.tk=impNorm(f.title)+'|'+impAuthKey(f.author);
+  f.sk=f.shelf.toLowerCase();
+  return f;
+}
+function impAnalyze(text){
+  var rows;
+  try{rows=impParseCSV(text);}catch(e){return {err:'unreadable'};}
+  var det=impDetect(rows);
+  if(!det)return {err:'unsupported'};
+  var items=[],shelves=[],byKey={},i,ownedN=0,hasOwn=det.H['owned']!==undefined&&det.src==='hardcover';
+  for(i=1;i<rows.length;i++){
+    var r=rows[i];if(!r||(r.length===1&&String(r[0]).trim()===''))continue;
+    var f=impFields(det.src,det.H,r);if(!f.title)continue;
+    items.push(f);
+    if(f.ownFile===true)ownedN++;
+    var sh=byKey[f.sk];
+    if(!sh){var auto=impMapShelf(f.shelf);sh={key:f.sk,name:f.shelf||'(No Shelf)',n:0,auto:auto,choice:auto||'skip'};byKey[f.sk]=sh;shelves.push(sh);}
+    sh.n++;
+  }
+  if(!items.length)return {err:'empty'};
+  var libI={},libT={};
+  state.books.forEach(function(b){if(b.isbn)libI[b.isbn]=1;libT[impNorm(b.title)+'|'+impAuthKey(b.author)]=1;});
+  return {step:'own',src:det.src,items:items,shelves:shelves,libI:libI,libT:libT,hasOwn:hasOwn,ownedN:ownedN,own:{mode:hasOwn?'file':'all',fin:false,tor:true}};
+}
+function impPlan(I){
+  var ch={},fI={},fT={},list=[],counts={finished:0,reading:0,toread:0,dnf:0},d1=0,d2=0,dated=0;
+  I.shelves.forEach(function(s){ch[s.key]=s.choice;});
+  I.items.forEach(function(it){
+    var st=ch[it.sk];if(!st||st==='skip')return;
+    counts[st]++;
+    if((it.isbn&&I.libI[it.isbn])||I.libT[it.tk]){d1++;return;}
+    if((it.isbn&&fI[it.isbn])||fT[it.tk]){d2++;return;}
+    if(it.isbn)fI[it.isbn]=1;fT[it.tk]=1;
+    if(st==='finished'&&it.finish)dated++;
+    list.push({it:it,st:st});
+  });
+  return {list:list,counts:counts,d1:d1,d2:d2,n:list.length,dated:dated};
+}
+function impOwned(I,it,st){
+  var o=I.own;
+  if(o.mode==='all')return true;
+  if(o.mode==='none')return false;
+  if(o.mode==='file')return it.ownFile===true;
+  return st==='toread'?!!o.tor:!!o.fin;
+}
+function impBuild(I,p,i,ctx){
+  var it=p.it,st=p.st;
+  var b={id:'i'+ctx.id.toString(36)+'-'+i.toString(36),title:it.title.slice(0,300),author:it.author.slice(0,300),pages:it.pages,status:st,currentPage:0,rating:it.rating,notes:(it.notes||'').slice(0,20000),owned:impOwned(I,it,st),addedAt:(it.added||ctx.id)+i,updatedAt:ctx.id,imp:ctx.id};
+  if(it.isbn){b.isbn=it.isbn;b.coverUrl='https://covers.openlibrary.org/b/isbn/'+it.isbn+'-M.jpg?default=false';}
+  if(it.year)b.year=it.year;
+  if(it.review)b.review=it.review.slice(0,20000);
+  if(st==='finished'){
+    if(it.finish){b.finishedAt=it.finish;b.startedAt=(it.start&&it.start<=it.finish)?it.start:it.finish;}
+    if(b.pages>0)b.currentPage=b.pages;
+  }else if(st==='reading'){
+    b.startedAt=it.start||ctx.id;
+  }else if(st==='dnf'){
+    if(it.start)b.startedAt=it.start;
+  }
+  return b;
+}
+function impRun(){
+  var I=state.imp;if(!I||I.step!=='rev')return;
+  var P=impPlan(I);if(!P.n)return;
+  var ctx={id:Date.now()},idx=0,list=P.list,net={finished:0,reading:0,toread:0,dnf:0},noIsbn=0;
+  var S0=BGX.get(),ear0=S0&&S0.earned?Object.keys(S0.earned):[];
+  I.step='work';I.total=list.length;renderCard();
+  function chunk(){
+    var end=Math.min(idx+100,list.length);
+    var made=[];
+    for(;idx<end;idx++){
+      var b=impBuild(I,list[idx],idx,ctx);
+      state.books.push(b);made.push(b);net[b.status]++;if(!b.isbn)noIsbn++;
+    }
+    dbPutMany(made);
+    var e=document.getElementById('imp-p');if(e)e.textContent='Importing '+list.length+' books\u2026 '+idx+' done';
+    if(idx<list.length){setTimeout(chunk,0);return;}
+    BGX.catchUp();
+    var S1=BGX.get(),nb=[];
+    if(S1&&S1.earned){Object.keys(S1.earned).forEach(function(k){if(ear0.indexOf(k)<0)nb.push(k);});}
+    lsSet(IMPK,JSON.stringify({id:ctx.id,n:list.length,src:I.src,at:Date.now(),badges:nb}));
+    var res={n:list.length,net:net,d1:P.d1,d2:P.d2,noIsbn:noIsbn,src:I.src};
+    state.filter='all';state.own='any';state.q='';
+    if(state.card==='import'){state.imp={step:'done',res:res};render();renderCard();}
+    else{render();toast(list.length+' Book'+(list.length===1?'':'s')+' Imported');}
+  }
+  setTimeout(chunk,30);
+}
+function impUndoSheet(){
+  var o=impLive();if(!o)return;
+  var rm=0,keep=0;
+  state.books.forEach(function(b){if(b.imp===o.id){if(b.updatedAt===o.id)rm++;else keep++;}});
+  if(!rm){
+    openSheet('<h2>Nothing to Remove</h2><p class="sm" style="margin:0 0 14px;line-height:1.5">Every book from this import has been changed since, so all of them are kept.</p><button class="ob cn" data-act="closesheet2" style="width:100%">Done</button>');
+    return;
+  }
+  openSheet('<h2>Remove This Import?</h2><p class="sm" style="margin:0 0 14px;line-height:1.5">This removes the '+rm+' book'+(rm===1?'':'s')+' it added. Books you have changed since the import are kept'+(keep?' ('+keep+').':'.')+'</p><button class="pb" data-act="impundoyes">Remove '+rm+' Book'+(rm===1?'':'s')+'</button><button class="ob cn" data-act="closesheet2" style="margin-top:10px;width:100%">Keep Them</button>');
+}
+function impUndoGo(){
+  var o=impLive();closeSheet();if(!o)return;
+  var keepList=[],gone=[];
+  state.books.forEach(function(b){if(b.imp===o.id&&b.updatedAt===o.id)gone.push(b.id);else keepList.push(b);});
+  state.books=keepList;
+  dbDelMany(gone);
+  try{BGX.undo(o.badges||[]);}catch(e){}
+  lsSet(IMPK,'');
+  if(state.card==='import')closeCard(true);
+  render();
+  toast('Import Removed');
+}
+function impOpen(){impSrc='goodreads';openSheet(impSheetHTML());}
+function impSheetHTML(){
+  var steps=IMP_STEPS[impSrc],h='<h2>Import Your Books</h2><p class="sm" style="margin:0 0 12px;line-height:1.45">Pick a file you exported from another reading app. Your file is read on this phone and is not uploaded anywhere.</p>';
+  h+='<div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:12px">';
+  ['goodreads','hardcover'].forEach(function(k){h+='<button type="button" class="ch'+(impSrc===k?' sel':'')+'" data-act="impsrc" data-v="'+k+'" aria-pressed="'+(impSrc===k?'true':'false')+'" style="flex:none">'+impName(k)+'</button>';});
+  h+='</div><div class="sm" style="line-height:1.5;margin-bottom:14px">';
+  steps.forEach(function(t,i){h+='<div style="margin-bottom:6px">'+(i+1)+'. '+esc(t)+'</div>';});
+  h+='</div><button class="pb" data-act="impchoose">Choose File</button><button class="ob cn" data-act="closesheet2" style="margin-top:10px;width:100%">Cancel</button>';
+  return h;
+}
+function impOpenCard(){
+  closeSheet();
+  if(state.card==='import')renderCard();else openCard('import');
+}
+function impShowErr(kind,n){
+  state.imp={step:'err',kind:kind,n:n||0};
+  impOpenCard();
+}
+function impHandleFile(file){
+  if(!file)return;
+  if(file.size>25*1024*1024){impShowErr('unreadable');return;}
+  var rd=new FileReader();
+  rd.onerror=function(){impShowErr('unreadable');};
+  rd.onload=function(){
+    var txt=String(rd.result||'');
+    if(txt.indexOf('\u0000')>=0||txt.slice(0,2)==='PK'){impShowErr('unreadable');return;}
+    var res=impAnalyze(txt);
+    if(res.err){impShowErr(res.err);return;}
+    var P=impPlan(res),unrec=res.shelves.some(function(sh){return !sh.auto;});
+    if(P.n===0&&P.d1>0&&!unrec){impShowErr('nothing',P.d1);return;}
+    state.imp=res;
+    impOpenCard();
+  };
+  try{rd.readAsText(file);}catch(e){impShowErr('unreadable');}
+}
+function impAct(a,el){
+  var I=state.imp;
+  if(a==='impopen'){impOpen();return true;}
+  if(a==='impsrc'){impSrc=el.getAttribute('data-v')==='hardcover'?'hardcover':'goodreads';openSheet(impSheetHTML());return true;}
+  if(a==='impchoose'){var f=$('#impfile');if(f){f.value='';f.click();}return true;}
+  if(a==='impown'&&I){I.own.mode=el.getAttribute('data-v');renderCard();return true;}
+  if(a==='impownfin'&&I){I.own.fin=!I.own.fin;renderCard();return true;}
+  if(a==='impowntor'&&I){I.own.tor=!I.own.tor;renderCard();return true;}
+  if(a==='impnext'&&I){I.step='rev';renderCard();return true;}
+  if(a==='impback'&&I){I.step='own';renderCard();return true;}
+  if(a==='impgo'){impRun();return true;}
+  if(a==='impstsheet'&&I){
+    var i=parseInt(el.getAttribute('data-i'),10),sh=I.shelves[i];if(!sh)return true;
+    var h='<h2>What Is This Shelf?</h2><p class="sm" style="margin:0 0 6px;word-break:break-word">'+esc(sh.name)+'</p>';
+    [['finished','Finished'],['reading','Reading'],['toread','To Read'],['dnf','Did Not Finish'],['skip','Skip']].forEach(function(c){
+      h+='<button class="opt" data-act="impsetst" data-i="'+i+'" data-v="'+c[0]+'"><span class="dot" style="background:'+(STAT[c[0]]?STAT[c[0]].color:'transparent')+(STAT[c[0]]?'':';border:1px solid var(--line)')+'"></span>'+c[1]+(sh.choice===c[0]?'<small>Current</small>':'')+'</button>';
+    });
+    h+='<div class="row" style="margin-top:12px"><button class="ob cn" data-act="closesheet2">Cancel</button></div>';
+    openSheet(h);return true;
+  }
+  if(a==='impsetst'&&I){
+    var j=parseInt(el.getAttribute('data-i'),10),sh2=I.shelves[j];
+    if(sh2){var v=el.getAttribute('data-v');sh2.choice=(v==='skip'||STAT[v])?v:'skip';}
+    closeSheet();renderCard();return true;
+  }
+  if(a==='impview'){closeCard(true);go('library');return true;}
+  if(a==='impclose'){closeCard();return true;}
+  if(a==='impundo'){impUndoSheet();return true;}
+  if(a==='impundoyes'){impUndoGo();return true;}
+  return false;
+}
+function impProfileHTML(){
+  var o=impLive(),h='<h2 class="sec">Import Your Books</h2><div class="cd">';
+  if(!o){
+    h+='<p class="sm" style="margin:0 0 10px;line-height:1.5">Bring in your library from Goodreads or Hardcover.</p><button class="bt" data-act="impopen" style="background:var(--navy)">'+ico('upload',22)+'Import Your Books</button>';
+  }else{
+    h+='<p class="sm" style="margin:0 0 10px;line-height:1.5">Last import: '+esc(dlabel(dstr(o.at)))+', '+o.live+' book'+(o.live===1?'':'s')+' from '+impName(o.src)+'.</p><div class="row"><button class="bt" data-act="impopen" style="justify-content:center;background:var(--navy)">Import More</button><button class="bt" data-act="impundo" style="justify-content:center;background:var(--navy)">Undo Import</button></div>';
+  }
+  return h+'</div>';
+}
+function impPill(label,color,act,attrs){
+  return '<button type="button" class="pill" data-act="'+act+'" '+(attrs||'')+' style="background:'+color+(color==='transparent'?';box-shadow:inset 0 0 0 0.5px var(--line)':'')+'">'+esc(label)+ico('arrow-left',14).replace('<svg class="tb"','<svg class="tb" style="transform:rotate(-90deg)"')+'</button>';
+}
+function cardImport(){
+  var I=state.imp;
+  if(!I)return cardHead('Import Your Books')+'<div class="cbody"></div>';
+  if(I.step==='err')return impErrHTML(I);
+  if(I.step==='own')return impOwnHTML(I);
+  if(I.step==='rev')return impRevHTML(I);
+  if(I.step==='work')return '<div class="chdr"><b>Importing Your Books</b></div><div class="cbody"><p class="sm" id="imp-p" style="margin:16px 0 0" role="status" aria-live="polite">Importing '+I.total+' books\u2026</p><p class="sm" style="margin:10px 0 0">Please keep this open for a moment.</p></div>';
+  if(I.step==='done')return impDoneHTML(I);
+  return cardHead('Import Your Books')+'<div class="cbody"></div>';
+}
+function impErrHTML(I){
+  var T={
+    unsupported:['This Is Not a Goodreads or Hardcover File','Book Nerd can read library exports from Goodreads and Hardcover. This file has neither of their columns, so nothing was imported.'],
+    empty:['This File Has No Books','The file looks like a Goodreads or Hardcover export, but it has no books in it. If you just exported it, try again and wait until the download finishes before saving.'],
+    unreadable:['Could Not Read That File','Book Nerd needs the export as a .csv file. If the file came zipped, open it in the Files app and choose the .csv inside.'],
+    nothing:['Nothing New to Import','All '+I.n+' books in this file are already in your library, so nothing was added.']
+  }[I.kind]||['Could Not Import','Something went wrong, so nothing was imported.'];
+  var h=cardHead(T[0])+'<div class="cbody"><p class="sm" style="margin:14px 0 22px;line-height:1.55">'+esc(T[1])+'</p>';
+  if(I.kind==='nothing')h+='<button class="pb" data-act="impclose">Done</button><button class="ob cn" data-act="impchoose" style="margin-top:10px;width:100%">Choose Another File</button>';
+  else h+='<button class="pb" data-act="impchoose">Choose Another File</button><button class="ob cn" data-act="impclose" style="margin-top:10px;width:100%">Cancel</button>';
+  return h+'</div>';
+}
+function impOwnHTML(I){
+  var P=impPlan(I),o=I.own,opts=[];
+  if(I.hasOwn)opts.push(['file','Use the Marks in My File ('+I.ownedN+' Owned)']);
+  opts.push(['all','All Owned'],['none','None Owned'],['status','Choose by Status']);
+  var h=cardHead('Do You Own These Books?')+'<div class="cbody"><p class="sm" style="margin:10px 0 12px;line-height:1.5">'+(I.hasOwn?'Your Hardcover file marks which books you own. You can use those marks or decide for the whole import. You can change any book later.':'Goodreads does not keep a usable record of which books you own, so this is asked once for the whole import. You can change any book later.')+'</p>';
+  opts.forEach(function(c){
+    var on=o.mode===c[0];
+    h+='<button type="button" class="imo'+(on?' sel':'')+'" data-act="impown" data-v="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'"><span>'+esc(c[1])+'</span>'+(on?ico('check',18):'')+'</button>';
+  });
+  if(o.mode==='status'){
+    h+='<div class="imr" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span>Finished ('+P.counts.finished+')</span>'+impPill(o.fin?'Owned':'Not Owned',o.fin?'var(--blue)':'transparent','impownfin')+'</div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span>To Read ('+P.counts.toread+')</span>'+impPill(o.tor?'Owned':'Not Owned',o.tor?'var(--blue)':'transparent','impowntor')+'</div>'+
+      ((P.counts.reading||P.counts.dnf)?'<small style="margin-top:8px;display:block">Reading and Did Not Finish books follow Finished.</small>':'')+'</div>';
+  }
+  h+='<button class="pb" data-act="impnext" style="margin-top:14px">Continue</button></div>';
+  return h;
+}
+function impRevHTML(I){
+  var P=impPlan(I),h=cardHead('Ready to Import')+'<div class="cbody"><div class="sm" style="margin:6px 0 12px">'+impName(I.src)+' file, '+I.items.length+' book'+(I.items.length===1?'':'s')+'</div>';
+  ['finished','reading','toread','dnf'].forEach(function(st){
+    if(!P.counts[st])return;
+    h+='<div class="imr"><span style="display:flex;align-items:center;gap:10px"><span class="dot" style="background:'+STAT[st].color+'"></span>'+STAT[st].label+'</span><span>'+P.counts[st]+'</span></div>';
+  });
+  I.shelves.forEach(function(sh,i){
+    if(sh.auto)return;
+    h+='<div class="imr warn"><div><div>'+esc(sh.name)+'</div><small>'+sh.n+' book'+(sh.n===1?'':'s')+'. This shelf was not recognized.</small></div>'+
+      impPill(sh.choice==='skip'?'Skip':STAT[sh.choice].label,sh.choice==='skip'?'transparent':STAT[sh.choice].color,'impstsheet','data-i="'+i+'"')+'</div>';
+  });
+  h+='<div class="imr"><span style="display:flex;align-items:center;gap:10px"><span class="dot" style="background:var(--line)"></span>Already in Your Library (Skipped)</span><span>'+P.d1+'</span></div>';
+  if(P.d2)h+='<div class="imr"><span style="display:flex;align-items:center;gap:10px"><span class="dot" style="background:var(--line)"></span>Repeated in the File (Skipped)</span><span>'+P.d2+'</span></div>';
+  var fin=P.counts.finished,note;
+  if(P.dated&&P.dated>=0&&fin)note=P.dated+' finished book'+(P.dated===1?' has':'s have')+' a Date Read. The rest show as In the Past.';
+  else if(fin)note='None of the finished books has a Date Read, so they show as In the Past.';
+  else note='';
+  h+='<div class="sm" style="line-height:1.5;margin-top:12px">'+(note?'<div style="margin-bottom:6px">'+esc(note)+'</div>':'')+'<div>Imported books do not count toward challenges, and badges are awarded quietly.</div></div>';
+  h+=P.n?'<button class="pb" data-act="impgo" style="margin-top:16px">Import '+P.n+' Book'+(P.n===1?'':'s')+'</button>':'<button class="pb" disabled style="margin-top:16px;opacity:.5">Nothing to Import</button>';
+  h+='<button class="ob cn" data-act="impback" style="margin-top:10px;width:100%">Back</button></div>';
+  return h;
+}
+function impDoneHTML(I){
+  var R=I.res,h=cardHead('Import Complete')+'<div class="cbody"><div style="display:flex;align-items:center;gap:12px;margin:16px 0"><div class="imok">'+ico('check',26)+'</div><div><div style="font-size:17px;font-weight:500">'+R.n+' Book'+(R.n===1?'':'s')+' Added</div><div class="sm">From your '+impName(R.src)+' file</div></div></div>';
+  ['finished','reading','toread','dnf'].forEach(function(st){
+    if(!R.net[st])return;
+    h+='<div class="imr"><span>'+STAT[st].label+'</span><span>'+R.net[st]+'</span></div>';
+  });
+  h+='<div class="imr"><span>Skipped, Already in Your Library</span><span>'+R.d1+'</span></div>';
+  if(R.d2)h+='<div class="imr"><span>Skipped, Repeated in the File</span><span>'+R.d2+'</span></div>';
+  if(R.noIsbn)h+='<div class="sm" style="line-height:1.5;margin:12px 0 4px">'+R.noIsbn+' book'+(R.noIsbn===1?' has':'s have')+' no ISBN, so '+(R.noIsbn===1?'it shows':'they show')+' a generated cover for now.</div>';
+  h+='<button class="pb" data-act="impview" style="margin-top:16px">View Your Library</button><button class="ob cn" data-act="impundo" style="margin-top:10px;width:100%">Undo This Import</button></div>';
+  return h;
+}
 function makeBook(f){
   var now=Date.now();
   var b={id:uid(),title:f.title,author:f.author||'',pages:f.pages||0,status:state.addAs,currentPage:0,rating:0,notes:'',owned:state.addOwned!==false,addedAt:now,updatedAt:now};
@@ -2312,6 +2731,7 @@ function cleanBook(x){
   if(typeof x.isbn==='string'&&/^[0-9Xx]{10,13}$/.test(x.isbn))b.isbn=x.isbn;
   if(typeof x.coverUrl==='string'&&/^https?:\/\//i.test(x.coverUrl))b.coverUrl=x.coverUrl.slice(0,500);
   if(typeof x.year==='string'&&/^\d{4}$/.test(x.year))b.year=x.year;
+  if(num(x.imp))b.imp=num(x.imp);
   if(Array.isArray(x.quotes)){
     var qs=[];
     x.quotes.forEach(function(q){
@@ -3238,6 +3658,7 @@ document.addEventListener('click',function(e){
     return;
   }
   if(a==='addfound'){if(!state.found)return;if(state.addAs==='finished'&&state.addWhen==='date'&&!finWhen('date',state.addDate)){toast('Pick a finish date that is not in the future.');return;}makeBook(state.found);return;}
+  if(a&&a.indexOf('imp')===0&&impAct(a,el))return;
   if(a==='markowned'){
     var mb=byId(el.getAttribute('data-bid')||state.id);if(!mb||isOwned(mb))return;
     mb.owned=true;mb.updatedAt=Date.now();dbPut(mb);refresh();
@@ -3362,6 +3783,7 @@ document.addEventListener('input',function(e){
 });
 document.addEventListener('change',function(e){
   if(e.target.id==='restorefile'){handleRestoreFile(e.target.files&&e.target.files[0]);}
+  if(e.target.id==='impfile'){impHandleFile(e.target.files&&e.target.files[0]);}
 });
 document.addEventListener('submit',function(e){
   if(e.target.id==='sform'){
