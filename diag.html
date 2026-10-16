@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book Nerd Google check</title>
+<style>
+body{margin:0;background:#001F5F;color:#fff;font:16px/1.45 -apple-system,Helvetica,Arial,sans-serif;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 6px}
+p{margin:6px 0 12px;color:#cfd8ef;font-size:14px}
+.t{background:#002a7a;border:.5px solid #00478E;border-radius:10px;padding:12px;margin:10px 0}
+.t b{display:block;font-weight:500;margin-bottom:4px}
+.q{font-size:12px;color:#9fb0d6;word-break:break-all}
+.res{margin-top:6px;font-size:15px}
+.ok{color:#7be07b}.bad{color:#ff9a9a}.warn{color:#ffd37a}
+button{background:#0a63c9;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;margin:6px 0}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:#00164a;border-radius:8px;padding:10px;margin:8px 0 0}
+</style></head><body>
+<h1>Book Nerd: Google Books check</h1>
+<p>This page asks Google Books the same way the app does, from your site, and shows exactly what Google answers. Wait about 10 seconds, then send me a screenshot of the whole page.</p>
+<button id="go">Run again</button>
+<div id="out"></div>
+<pre id="sum"></pre>
+<script>
+var KEY='AIzaSyDy2HxQT6lDLOH8BbMkMS9q7uyKxHSnwz8';
+var BASE='https://www.googleapis.com/books/v1/volumes?';
+var TESTS=[
+ ['Control: a famous old book (Pride and Prejudice, Penguin)','q=isbn:9780141439518&key='+KEY],
+ ['Under Story, US ISBN 9780593545218, with key','q=isbn:9780593545218&key='+KEY],
+ ['Under Story, UK ISBN 9781035437382, with key','q=isbn:9781035437382&key='+KEY],
+ ['Search: under story chloe benjamin, with key','q='+encodeURIComponent('under story chloe benjamin')+'&maxResults=20&printType=books&key='+KEY],
+ ['Search: intitle and inauthor, with key','q='+encodeURIComponent('intitle:under story inauthor:benjamin')+'&key='+KEY],
+ ['Under Story, US ISBN, WITHOUT the key (comparison)','q=isbn:9780593545218']
+];
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function show(label,qs){
+  var box=document.createElement('div');box.className='t';
+  box.innerHTML='<b>'+esc(label)+'</b><div class="q">'+esc((BASE+qs).replace(KEY,'AIza...'))+'</div><div class="res warn">Asking Google...</div>';
+  document.getElementById('out').appendChild(box);
+  var res=box.querySelector('.res'),line=label+' => ';
+  return fetch(BASE+qs).then(function(r){return r.json().then(function(j){return {s:r.status,j:j};});}).then(function(o){
+    var j=o.j,txt;
+    if(j&&j.error){txt='HTTP '+o.s+' ERROR: '+(j.error.status||j.error.code)+' - '+(j.error.message||'');res.className='res bad';}
+    else{
+      var items=(j.items||[]).slice(0,3).map(function(it){var v=it.volumeInfo||{};var ids=(v.industryIdentifiers||[]).map(function(x){return x.identifier;}).join(' ');return (v.title||'?')+' | '+((v.authors||[]).join(', ')||'?')+' | '+(v.publishedDate||'?')+' | '+ids;});
+      txt='HTTP '+o.s+' totalItems='+(j.totalItems===undefined?'?':j.totalItems)+(items.length?'\n'+items.join('\n'):'\n(no books returned)');
+      res.className='res '+(items.length?'ok':'warn');
+    }
+    res.innerHTML=esc(txt).replace(/\n/g,'<br>');line+=txt.replace(/\n/g,' // ');return line;
+  }).catch(function(e){res.className='res bad';res.textContent='Could not reach Google: '+e;return line+'NETWORK ERROR '+e;});
+}
+function run(){
+  document.getElementById('out').innerHTML='';document.getElementById('sum').textContent='Running...';
+  var lines=[];
+  TESTS.reduce(function(p,t){return p.then(function(){return show(t[0],t[1]).then(function(l){lines.push(l);});});},Promise.resolve()).then(function(){
+    document.getElementById('sum').textContent='Summary for Claude:\n'+location.href+'\n'+lines.join('\n');
+  });
+}
+document.getElementById('go').onclick=run;run();
+</script></body></html>
