@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-16 10:13 UTC">
+<meta name="build" content="2026-10-16 12:14 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -1629,9 +1629,12 @@ function addResultsHTML(){
   if(st==='idle')return '<p class="sm" style="margin:14px 0 0">Type a title, an author or an ISBN, then tap Search on the keyboard.</p>';
   if(st==='loading')return '<p class="sm" style="margin:14px 0 0">'+esc(state.sload||'Searching\u2026')+'</p>';
   if(st==='err')return '<p class="err" style="margin:14px 0 0">Search is not working right now. Check your connection and try again.</p>';
+  if(st==='busy')return '<p class="err" style="margin:14px 0 0">Search is busy right now. Wait a moment and try again.</p><button class="pb" data-act="searchretry" style="display:inline-block;width:auto;padding:12px 22px;margin-top:12px">Try Again</button>';
   if(st==='isbnbad')return '<p class="err" style="margin:14px 0 0">That does not look like a valid ISBN. Check the digits and try again.</p>';
   if(st==='empty')return '<p class="sm" style="margin:14px 0 0">No books found. Try fewer words or a different spelling, or scan the barcode.</p>';
-  var h='<div class="ares" style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
+  var h='';
+  if(state.sgbfail)h+='<div id="gbnote" style="background:rgba(255,181,0,.12);border:0.5px solid #8a6a10;border-radius:12px;padding:12px;margin-top:14px"><div style="font-size:14px;color:var(--gold);line-height:1.4">Google Books did not answer, so brand-new books may be missing from this list.</div><button class="pb" data-act="searchretry" style="display:inline-block;width:auto;padding:10px 18px;margin-top:10px;font-size:15px">Try Again</button></div>';
+  h+='<div class="ares" style="display:flex;flex-direction:column;gap:'+'10px;margin-top:'+(state.sgbfail?'10':'14')+'px">';
   state.sres.forEach(function(r,i){
     var meta=[r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
     h+='<button class="cd" data-pick="'+i+'" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left"><div style="width:46px;flex:none">'+coverHTML({title:r.title,status:'toread',coverUrl:r.cover},'border-bottom:0;padding:4px;font-size:8px')+'</div>'+
@@ -1726,8 +1729,11 @@ function cardDetail(){
 }
 function cardFound(){
   var f=state.found;
-  var h=cardHead(f?'Book Found':'No Match Found');
+  var h=cardHead(f?'Book Found':(state.nfbusy?'Could Not Check This ISBN':'No Match Found'));
   if(!f){
+    if(state.nfbusy==='load')return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:14px">Looking up ISBN '+esc(state.nf)+'\u2026</p></div>';
+    if(state.nfbusy==='busy')return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:14px">Open Library and Google Books did not answer, so ISBN '+esc(state.nf)+' could not be checked. Check your connection, wait a moment, and try again.</p>'+
+    '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="pb" data-act="lookupretry">Try Again</button><button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button><button class="bt" data-act="scanagain">'+ico('barcode',22)+'Scan Again</button></div></div>';
     return h+'<div class="cbody"><p class="sm" style="margin-top:16px;font-size:14px">Neither Open Library nor Google Books has ISBN '+esc(state.nf)+'. Try searching for it by title instead, or scan again.</p>'+
     '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button><button class="bt" data-act="scanagain">'+ico('barcode',22)+'Scan Again</button></div></div>';
   }
@@ -1972,17 +1978,38 @@ function lookupOL(isbn){
     return {title:b.title||'',author:(b.authors||[]).map(function(a){return a.name;}).join(', '),pages:b.number_of_pages||0,year:yearOf(b.publish_date),cover:b.cover?(b.cover.medium||b.cover.large||b.cover.small||''):''};
   });
 }
+/* Google Books (Build 19): an error answer is told apart from "no results", and short outages are retried */
+function gbFetch(url){
+  return fetch(url).then(function(r){
+    return r.json().catch(function(){return null;}).then(function(j){
+      var c=0,e;
+      if(j&&j.error){c=Number(j.error.code)||r.status||0;e=new Error('gb '+c);e.gb=c;e.busy=true;e.retry=(c>=500);throw e;}
+      if(!r.ok){e=new Error('gb http '+r.status);e.gb=r.status;e.busy=true;e.retry=(r.status>=500);throw e;}
+      return j||{};
+    });
+  });
+}
+function gbRetry(fn,tries,gap){
+  return fn().catch(function(e){
+    if(tries>0&&e&&e.retry)return new Promise(function(res){setTimeout(res,gap);}).then(function(){return gbRetry(fn,tries-1,gap);});
+    throw e;
+  });
+}
 function lookupGB(isbn){
-  return fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn+'&key='+GKEY).then(function(r){return r.json();}).then(function(j){
+  return gbRetry(function(){return gbFetch('https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn+'&key='+GKEY);},2,1000).then(function(j){
     var v=j.items&&j.items[0]&&j.items[0].volumeInfo;if(!v)return null;
     var img=v.imageLinks?(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail||''):'';
     return {title:v.title||'',author:(v.authors||[]).join(', '),pages:v.pageCount||0,year:yearOf(v.publishedDate),cover:img.replace('http://','https://')};
   });
 }
 function findBook(isbn){
-  return withTimeout(lookupOL(isbn),8000).catch(function(){return null;}).then(function(b){
-    if(b&&b.title)return b;
-    return withTimeout(lookupGB(isbn),8000).catch(function(){return null;}).then(function(g){return (g&&g.title)?g:null;});
+  var failed=false;
+  return withTimeout(lookupOL(isbn),8000).catch(function(){failed=true;return null;}).then(function(b){
+    if(b&&b.title)return {book:b,busy:false};
+    return withTimeout(lookupGB(isbn),9000).catch(function(){failed=true;return null;}).then(function(g){
+      if(g&&g.title)return {book:g,busy:false};
+      return {book:null,busy:failed};
+    });
   });
 }
 function doLookup(isbn){
@@ -1990,9 +2017,10 @@ function doLookup(isbn){
   var ex=null;for(var i=0;i<state.books.length;i++){if(state.books[i].isbn===isbn){ex=state.books[i];break;}}
   if(ex){stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}toast('Already in Your Library');state.id=ex.id;openCard('detail');return;}
   setStat('Found ISBN '+isbn+'. Looking up the book\u2026');
-  findBook(isbn).then(function(book){
+  findBook(isbn).then(function(fr){
+    var book=fr.book;
     state.isbn=isbn;state.addAs='toread';state.addWhen='past';state.addDate='';state.addOwned=true;state.from='';
-    if(book){book.isbn=isbn;book.status='toread';state.found=book;state.nf='';}else{state.found=null;state.nf=isbn;}
+    if(book){book.isbn=isbn;book.status='toread';state.found=book;state.nf='';state.nfbusy='';}else{state.found=null;state.nf=isbn;state.nfbusy=fr.busy?'busy':'';}
     stopScan();if(state.sstat==='loading'){state.sstat='idle';state.sload='';render();}openCard('found');
   });
 }
@@ -2003,30 +2031,80 @@ function searchOL(q){
   });
 }
 function searchGB(q){
-  return fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=20&printType=books&key='+GKEY).then(function(r){return r.json();}).then(function(j){
+  return gbRetry(function(){return gbFetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=20&printType=books&key='+GKEY);},2,1000).then(function(j){
     return (j.items||[]).map(function(it){
       var v=it.volumeInfo||{},isbn='';
       (v.industryIdentifiers||[]).forEach(function(x){if(x.type==='ISBN_13'&&/^97[89][0-9]{10}$/.test(x.identifier))isbn=x.identifier;});
       var img=v.imageLinks?(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail||''):'';
-      return {title:v.title||'',author:(v.authors||[]).slice(0,2).join(', '),year:yearOf(v.publishedDate),pages:v.pageCount||0,cover:img.replace('http://','https://'),isbn:isbn};
+      return {title:v.title||'',author:(v.authors||[]).slice(0,2).join(', '),year:yearOf(v.publishedDate),pages:v.pageCount||0,cover:img.replace('http://','https://'),isbn:isbn,src:'gb'};
     }).filter(function(x){return x.title;});
   });
 }
+function plain(s){s=String(s||'');if(s.normalize)s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');return s.toLowerCase();}
+function normT(t){return plain(t).replace(/\s*\([^)]*#\s*\d+[^)]*\)\s*$/,'').replace(/\s*[:\u2014\u2013].*$/,'').replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').trim();}
+function normA(a){var w=plain(String(a||'').split(',')[0]).replace(/[^a-z0-9 ]+/g,' ').trim().split(/\s+/);return w[w.length-1]||'';}
+function wordSet(s){var o={},w=plain(s).replace(/[^a-z0-9]+/g,' ').trim().split(' '),i;for(i=0;i<w.length;i++){if(w[i])o[w[i]]=1;}return o;}
+function mergeSearch(ol,gb,q){
+  var rows=[],map={},all=ol.concat(gb);
+  all.forEach(function(r,i){
+    var k=normT(r.title)+'|'+normA(r.author),ex=map[k];
+    if(ex===undefined){map[k]=rows.length;rows.push({r:{title:r.title,author:r.author,year:r.year,pages:r.pages,cover:r.cover,isbn:r.isbn,olKey:r.olKey||'',src:r.olKey?'ol':'gb'},i:i});return;}
+    var x=rows[ex].r;
+    if(!x.isbn&&r.isbn)x.isbn=r.isbn;
+    if(!x.cover&&r.cover)x.cover=r.cover;
+    if(!x.pages&&r.pages)x.pages=r.pages;
+    if(!x.year&&r.year)x.year=r.year;
+    if(!x.author&&r.author)x.author=r.author;
+    if(x.src==='gb'&&!r.olKey&&r.title.length<x.title.length)x.title=r.title;
+    if(!x.olKey&&r.olKey){x.olKey=r.olKey;x.src='ol';}
+  });
+  var qs=wordSet(q),qw=Object.keys(qs);
+  rows.forEach(function(o){
+    var ts=wordSet(normT(o.r.title)),as=wordSet(o.r.author),tw=Object.keys(ts),inq=true,qin=true,j;
+    for(j=0;j<tw.length;j++){if(!qs[tw[j]]){inq=false;break;}}
+    for(j=0;j<qw.length;j++){if(!ts[qw[j]]&&!as[qw[j]]){qin=false;break;}}
+    o.s=(inq&&qin&&qw.length)?3:(qin&&qw.length)?2:1;
+  });
+  rows.sort(function(a,b){return (b.s-a.s)||(a.i-b.i);});
+  return rows.slice(0,20).map(function(o){return o.r;});
+}
+function busyErr(e){return !!e&&(e.busy||e.message==='timeout');}
 function searchBooks(q){
-  var olFailed=false;
-  return withTimeout(searchOL(q),10000).catch(function(){olFailed=true;return [];}).then(function(list){
-    if(list.length)return list;
-    return withTimeout(searchGB(q),10000).then(function(g){return g;},function(e){if(olFailed)throw e;return [];});
+  var fail={ol:null,gb:null};
+  var po=withTimeout(searchOL(q),10000).catch(function(e){fail.ol=e||new Error('x');return null;});
+  var pg=withTimeout(searchGB(q),9000).catch(function(e){fail.gb=e||new Error('x');return null;});
+  return Promise.all([po,pg]).then(function(r){
+    var ol=r[0],gb=r[1],er;
+    if(ol===null&&gb===null){er=new Error('both');er.busy=busyErr(fail.ol)||busyErr(fail.gb);throw er;}
+    if(gb===null){
+      if(!ol.length){er=new Error('google');er.busy=true;throw er;}
+      return {list:mergeSearch(ol,[],q),gbfail:true};
+    }
+    if(ol===null){
+      if(!gb.length){er=new Error('ol');er.busy=true;throw er;}
+      return {list:mergeSearch([],gb,q),gbfail:false};
+    }
+    return {list:mergeSearch(ol,gb,q),gbfail:false};
   });
 }
 function doSearch(q){
-  state.sq=q;state.sstat='loading';state.sres=[];render();
-  searchBooks(q).then(function(list){
+  state.sq=q;state.sstat='loading';state.sres=[];state.sgbfail=false;render();
+  searchBooks(q).then(function(r){
     if(state.sq!==q||state.view!=='add'||state.scanning)return;
-    state.sres=list;state.sstat=list.length?'done':'empty';render();
-  }).catch(function(){
+    state.sres=r.list;state.sgbfail=r.gbfail;state.sstat=r.list.length?'done':'empty';render();
+  }).catch(function(e){
     if(state.sq!==q||state.view!=='add'||state.scanning)return;
-    state.sstat='err';render();
+    state.sstat=(e&&e.busy)?'busy':'err';render();
+  });
+}
+function retryLookup(){
+  var isbn=state.nf;if(!isbn||state.nfbusy==='load')return;
+  state.nfbusy='load';renderCard();
+  findBook(isbn).then(function(fr){
+    if(state.card!=='found'||state.nf!==isbn||state.found)return;
+    if(fr.book){var book=fr.book;book.isbn=isbn;book.status='toread';state.isbn=isbn;state.addAs='toread';state.addWhen='past';state.addDate='';state.addOwned=true;state.from='';state.found=book;state.nf='';state.nfbusy='';}
+    else{state.nfbusy=fr.busy?'busy':'';}
+    renderCard();
   });
 }
 function pickResult(i){
@@ -3136,6 +3214,8 @@ document.addEventListener('click',function(e){
   if(a==='scanstart'){state.scanning=true;state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();startScan();return;}
   if(a==='scanstop'){state.scanning=false;stopScan().then(function(){setStat('');});render();return;}
   if(a==='searchtitle'){stopScan();state.scanning=false;if(state.card)closeCard(true);if(state.view!=='add')go('add');else render();var si=$('#sq');if(si){si.focus();setTimeout(scrollToSearch,280);}return;}
+  if(a==='searchretry'){if(state.sq)doSearch(state.sq);return;}
+  if(a==='lookupretry'){retryLookup();return;}
   if(a==='clearsq'){state.sq='';state.sres=[];state.sstat='idle';state.sload='';render();var cs=$('#sq');if(cs)cs.focus();return;}
   if(a==='pickread'){state.filter='toread';state.own='any';go('library');return;}
   if(a==='hqshuf'){hqShuffle();return;}
