@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-16 00:29 UTC">
+<meta name="build" content="2026-10-16 10:13 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -1962,6 +1962,8 @@ function onScan(text){
   handled=true;if(navigator.vibrate)navigator.vibrate(60);
   stopScan().then(function(){doLookup(code);});
 }
+/* Google Books key: locked to https://cwgaibler.github.io/* and to the Books API only, so it is safe to be public */
+var GKEY='AIzaSyDy2HxQT6lDLOH8BbMkMS9q7uyKxHSnwz8';
 function withTimeout(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'));},ms);})]);}
 function yearOf(s){var m=String(s||'').match(/(1[5-9]|20)\d\d/);return m?m[0]:'';}
 function lookupOL(isbn){
@@ -1971,7 +1973,7 @@ function lookupOL(isbn){
   });
 }
 function lookupGB(isbn){
-  return fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn).then(function(r){return r.json();}).then(function(j){
+  return fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn+'&key='+GKEY).then(function(r){return r.json();}).then(function(j){
     var v=j.items&&j.items[0]&&j.items[0].volumeInfo;if(!v)return null;
     var img=v.imageLinks?(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail||''):'';
     return {title:v.title||'',author:(v.authors||[]).join(', '),pages:v.pageCount||0,year:yearOf(v.publishedDate),cover:img.replace('http://','https://')};
@@ -2001,7 +2003,7 @@ function searchOL(q){
   });
 }
 function searchGB(q){
-  return fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=20&printType=books').then(function(r){return r.json();}).then(function(j){
+  return fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=20&printType=books&key='+GKEY).then(function(r){return r.json();}).then(function(j){
     return (j.items||[]).map(function(it){
       var v=it.volumeInfo||{},isbn='';
       (v.industryIdentifiers||[]).forEach(function(x){if(x.type==='ISBN_13'&&/^97[89][0-9]{10}$/.test(x.identifier))isbn=x.identifier;});
@@ -2152,7 +2154,7 @@ function fetchSynopsis(b){
   }
   return chain.then(function(txt){
     if(txt||!b.isbn)return txt;
-    return safe(jget('https://www.googleapis.com/books/v1/volumes?q=isbn:'+b.isbn)).then(function(g){
+    return safe(jget('https://www.googleapis.com/books/v1/volumes?q=isbn:'+b.isbn+'&key='+GKEY)).then(function(g){
       var v=g&&g.items&&g.items[0]&&g.items[0].volumeInfo;return v?cleanSynopsis(v.description):'';
     });
   }).then(function(txt){return {text:txt,failed:failed};});
