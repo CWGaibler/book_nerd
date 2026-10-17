@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-16 18:27 UTC">
+<meta name="build" content="2026-10-16 22:55 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -343,7 +343,12 @@ nav .ni{flex:1 1 0;min-width:0}
 
 /* ----- Build 15: phone-view helpers (look identical to Build 14) ----- */
 .dwide,.drest{display:block}
-.dtop{display:flex;gap:14px;margin-top:10px;align-items:center}
+.dtop{display:grid;grid-template-columns:var(--tile) minmax(0,1fr);column-gap:14px;margin-top:10px;align-items:end}
+.dtop .dcov{grid-column:1;grid-row:1}
+.dtop .dinfo{grid-column:2;grid-row:1}
+.dtop .dedit{grid-column:1;grid-row:2;justify-self:center;align-self:baseline;margin-top:9px;font-size:13px;white-space:nowrap}
+.dtop .dmeta{grid-column:2;grid-row:2;align-self:baseline;margin-top:9px}
+.yrs{font-size:11px;font-weight:400;background:var(--line);border-radius:999px;padding:2px 8px;margin-left:4px}
 .dcov{width:var(--tile);flex:none}
 .dinfo{min-width:0}
 /* ----- Build 15: the wide layout (iPad and Mac). Nothing below applies to a phone. ----- */
@@ -354,11 +359,13 @@ nav .ni{flex:1 1 0;min-width:0}
   .grid.lib{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
   .card2{max-width:var(--cardw)}
   .card2 .grid{grid-template-columns:repeat(auto-fill,minmax(137px,1fr))}
-  .dwide{display:grid;grid-template-columns:var(--dcov) minmax(0,1fr);column-gap:20px;align-items:start;margin-top:10px}
+  .dwide{display:grid;grid-template-columns:var(--dcov) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr);column-gap:20px;align-items:start;margin-top:10px}
   .dtop{display:contents}
-  .dcov{width:auto;grid-column:1;grid-row:1/span 2}
+  .dtop .dcov{width:auto;grid-column:1;grid-row:1/span 4}
   .dinfo{grid-column:2;grid-row:1}
-  .drest{display:block;grid-column:2;grid-row:2}
+  .drest{display:block;grid-column:2;grid-row:4}
+.dtop .dmeta{grid-column:2;grid-row:2;align-self:start;margin-top:8px}
+.dtop .dedit{grid-column:2;grid-row:3;justify-self:start;align-self:start;margin-top:8px;font-size:14px}
   .bgg{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px 12px;padding:18px 12px 14px}
   .ares{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}
   .sgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -1737,7 +1744,7 @@ function cardDetail(){
   (b.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+authorLinks(b)+'</div>':'<div style="height:10px"></div>')+
   '<div class="pills"><button class="pill" data-act="status" aria-label="Change status, currently '+st.label+'" style="background:'+st.color+'">'+st.label+' \u25BE</button>'+
   '<button class="pill o '+(own?'pwy':'pwn')+'" data-act="ownsheet" aria-label="Change ownership, currently '+(own?'Owned':'Not Owned')+'">'+ico(own?'check':'bag',14)+(own?'Owned':'Not Owned')+' \u25BE</button></div>'+
-  '<div class="sm" style="margin-top:8px">'+meta+(b.status==='finished'?'<button type="button" class="alk" data-act="chgfin" data-bid="'+b.id+'" style="margin-left:8px;font-size:14px">Change</button>':'')+'</div></div></div><div class="drest">'+
+  '</div><div class="dmeta sm">'+meta+(b.status==='finished'?'<button type="button" class="alk" data-act="chgfin" data-bid="'+b.id+'" style="margin-left:8px;font-size:14px">Change</button>':'')+'</div><button type="button" class="alk dedit" data-act="edchange" data-bid="'+b.id+'">Change Edition</button></div><div class="drest">'+
   (own?'':'<div class="row btns" style="margin-top:16px"><button class="ob ca" data-act="markowned" data-bid="'+b.id+'">Mark as Owned</button><a class="ob ca buybtn" href="'+esc(buyURL(b))+'" target="_blank" rel="noopener noreferrer">'+ico('external-link',18)+'Buy This Book</a></div>')+
   synHTML(b);
   var s2=b.status,fin=s2==='finished',tr=s2==='toread',started=!tr;
@@ -1780,7 +1787,7 @@ function cardFound(){
     '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="bt" data-act="searchtitle">'+ico('search',22)+'Search by Title</button><button class="bt" data-act="scanagain">'+ico('barcode',22)+'Scan Again</button></div></div>';
   }
   var meta=[f.year,f.pages?f.pages+' pages':''].filter(Boolean).join(' \u00B7 ');
-  h+='<div class="cbody"><div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div style="width:var(--tile);flex:none">'+coverHTML({title:f.title,status:'toread',coverUrl:f.cover})+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(f.title)+'</div>'+
+  h+='<div class="cbody"><div style="display:flex;gap:14px;margin-top:10px;align-items:flex-end"><div style="width:var(--tile);flex:none">'+coverHTML({title:f.title,status:'toread',coverUrl:f.cover})+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(f.title)+'</div>'+
   (f.author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+foundAuthorLinks(f)+'</div>':'<div style="height:10px"></div>')+
   (meta?'<div class="sm">'+esc(meta)+'</div>':'')+
   (f.isbn?'<div class="sm" style="font-size:12px;margin-top:4px">ISBN '+esc(f.isbn)+'</div>':'')+'</div></div>'+
@@ -2197,7 +2204,7 @@ function edOpen(key){
 function edFetch(key){
   ajget('https://openlibrary.org'+key+'/editions.json?limit=100').then(function(j){
     if(!state.ed||state.ed.key!==key)return;
-    state.ed.list=edClean(j&&j.entries);state.ed.st='ok';
+    state.ed.list=edClean(j&&j.entries);state.ed.st='ok';if(state.ed.bookId)edMarkCurrent();
     if(state.card==='edition')renderCard();
   }).catch(function(){
     if(!state.ed||state.ed.key!==key)return;
@@ -2205,6 +2212,7 @@ function edFetch(key){
   });
 }
 function edUse(){
+  if(state.ed&&state.ed.bookId){edUseBook();return;}
   var E=state.ed,f=state.found;if(!E||!f)return;
   var e=E.list[E.sel];
   if(e){
@@ -2215,28 +2223,98 @@ function edUse(){
   }
   state.ed=null;state.card='found';renderCard();
 }
-function edKeep(){state.ed=null;state.card='found';renderCard();}
+/* ---------- Change Edition for a book already in the library (Build 21) ---------- */
+function edOpenBook(bid){
+  var b=byId(bid);if(!b)return;
+  state.ed={key:'',st:'load',list:[],shown:6,sel:0,cur:-1,bookId:bid};
+  openCard('edition');
+  var k=(typeof b.olKey==='string'&&/^\/works\/OL\d+W$/.test(b.olKey))?b.olKey:'';
+  if(k){state.ed.key=k;edFetch(k);return;}
+  if(!b.isbn){state.ed.st='na';renderCard();return;}
+  jget('https://openlibrary.org/search.json?isbn='+encodeURIComponent(b.isbn)+'&fields=key&limit=1').then(function(j){
+    if(!state.ed||state.ed.bookId!==bid)return;
+    var d=j&&Array.isArray(j.docs)&&j.docs[0],w=d&&d.key;
+    if(typeof w==='string'&&/^\/works\/OL\d+W$/.test(w)){state.ed.key=w;edFetch(w);}
+    else{state.ed.st='na';if(state.card==='edition')renderCard();}
+  }).catch(function(){
+    if(!state.ed||state.ed.bookId!==bid)return;
+    state.ed.st='err';if(state.card==='edition')renderCard();
+  });
+}
+function edMarkCurrent(){
+  var E=state.ed,b=E&&byId(E.bookId);if(!b)return;
+  var cur=-1,m=String(b.coverUrl||'').match(/\/b\/id\/(\d+)-/);
+  E.list.forEach(function(e,i){if(cur<0&&((b.isbn&&e.isbn===b.isbn)||(m&&e.cover===+m[1])))cur=i;});
+  if(cur>0){var it=E.list.splice(cur,1)[0];E.list.unshift(it);}
+  E.cur=cur>=0?0:-1;E.sel=0;
+}
+function edUseBook(){
+  var E=state.ed,b=E&&byId(E.bookId);if(!E||!b)return;
+  var e=E.list[E.sel];
+  if(!e||(E.cur>=0&&E.sel===E.cur)){edKeep();return;}
+  var np=e.pages||0,P=b.currentPage||0;
+  if(np&&b.status==='reading'&&P>0&&(b.pages||0)>0&&np!==b.pages){
+    var keepP=Math.min(P,np),pctNow=Math.round(keepP/np*100),pctOld=Math.round(P/b.pages*100),placeP=Math.max(0,Math.min(np,Math.round(P/b.pages*np)));
+    openSheet('<h2>The Page Count Changed</h2><p class="sm" style="margin:0 0 8px;line-height:1.5">This edition has '+np+' pages, and your copy had '+b.pages+'. You are on page '+P+'.</p>'+
+      '<button class="opt" data-act="edpg" data-v="page">Keep Page '+keepP+'<small>Now '+pctNow+'%</small></button>'+
+      '<button class="opt" data-act="edpg" data-v="place">Keep My Place at '+pctOld+'%<small>Page '+placeP+'</small></button>'+
+      '<div class="row" style="margin-top:12px"><button class="ob cn" data-act="closesheet2">Cancel</button></div>');
+    return;
+  }
+  edApply(b,e,'page');
+}
+function edApply(b,e,mode){
+  var prev={coverUrl:b.coverUrl,pages:b.pages,year:b.year,isbn:b.isbn,olKey:b.olKey,currentPage:b.currentPage,updatedAt:b.updatedAt};
+  var oldPages=b.pages||0,E=state.ed,key=E&&E.key;
+  if(e.cover)b.coverUrl='https://covers.openlibrary.org/b/id/'+e.cover+'-M.jpg';
+  if(e.year)b.year=e.year;
+  if(e.isbn)b.isbn=e.isbn;
+  if(e.pages){
+    b.pages=e.pages;
+    if(b.status==='finished')b.currentPage=e.pages;
+    else if(b.status==='reading'||b.status==='dnf'){
+      var cp=b.currentPage||0;
+      if(mode==='place'&&oldPages>0)cp=Math.round(cp/oldPages*e.pages);
+      b.currentPage=Math.max(0,Math.min(cp,e.pages));
+    }
+  }
+  if(!b.olKey&&typeof key==='string'&&/^\/works\/OL\d+W$/.test(key))b.olKey=key;
+  b.updatedAt=Date.now();dbPut(b);
+  state.ed=null;state.card='detail';renderCard();
+  toast('Edition Changed',{label:'Undo',fn:function(){
+    ['coverUrl','pages','year','isbn','olKey','currentPage'].forEach(function(k){if(prev[k]===undefined)delete b[k];else b[k]=prev[k];});
+    b.updatedAt=Date.now();dbPut(b);refresh();
+  }});
+}
+function edKeep(){
+  if(state.ed&&state.ed.bookId){state.ed=null;state.card='detail';renderCard();return;}
+  state.ed=null;state.card='found';renderCard();
+}
 function cardEdition(){
-  var E=state.ed,f=state.found,h=cardHead('Choose Your Edition');
+  var E=state.ed,bk=(E&&E.bookId)?byId(E.bookId):null,f=bk||state.found,h=cardHead('Choose Your Edition');
   if(!E||!f)return h+'<div class="cbody"></div>';
   h+='<div class="cbody"><div class="sm" style="font-size:14px;margin:10px 0 12px;word-break:break-word">'+esc(f.title)+(f.author?' \u00B7 '+esc(f.author):'')+'</div>';
   if(E.st==='load')return h+'<p class="sm" style="margin:0">Looking up editions\u2026</p></div>';
+  if(bk&&E.st==='na')return h+'<p class="sm" style="margin:0 0 16px;line-height:1.55">Open Library does not list other editions of this book, so there is nothing to choose from. Your cover and details stay as they are.</p><button class="pb" data-act="edkeep">Done</button></div>';
+  if(bk&&(E.st==='err'||!E.list.length)){
+    return h+'<p class="sm" style="margin:0 0 16px;line-height:1.55">'+(E.st==='err'?'Could not load editions. Check your connection and try again.':'Open Library does not list other editions of this book, so there is nothing to choose from. Your cover and details stay as they are.')+'</p>'+(E.st==='err'?'<button class="pb" data-act="edretry">Try Again</button><button class="lnk l14" data-act="edkeep">Keep My Current Edition</button>':'<button class="pb" data-act="edkeep">Done</button>')+'</div>';
+  }
   if(E.st==='err'||!E.list.length){
     return h+'<p class="sm" style="margin:0 0 16px">'+(E.st==='err'?'Could not load editions. Check your connection and try again, or keep the standard cover.':'No editions to choose from. You can keep the standard cover.')+'</p>'+
       '<button class="pb" data-act="edkeep">Keep the Standard Cover</button>'+(E.st==='err'?'<button class="lnk l14" data-act="edretry">Try Again</button>':'')+'</div>';
   }
-  h+='<p class="sm" style="margin:0 0 10px">Tap the one that matches your copy. The cover and page count come from it.</p><div style="display:flex;flex-direction:column;gap:8px">';
+  h+='<p class="sm" style="margin:0 0 10px">'+(bk?'Tap the one that matches your copy. The cover, page count, year and ISBN come from it. Your rating, review and dates stay.':'Tap the one that matches your copy. The cover and page count come from it.')+'</p><div style="display:flex;flex-direction:column;gap:8px">';
   E.list.slice(0,E.shown).forEach(function(e,i){
     var cv=e.cover?'<div style="width:44px;flex:none">'+coverHTML({title:f.title,coverUrl:'https://covers.openlibrary.org/b/id/'+e.cover+'-M.jpg'},'padding:4px;font-size:11px')+'</div>':'<div style="width:44px;height:66px;flex:none;border:1px dashed var(--line);border-radius:3px;display:flex;align-items:center;justify-content:center;padding:2px;font-size:11px;line-height:1.2;text-align:center">No cover</div>';
     var pu=[e.pub,e.year].filter(Boolean).join(' \u00B7 ')||'Publisher not listed';
     var on=(i===E.sel);
     h+='<button type="button" class="edr'+(on?' sel':'')+'" data-ed="'+i+'" aria-pressed="'+(on?'true':'false')+'">'+cv+
-      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">'+(e.fmt?esc(e.fmt):'Format not listed')+'</div><div class="sm" style="word-break:break-word">'+esc(pu)+'</div><div class="sm">'+(e.pages?e.pages+' pages':'Pages not listed')+'</div></div>'+
+      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">'+(e.fmt?esc(e.fmt):'Format not listed')+(bk&&E.cur===i?'<span class="yrs">Yours</span>':'')+'</div><div class="sm" style="word-break:break-word">'+esc(pu)+'</div><div class="sm">'+(e.pages?e.pages+' pages':'Pages not listed')+'</div></div>'+
       '<span style="flex:none;color:var(--blue);'+(on?'':'visibility:hidden')+'">'+ico('check',22)+'</span></button>';
   });
   h+='</div>';
   if(E.list.length>E.shown)h+='<button class="lnk l14" data-act="edmore">Show more editions</button>';
-  h+='<div style="margin-top:6px"><button class="pb" data-act="eduse" style="margin-top:6px">Use This Edition</button><button class="lnk l14" data-act="edkeep">Not Sure? Keep the Standard Cover</button></div></div>';
+  h+='<div style="margin-top:6px"><button class="pb" data-act="eduse" style="margin-top:6px">Use This Edition</button><button class="lnk l14" data-act="edkeep">'+(bk?'Keep My Current Edition':'Not Sure? Keep the Standard Cover')+'</button></div></div>';
   return h;
 }
 function cleanSynopsis(raw){
@@ -3504,6 +3582,7 @@ function openAuthor(name,book){
   authLoad(name,book?book.title:'');
 }
 function cardBack(){
+  if(state.card==='edition'&&state.ed&&state.ed.bookId&&byId(state.ed.bookId)){state.ed=null;state.card='detail';renderCard();return;}
   if(state.card==='author'&&state.authorBack==='found'&&state.found){state.authorBack=false;state.card='found';renderCard();return;}
   if(state.card==='author'&&state.authorBack===true&&byId(state.id)){state.authorBack=false;state.card='detail';state.synOpen=false;renderCard();return;}
   closeCard();
@@ -3599,10 +3678,12 @@ document.addEventListener('click',function(e){
   if(a==='clearq'){state.q='';var cq=$('#q');if(cq){cq.value='';cq.focus();}updateLib();return;}
   if(a==='closecard'){if(Date.now()-xbLast<450)return;cardBack();return;}
   if(a==='rescan'){closeCard();return;}
+  if(a==='edchange'){edOpenBook(el.getAttribute('data-bid')||state.id);return;}
+  if(a==='edpg'){var v=el.getAttribute('data-v'),E2=state.ed,b2=E2&&byId(E2.bookId),e2=E2&&E2.list[E2.sel];closeSheet();if(b2&&e2)edApply(b2,e2,v==='place'?'place':'page');return;}
   if(a==='eduse'){edUse();return;}
   if(a==='edkeep'){edKeep();return;}
   if(a==='edmore'){if(state.ed){state.ed.shown+=6;renderCard();}return;}
-  if(a==='edretry'){if(state.ed){state.ed.st='load';renderCard();edFetch(state.ed.key);}return;}
+  if(a==='edretry'){if(state.ed){if(state.ed.bookId&&!state.ed.key){edOpenBook(state.ed.bookId);return;}state.ed.st='load';renderCard();edFetch(state.ed.key);}return;}
   if(a==='scanagain'){state.scanning=true;state.sq='';state.sres=[];state.sstat='idle';state.sload='';closeCard();return;}
   if(a==='qadd'){var qb=byId(state.id);if(!qb)return;if((qb.quotes||[]).length>=100){toast('This book has 100 quotes');return;}openSheet(quoteSheet(qb,null));state.lockSheet=true;return;}
   if(a==='qedit'){var eb=byId(state.id),eq=eb&&(eb.quotes||[]).filter(function(q){return q.id===el.getAttribute('data-qid');})[0];if(!eq)return;openSheet(quoteSheet(eb,eq));state.lockSheet=true;return;}
