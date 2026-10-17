@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-17 12:52 UTC">
+<meta name="build" content="2026-10-17 18:16 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -3213,9 +3213,9 @@ function chEndClose(){
 function chEndDone(){chEndClose();chSave(null);render();try{BGX.wake();}catch(x){}}
 function chEndOpen(kind){
   var c=chGet();if(!c||document.getElementById('chend'))return;
-  var n=Math.min(c.credits.length,c.target),target=kind==='met'?1:Math.min(1,n/c.target),yr=c.end.slice(0,4);
-  var head=kind==='met'?'Congratulations!':'What a year of reading!';
-  var msg=kind==='met'?'You finished '+(c.target===1?'your book':'all '+c.target+' books')+' in '+yr+'. What a year of reading.':'You finished '+n+(n===1?' book':' books')+' in '+yr+'. Every one counts.';
+  var n=Math.min(c.credits.length,c.target),target=kind==='met'?1:Math.min(1,n/c.target);
+  var head=kind==='met'?'Congratulations!':'Well Read!';
+  var msg=kind==='met'?'You finished '+(c.target===1?'your book':'all '+c.target+' books')+'. What a great stretch of reading.':'You finished '+n+(n===1?' book':' books')+'. Every one counts.';
   if(kind==='met')c.celebrated=true;else c.ended=true;
   chSave(c);
   var el=document.createElement('div');el.id='chend';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Reading challenge');
