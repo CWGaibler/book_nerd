@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-17 23:09 UTC">
+<meta name="build" content="2026-10-18 01:25 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -554,10 +554,10 @@ function dbDel(id){if(memoryOnly)return;try{db.transaction('books','readwrite').
 /* ---------- helpers ---------- */
 function byId(id){for(var i=0;i<state.books.length;i++){if(state.books[i].id===id)return state.books[i];}return null;}
 function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return Math.abs(h);}
-function coverHTML(b,extra,bag){
+function coverHTML(b,extra,bag,pri){
   var c=COVERS[hash(b.title)%COVERS.length];
   var t=(c==='#6B8E6B')?'#00033C':'#fff';
-  var img=b.coverUrl?'<img src="'+esc(b.coverUrl)+'" alt="" loading="lazy" decoding="async" onerror="this.remove()">':'';
+  var img=b.coverUrl?'<img src="'+esc(b.coverUrl)+'" alt="" '+(pri?'loading="eager" decoding="sync"':'loading="lazy" decoding="async"')+' onerror="this.remove()">':'';
   return '<div class="cv" style="--c:'+c+';--t:'+t+';'+(extra||'')+'">'+img+'<span>'+esc(b.title)+'</span>'+(bag?'<div class="badge" role="img" aria-label="Not owned">'+ico('bag',13)+'</div>':'')+'</div>';
 }
 function fmtDate(ts){
@@ -1613,7 +1613,7 @@ function viewHomeBase(){
   var p=pct(cur),left=cur.pages>0?Math.max(0,cur.pages-(cur.currentPage||0)):null;
   var meta=cur.startedAt?'Started '+fmtDate(cur.startedAt):'Added '+fmtDate(cur.addedAt);
   h+='<div class="cd" style="padding:12px;display:block">'+
-  '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:var(--hcov,96px);flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur))+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
+  '<div style="display:flex;gap:14px"><button data-open="'+cur.id+'" aria-label="Open '+esc(cur.title)+'" style="display:block;width:var(--hcov,96px);flex:none;text-align:left">'+coverHTML(cur,'padding:10px;font-size:12px',!isOwned(cur),true)+'</button><div style="min-width:0"><div><button data-open="'+cur.id+'" style="display:inline-block;max-width:100%;text-align:left;font-size:17px;font-weight:500;line-height:1.3;word-break:break-word">'+esc(cur.title)+'</button></div>'+
   (cur.author?'<div style="font-size:14px;margin:6px 0 10px">'+authorLinks(cur)+'</div>':'<div style="height:10px"></div>')+
   '<div class="sm" style="margin-top:10px">'+meta+'</div></div></div>'+hqHTML(cur)+
   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px"><span style="font-size:14px;font-weight:500">'+pageText(cur)+'</span>'+(p!==null?'<span style="font-size:14px;font-weight:500;color:var(--green)">'+p+'%</span>':'')+'</div>'+
@@ -1670,7 +1670,7 @@ function libMeta(list){
 function libBody(list){
   if(!list.length)return '<div class="empty" style="padding:24px 8px"><p class="sm">No books match.</p></div>';
   var h='<div class="grid lib">';
-  list.forEach(function(b){h+='<button data-open="'+b.id+'" aria-label="'+esc(b.title)+'" style="display:block;text-align:left">'+coverHTML(b,'',!isOwned(b))+'</button>';});
+  list.forEach(function(b,ix){h+='<button data-open="'+b.id+'" aria-label="'+esc(b.title)+'" style="display:block;text-align:left">'+coverHTML(b,'',!isOwned(b),ix<24)+'</button>';});
   return h+'</div>';
 }
 function starsHTML(r,kind,sz){
@@ -1974,10 +1974,35 @@ function makeGhost(v){
   var g=document.createElement('div');g.className='ghost';g.setAttribute('aria-hidden','true');
   var inner=document.createElement('div');
   inner.style.cssText='position:absolute;left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;padding:'+cs.padding;
-  inner.innerHTML=v.innerHTML;
-  var ids=inner.querySelectorAll('[id]');for(var i=0;i<ids.length;i++)ids[i].removeAttribute('id');
-  var vs=inner.querySelectorAll('video');for(var j=0;j<vs.length;j++)vs[j].parentNode.removeChild(vs[j]);
   g.appendChild(inner);document.body.appendChild(g);ghostEl=g;return g;
+}
+/* Build 26: the old screen itself moves into the fading copy (a text copy re-created every cover image, so covers showed as blank tiles for a moment). */
+function fillGhost(g,v){
+  var inner=g.firstChild;if(!inner)return;
+  var vs=v.querySelectorAll('video'),i,j,e;for(j=0;j<vs.length;j++)vs[j].parentNode.removeChild(vs[j]);
+  while(v.firstChild)inner.appendChild(v.firstChild);
+  var els=inner.querySelectorAll('[id]'),map={},any=false;
+  for(i=0;i<els.length;i++){e=els[i];
+    if(e.closest&&e.closest('svg')){map[e.id]=e.id+'-g';e.setAttribute('id',map[e.id]);any=true;}
+    else e.removeAttribute('id');
+  }
+  if(!any)return;
+  var all=inner.querySelectorAll('*'),at=['fill','stroke','clip-path','mask','filter','style','href','xlink:href'];
+  for(i=0;i<all.length;i++){e=all[i];
+    for(j=0;j<at.length;j++){var a=e.getAttribute(at[j]);if(!a||a.indexOf('#')<0)continue;
+      var b=a.replace(/url\(\s*(['"]?)#([^)'"\s]+)\1\s*\)/g,function(m,q,id){return map[id]?'url(#'+map[id]+')':m;});
+      if((at[j]==='href'||at[j]==='xlink:href')&&b.charAt(0)==='#'&&map[b.slice(1)])b='#'+map[b.slice(1)];
+      if(b!==a)e.setAttribute(at[j],b);
+    }
+  }
+}
+var WARM={},WARMN=0;
+function warmCovers(){
+  try{
+    var l=libFilter().list,rd=state.books.filter(function(b){return b.status==='reading';}).slice(0,3),use=rd.concat(l.slice(0,48)),i,u;
+    if(WARMN>240){WARM={};WARMN=0;}
+    for(i=0;i<use.length;i++){u=use[i].coverUrl;if(u&&!WARM[u]){var im=new Image();im.src=u;WARM[u]=im;WARMN++;}}
+  }catch(e){}
 }
 function startFade(v,g){
   var d=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fade'),10)||950,ease='cubic-bezier(.3,.05,.2,1)';
@@ -1993,8 +2018,11 @@ function render(){
   var v=$('#view');
   var ghost=(lastView!==null&&lastView!==state.view&&state.loaded&&!reduced())?makeGhost(v):null;
   var apE=document.getElementById('app');if(apE)apE.setAttribute('data-v',state.view);
-  if(!state.loaded&&(state.view==='home'||state.view==='library')){v.innerHTML=top()+ptitle(state.view==='home'?'Home':'Library');}
-  else{v.innerHTML=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='badges'?BGX.view():viewBackup();}
+  var html;
+  if(!state.loaded&&(state.view==='home'||state.view==='library')){html=top()+ptitle(state.view==='home'?'Home':'Library');}
+  else{html=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='badges'?BGX.view():viewBackup();}
+  if(ghost)fillGhost(ghost,v);
+  v.innerHTML=html;
   setPT();profSync();
   var tab=state.view;
   var ns=document.querySelectorAll('.ni');
@@ -2002,6 +2030,7 @@ function render(){
   lastView=state.view;
   if(state.view==='backup')navH();
   if(ghost)startFade(v,ghost);
+  setTimeout(warmCovers,0);
 }
 function renderCard(){
   var el=$('#card');
