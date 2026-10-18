@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-18 11:54 UTC">
+<meta name="build" content="2026-10-18 14:26 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -2003,6 +2003,7 @@ function fillGhost(g,v){
 var WARM={},WARMN=0;
 function warmCovers(){
   try{
+    if(state.view==='explore')exWarm();
     var l=libFilter().list,rd=state.books.filter(function(b){return b.status==='reading';}).slice(0,3),use=rd.concat(l.slice(0,48)),i,u;
     if(WARMN>240){WARM={};WARMN=0;}
     for(i=0;i<use.length;i++){u=use[i].coverUrl;if(u&&!WARM[u]){var im=new Image();im.src=u;WARM[u]=im;WARMN++;}}
@@ -2020,14 +2021,22 @@ function startFade(v,g){
 /* ---------- render ---------- */
 /* Build 27: Explore. Two suggestions at once: one book from the To Read list, and one new book by an author the reader rated 4 stars or higher.
    New-book candidates come from the same Open Library author lookup (and 14-day cache) the author card uses. Passed-on books are remembered on this device only (bm_exskip). */
-var EX={cur:'',st:'idle',sig:'',pool:[],ai:0,tok:0};
+var EX={cur:'',st:'idle',sig:'',pool:[],ai:0,tok:0,pend:null,last:null};
 function exSkip(){try{var a=JSON.parse(lsGet('bm_exskip')||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
 function exSkipAdd(k){var a=exSkip();if(a.indexOf(k)<0){a.push(k);if(a.length>300)a=a.slice(-300);lsSet('bm_exskip',JSON.stringify(a));}}
+var EXROLE=/\b(illustrators?|translators?|editors?|narrators?|forewords?|introductions?|afterwords?|prefaces?|adapters?|compilers?|contributors?|photographers?|readers?|read by|cover (?:art|design)|artists?|colou?rists?|letterers?|pencill?ers?|inkers?)\b/i;
+function exName(raw){
+  var s=String(raw||'').trim(),m=s.match(/\s*\(([^)]*)\)\s*$/);
+  if(m){var tag=m[1];s=s.slice(0,m.index).trim();return {name:s,role:EXROLE.test(tag)};}
+  return {name:s,role:s.split(/\s+/).length===1&&EXROLE.test(s)};
+}
+function exAuthors(raw){var o=[];authorNames(raw).forEach(function(n){var x=exName(n);if(x.name&&!x.role)o.push(x.name);});return o;}
+function exShow(raw){var a=exAuthors(raw);if(a.length)return a.join(', ');return authorNames(raw).map(function(n){return exName(n).name;}).filter(Boolean).join(', ');}
 function exTaste(){
   var m={},ks=[];
   state.books.forEach(function(b){
     if(!((b.rating||0)>=4))return;
-    authorNames(b.author).forEach(function(nm){
+    exAuthors(b.author).forEach(function(nm){
       var k=anorm(nm);if(!k)return;
       var e=m[k];if(!e){e=m[k]={name:nm,n:0,last:0};ks.push(k);}
       e.n++;if((b.updatedAt||0)>e.last)e.last=b.updatedAt||0;
@@ -2041,7 +2050,7 @@ function exToRead(){
   var rated=state.books.some(function(b){return (b.rating||0)>0;});
   var list=state.books.filter(function(b){return b.status==='toread';}).map(function(b){
     var best=null;
-    authorNames(b.author).forEach(function(nm){var t=tm[anorm(nm)];if(t&&(!best||t.n>best.n))best=t;});
+    exAuthors(b.author).forEach(function(nm){var t=tm[anorm(nm)];if(t&&(!best||t.n>best.n))best=t;});
     return {b:b,t:best};
   });
   list.sort(function(x,y){return ((y.t?y.t.n:0)-(x.t?x.t.n:0))||((x.b.addedAt||0)-(y.b.addedAt||0));});
@@ -2054,6 +2063,7 @@ function exWhyTR(c,rated,i){
   return i===0?'You have not rated any books yet, so this is the book that has waited longest on your list.':'You have not rated any books yet. This one has been on your list since '+fmtDate(c.b.addedAt)+'.';
 }
 function exBody(cv,title,author,meta,why,btns){
+  cv=String(cv).replace('<img ','<img fetchpriority=\"high\" ');
   return '<div class="cd"><div style="display:flex;gap:14px;align-items:flex-end"><div style="width:var(--tile);flex:none">'+cv+'</div><div style="min-width:0"><div style="font-size:18px;font-weight:500;word-break:break-word">'+esc(title)+'</div>'+(author?'<div class="sm" style="font-size:14px;margin:2px 0 10px">'+esc(author)+'</div>':'<div style="height:10px"></div>')+(meta?'<div class="sm">'+esc(meta)+'</div>':'')+'</div></div><div style="margin-top:14px"><div class="lb">Why This One</div><p class="sm" style="margin:4px 0 0;font-size:14px">'+esc(why)+'</p></div><div class="row btns" style="margin-top:16px">'+btns+'</div></div>';
 }
 function exMsg(head,text,btn){
@@ -2099,21 +2109,40 @@ function exNewHTML(){
   var c=exNewCur();
   if(!c&&EX.ai<taste.length){exLoad();return loading;}
   if(!c)return exMsg('No New Suggestions Right Now','We could not find a new book by the authors you rated highly. Check back after you rate more books.');
-  var b=c.b,cv=coverHTML({title:b.t,coverUrl:b.c?'https://covers.openlibrary.org/b/id/'+b.c+'-M.jpg':''});
+  var b=c.b,cv=coverHTML({title:b.t,coverUrl:b.c?'https://covers.openlibrary.org/b/id/'+b.c+'-M.jpg':''},'',false,true);
   return exBody(cv,b.t,c.a.name,b.p?b.p+' pages':'','You rated '+exPlural(c.a.n)+' by '+c.a.name+' 4 stars or higher. This is another of their books that is not in your library yet.','<button class="ob ca" data-act="exadd">Add to Library</button><button class="ob ca" data-act="exnextnew">Another One</button>');
 }
+function exTRHTML(){
+  var tr=exToRead();
+  if(!tr.list.length)return exMsg('Your To Read List Is Empty','Add a book you want to read and it will show up here.','<button class="pb" data-go="add">Add Book</button>');
+  var ix=-1,k;for(k=0;k<tr.list.length;k++)if(tr.list[k].b.id===EX.cur){ix=k;break;}
+  if(ix<0)ix=0;
+  var c=tr.list[ix],b=c.b;EX.cur=b.id;
+  return exBody(coverHTML(b,'',false,true),b.title,exShow(b.author),[b.pages?b.pages+' pages':'',b.year||''].filter(Boolean).join(' \u00B7 '),exWhyTR(c,tr.rated,ix),'<button class="ob ca" data-act="exstart" data-bid="'+esc(b.id)+'">Start Reading</button>'+(tr.list.length>1?'<button class="ob ca" data-act="exnexttr">Another One</button>':''));
+}
 function viewExplore(){
-  var h=top()+ptitle('Explore'),tr=exToRead();
-  h+='<h2 class="sec">From Your To Read List</h2>';
-  if(!tr.list.length)h+=exMsg('Your To Read List Is Empty','Add a book you want to read and it will show up here.','<button class="pb" data-go="add">Add Book</button>');
-  else{
-    var ix=-1,k;for(k=0;k<tr.list.length;k++)if(tr.list[k].b.id===EX.cur){ix=k;break;}
-    if(ix<0)ix=0;
-    var c=tr.list[ix],b=c.b;EX.cur=b.id;
-    h+=exBody(coverHTML(b),b.title,b.author,[b.pages?b.pages+' pages':'',b.year||''].filter(Boolean).join(' \u00B7 '),exWhyTR(c,tr.rated,ix),'<button class="ob ca" data-act="exstart" data-bid="'+esc(b.id)+'">Start Reading</button>'+(tr.list.length>1?'<button class="ob ca" data-act="exnexttr">Another One</button>':''));
-  }
-  h+='<h2 class="sec">Something New for You</h2>'+exNewHTML();
-  return h;
+  var h=top()+ptitle('Explore'),a=exTRHTML(),b=exNewHTML();
+  EX.pend={tr:a,nw:b};
+  return h+'<h2 class="sec">From Your To Read List</h2><div class="exs" data-s="tr">'+a+'</div><h2 class="sec">Something New for You</h2><div class="exs" data-s="nw">'+b+'</div>';
+}
+/* Build 28: a re-draw of Explore replaces only the card whose content changed, so the other card keeps its already-loaded cover. */
+function exPatch(v){
+  var o=v.querySelectorAll('.exs'),p=EX.pend,l=EX.last,i,ks=['tr','nw'];
+  if(!p||!l||o.length!==2||lastView!=='explore')return false;
+  for(i=0;i<2;i++){if(o[i].getAttribute('data-s')!==ks[i])return false;}
+  for(i=0;i<2;i++){if(p[ks[i]]!==l[ks[i]])o[i].innerHTML=p[ks[i]];}
+  EX.last=p;return true;
+}
+/* Build 28: while Explore is open, pre-load the next few suggestions' covers first, ahead of the Library pre-load that follows. */
+function exWarm(){
+  try{
+    var tr=exToRead().list,ix=-1,k,urls=[],sk=exSkip(),seen={},n=0;
+    for(k=0;k<tr.length;k++)if(tr[k].b.id===EX.cur){ix=k;break;}
+    for(k=1;k<=3&&tr.length>1;k++){var c=tr[(Math.max(ix,0)+k)%tr.length];if(c&&c.b.coverUrl)urls.push(c.b.coverUrl);}
+    for(k=0;k<EX.pool.length&&n<4;k++){var p=EX.pool[k],t=anorm(p.b.t);if(!t||seen[t])continue;seen[t]=1;if(sk.indexOf(p.b.k)>=0||inLib(p.b.t))continue;n++;if(p.b.c)urls.push('https://covers.openlibrary.org/b/id/'+p.b.c+'-M.jpg');}
+    if(WARMN>240){WARM={};WARMN=0;}
+    urls.forEach(function(u){if(!WARM[u]){var im=new Image();im.src=u;WARM[u]=im;WARMN++;}});
+  }catch(e){}
 }
 function render(){
   var v=$('#view');
@@ -2123,7 +2152,7 @@ function render(){
   if(!state.loaded&&(state.view==='home'||state.view==='library')){html=top()+ptitle(state.view==='home'?'Home':'Library');}
   else{html=state.view==='home'?viewHome():state.view==='library'?viewLibrary():state.view==='add'?viewAdd():state.view==='explore'?viewExplore():state.view==='badges'?BGX.view():viewBackup();}
   if(ghost)fillGhost(ghost,v);
-  v.innerHTML=html;
+  if(state.view==='explore'&&!ghost&&exPatch(v)){}else{v.innerHTML=html;if(state.view==='explore')EX.last=EX.pend;}
   setPT();profSync();
   var tab=state.view;
   var ns=document.querySelectorAll('.ni');
