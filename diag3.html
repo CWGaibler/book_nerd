@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book Nerd ISBN check 2</title>
+<style>
+body{margin:0;background:#001F5F;color:#fff;font:16px/1.45 -apple-system,Helvetica,Arial,sans-serif;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 6px}
+h2{font-size:15px;font-weight:500;margin:18px 0 4px;color:#00BDF6}
+p{margin:6px 0 12px;color:#cfd8ef;font-size:14px}
+button{background:#0a63c9;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;margin:6px 8px 6px 0}
+pre{white-space:pre-wrap;word-break:break-word;font-size:11.5px;background:#00164a;border-radius:8px;padding:10px;margin:8px 0 0}
+#prog{font-size:13px;color:#ffd37a;margin:6px 0}
+#bar{height:6px;background:#00478E;border-radius:3px;margin:6px 0}
+#bar i{display:block;height:6px;width:0;background:#42BB37;border-radius:3px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin:6px 0}
+td,th{border:.5px solid #00478E;padding:4px 3px;text-align:center}
+th{font-weight:500;color:#00BDF6}
+td.l{text-align:left;padding-left:5px}
+.E{color:#7be07b;font-weight:600}.T{color:#b6e07b}.W{color:#ff9a9a}.N{color:#9fb0d6}.X{color:#ff6b8a}
+</style></head><body>
+<h1>Book Nerd: ISBN check, round two</h1>
+<p>This page looks up 13 well-known books by their ISBN in several ways, from your phone, and checks each answer against the right book. It takes about two minutes. Keep the page open. When "Finished" appears, tap Copy Report and paste it into the chat, or send a screenshot of the whole page.</p>
+<button id="go">Run again</button><button id="cp">Copy Report</button>
+<div id="prog">Starting...</div><div id="bar"><i id="fill"></i></div>
+<div id="tbl"></div>
+<pre id="sum"></pre>
+<script>
+var KEY='AIzaSyDy2HxQT6lDLOH8BbMkMS9q7uyKxHSnwz8';
+var GB='https://www.googleapis.com/books/v1/volumes?';
+var GB2='https://books.googleapis.com/books/v1/volumes?';
+var OLB='https://openlibrary.org/api/books?format=json&jscmd=data&bibkeys=ISBN:';
+/* t = title key (lowercase), a = author surname key ('' = do not check) */
+var BOOKS=[
+ ['Pride and Prejudice','pride and prejudice','austen','9780141439518'],
+ ['The Great Gatsby','great gatsby','fitzgerald','9780743273565'],
+ ['To Kill a Mockingbird','mockingbird','lee','9780061120084'],
+ ['1984','1984','orwell','9780451524935'],
+ ['The Hobbit','hobbit','tolkien','9780547928227'],
+ ['Gone Girl','gone girl','flynn','9780307588371'],
+ ['Sapiens','sapiens','harari','9780062316110'],
+ ['Atomic Habits','atomic habits','clear','9780735211292'],
+ ['Piranesi','piranesi','clarke','9781635575637'],
+ ['The Disappearers','disappearers','james','9780593717202'],
+ ['Fourth Wing','fourth wing','yarros','9781649374042'],
+ ['Tomorrow x3','tomorrow','zevin','9780593321201'],
+ ['Under Story','under story','benjamin','9780593545218']
+];
+/* column code, label, how */
+var FORMS=[
+ ['F1','isbn: 13 (app)'],
+ ['F1b','isbn: 13 again'],
+ ['F2','plain 13'],
+ ['F3','isbn: 10'],
+ ['F4','plain 10'],
+ ['F5','isbn: 13, other host'],
+ ['OL','Open Library']
+];
+var R={};var LINES=[];var DONE=0,TOTAL=BOOKS.length*FORMS.length;
+function isbn10(i){var b=i.slice(3,12),s=0,k;for(k=0;k<9;k++)s+=(10-k)*Number(b.charAt(k));var c=(11-s%11)%11;return b+(c===10?'X':String(c));}
+function norm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function tryFetch(url,n,max,gap,log){
+  return fetch(url).then(function(r){
+    return r.text().then(function(t){
+      var j=null;try{j=JSON.parse(t);}catch(e){}
+      if(r.status>=500&&n<max){log.push('HTTP '+r.status);return wait(gap).then(function(){return tryFetch(url,n+1,max,gap,log);});}
+      return {n:n,s:r.status,j:j};
+    });
+  }).catch(function(e){
+    if(n<max){log.push('net');return wait(gap).then(function(){return tryFetch(url,n+1,max,gap,log);});}
+    return {n:n,s:0,j:null};
+  });
+}
+function gradeG(it,b,i13,i10){
+  var v=it.volumeInfo||{};var ids=(v.industryIdentifiers||[]).map(function(x){return x.identifier;});
+  if(ids.indexOf(i13)>=0||ids.indexOf(i10)>=0)return 'E';
+  var t=norm((v.title||'')+' '+(v.subtitle||''));var au=norm((v.authors||[]).join(' '));
+  if(t.indexOf(b[1])>=0&&(!b[2]||au.indexOf(b[2])>=0))return 'T';
+  return 'W';
+}
+function runOne(b,f){
+  var i13=b[3],i10=isbn10(i13),url,log=[];
+  if(f==='OL'){
+    return tryFetch(OLB+i13,1,3,1500,log).then(function(o){
+      var code,txt;
+      if(o.s===0){code='X';txt='no readable answer';}
+      else{var k=o.j?Object.keys(o.j):[];
+        if(!k.length){code='N';txt='HTTP '+o.s+' no record';}
+        else{var rec=o.j[k[0]];var ok=norm(rec.title).indexOf(b[1])>=0;code=ok?'E':'W';txt='HTTP '+o.s+' "'+(rec.title||'?')+'"';}}
+      return {code:code,txt:txt+(o.n>1?' (tries '+o.n+')':''),top:code};
+    });
+  }
+  var q={F1:'isbn:'+i13,F1b:'isbn:'+i13,F2:i13,F3:'isbn:'+i10,F4:i10,F5:'isbn:'+i13}[f];
+  url=(f==='F5'?GB2:GB)+'q='+encodeURIComponent(q)+'&maxResults=10&key='+KEY;
+  return tryFetch(url,1,3,1000,log).then(function(o){
+    var j=o.j,code,txt;
+    if(o.s===0){return {code:'X',txt:'no readable answer',top:'X'};}
+    if(j&&j.error){return {code:'X',txt:'HTTP '+o.s+' '+(j.error.status||j.error.code)+' '+(j.error.message||''),top:'X'};}
+    var items=(j&&j.items)||[];
+    if(!items.length){return {code:'N',txt:'HTTP '+o.s+' total='+(j&&j.totalItems!==undefined?j.totalItems:'?')+' empty'+(o.n>1?' (tries '+o.n+')':''),top:'N'};}
+    var g=items.map(function(it){return gradeG(it,b,i13,i10);});
+    var top=g[0],best=-1,k;
+    for(k=0;k<g.length;k++){if(g[k]==='E'||g[k]==='T'){best=k;break;}}
+    var v0=items[0].volumeInfo||{};var ids0=(v0.industryIdentifiers||[]).map(function(x){return x.identifier;}).join(' ');
+    code=(top==='E'||top==='T')?top:(best>=0?(g[best]==='E'?'e':'t'):'W');
+    txt='HTTP '+o.s+' total='+(j.totalItems!==undefined?j.totalItems:'?')+' top='+top+' "'+(v0.title||'?')+'" ['+ids0+']'+(best>0?' right-at='+(best+1):'')+(o.n>1?' (tries '+o.n+')':'');
+    return {code:code,txt:txt,top:top};
+  });
+}
+function cell(c){var cls={E:'E',T:'T',e:'T',t:'T',W:'W',N:'N',X:'X'}[c]||'N';var sym={E:'E',T:'T',e:'e',t:'t',W:'W',N:'-',X:'!'}[c]||'?';return '<span class="'+cls+'">'+sym+'</span>';}
+function render(final){
+  var h='<h2>Result grid</h2><table><tr><th></th>'+FORMS.map(function(f){return '<th>'+f[0]+'</th>';}).join('')+'</tr>';
+  BOOKS.forEach(function(b){
+    h+='<tr><td class="l">'+b[0]+'</td>'+FORMS.map(function(f){var r=R[b[0]+'|'+f[0]];return '<td>'+(r?cell(r.code):'.')+'</td>';}).join('')+'</tr>';
+  });
+  h+='</table><p style="font-size:12px">E = exact ISBN match at the top. T = right book (title and author) at the top, different ISBN. e / t = right book, but not first. W = only wrong books. - = empty answer. ! = error or no answer.</p>';
+  h+='<h2>Totals by method (13 books)</h2><table><tr><th></th><th>top right</th><th>exact ISBN</th><th>right, not first</th><th>empty</th><th>wrong</th><th>error</th></tr>';
+  FORMS.forEach(function(f){
+    var tr=0,ex=0,lo=0,em=0,wr=0,er=0;
+    BOOKS.forEach(function(b){var r=R[b[0]+'|'+f[0]];if(!r)return;if(r.code==='E'){tr++;ex++;}else if(r.code==='T')tr++;else if(r.code==='e'||r.code==='t')lo++;else if(r.code==='N')em++;else if(r.code==='X')er++;else wr++;});
+    h+='<tr><td class="l">'+f[0]+' '+f[1]+'</td><td>'+tr+'</td><td>'+ex+'</td><td>'+lo+'</td><td>'+em+'</td><td>'+wr+'</td><td>'+er+'</td></tr>';
+  });
+  h+='</table>';
+  document.getElementById('tbl').innerHTML=h;
+}
+function reportText(){
+  var t='ISBN check report, round two\n'+location.href+'\n'+navigator.userAgent+'\n'+new Date().toISOString()+'\n\nGRID (rows = books, columns: '+FORMS.map(function(f){return f[0];}).join(' ')+')\n';
+  BOOKS.forEach(function(b){t+=b[0]+': '+FORMS.map(function(f){var r=R[b[0]+'|'+f[0]];return r?r.code:'.';}).join(' ')+'\n';});
+  t+='\nTOTALS (top right / exact / right-not-first / empty / wrong / error)\n';
+  FORMS.forEach(function(f){
+    var tr=0,ex=0,lo=0,em=0,wr=0,er=0;
+    BOOKS.forEach(function(b){var r=R[b[0]+'|'+f[0]];if(!r)return;if(r.code==='E'){tr++;ex++;}else if(r.code==='T')tr++;else if(r.code==='e'||r.code==='t')lo++;else if(r.code==='N')em++;else if(r.code==='X')er++;else wr++;});
+    t+=f[0]+' '+f[1]+': '+tr+' / '+ex+' / '+lo+' / '+em+' / '+wr+' / '+er+'\n';
+  });
+  return t+'\nDETAIL\n'+LINES.join('\n');
+}
+function run(){
+  R={};LINES=[];DONE=0;
+  document.getElementById('sum').textContent='';document.getElementById('tbl').innerHTML='';
+  var jobs=[];BOOKS.forEach(function(b){FORMS.forEach(function(f){jobs.push([b,f[0]]);});});
+  return jobs.reduce(function(p,j){
+    return p.then(function(){
+      document.getElementById('prog').textContent='Running '+(DONE+1)+' of '+TOTAL+'... keep this page open';
+      return runOne(j[0],j[1]).then(function(r){
+        R[j[0][0]+'|'+j[1]]=r;LINES.push(j[0][0]+' | '+j[1]+' | '+r.code+' | '+r.txt);
+        DONE++;document.getElementById('fill').style.width=(100*DONE/TOTAL)+'%';
+        if(DONE%7===0)render(false);
+        return wait(250);
+      });
+    });
+  },Promise.resolve()).then(function(){
+    render(true);document.getElementById('prog').textContent='Finished. Tap Copy Report.';
+    document.getElementById('sum').textContent=reportText();
+  });
+}
+function copyReport(){
+  var t=document.getElementById('sum').textContent;if(!t)return;
+  var done=function(m){document.getElementById('prog').textContent=m;};
+  function fb(){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done('Copied. Paste it into the chat.');}catch(e){done('Could not copy. Take screenshots of the page instead.');}document.body.removeChild(ta);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done('Copied. Paste it into the chat.');},fb);}else{fb();}
+}
+document.getElementById('go').onclick=run;
+document.getElementById('cp').onclick=copyReport;
+run();
+</script></body></html>
