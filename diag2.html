@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book Nerd ISBN check</title>
+<style>
+body{margin:0;background:#001F5F;color:#fff;font:16px/1.45 -apple-system,Helvetica,Arial,sans-serif;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 6px}
+h2{font-size:15px;font-weight:500;margin:18px 0 4px;color:#00BDF6}
+p{margin:6px 0 12px;color:#cfd8ef;font-size:14px}
+.t{background:#002a7a;border:.5px solid #00478E;border-radius:10px;padding:10px 12px;margin:8px 0}
+.t b{display:block;font-weight:500;font-size:14px;margin-bottom:2px}
+.q{font-size:11px;color:#9fb0d6;word-break:break-all}
+.ok{color:#7be07b}.bad{color:#ff9a9a}.warn{color:#ffd37a}
+.res{font-size:13px;margin-top:4px}
+button{background:#0a63c9;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;margin:6px 8px 6px 0}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:#00164a;border-radius:8px;padding:10px;margin:8px 0 0}
+#prog{font-size:13px;color:#ffd37a;margin:6px 0}
+</style></head><body>
+<h1>Book Nerd: ISBN check</h1>
+<p>This page asks Google Books and Open Library about one real book that the app cannot find by barcode, in several different ways, from your own phone. It takes about a minute. When "Finished" appears, tap Copy Report and paste it to me, or send a screenshot of the whole page.</p>
+<button id="go">Run again</button><button id="cp">Copy Report</button>
+<div id="prog">Starting...</div>
+<div id="out"></div>
+<pre id="sum"></pre>
+<script>
+var KEY='AIzaSyDy2HxQT6lDLOH8BbMkMS9q7uyKxHSnwz8';
+var GB='https://www.googleapis.com/books/v1/volumes?';
+var OL='https://openlibrary.org/';
+/* The book: Under Story (US 9780593545218, ISBN-10 0593545214; UK 9781035437382). Google itself lists it under 9781035437412 and 9798217414178. Control: Pride and Prejudice 9780141439518 / 0141439513. */
+var GROUPS=[
+ ['Google Books: the US ISBN of the book the app cannot find',[
+  ['G1 isbn: prefix (what the app does today)','g','q=isbn:9780593545218&key='+KEY],
+  ['G2 plain number, no prefix','g','q=9780593545218&key='+KEY],
+  ['G3 ten-digit form with isbn:','g','q=isbn:0593545214&key='+KEY],
+  ['G4 ten-digit form, plain','g','q=0593545214&key='+KEY],
+  ['G5 isbn: with country=US added','g','q=isbn:9780593545218&country=US&key='+KEY]
+ ]],
+ ['Google Books: other ISBNs for the same book',[
+  ['G6 UK ISBN 9781035437382 with isbn:','g','q=isbn:9781035437382&key='+KEY],
+  ['G7 ISBN 9781035437412 with isbn: (Google listed this one)','g','q=isbn:9781035437412&key='+KEY],
+  ['G8 ISBN 9798217414178 with isbn: (Google listed this one)','g','q=isbn:9798217414178&key='+KEY]
+ ]],
+ ['Google Books: title and author search (shows which ISBNs Google holds)',[
+  ['G9 intitle and inauthor','g','q='+encodeURIComponent('intitle:under story inauthor:benjamin')+'&maxResults=10&key='+KEY]
+ ]],
+ ['Google Books: controls (a famous old book)',[
+  ['C1 Pride and Prejudice, isbn:','g','q=isbn:9780141439518&key='+KEY],
+  ['C2 Pride and Prejudice, plain number','g','q=9780141439518&key='+KEY]
+ ]],
+ ['Open Library: the same book',[
+  ['O1 books API by ISBN (what the app does today)','o1',OL+'api/books?bibkeys=ISBN:9780593545218&format=json&jscmd=data'],
+  ['O2 search.json by isbn=','o2',OL+'search.json?isbn=9780593545218&fields=key,title,author_name,isbn&limit=3'],
+  ['O3 search.json with the number as plain text','o2',OL+'search.json?q=9780593545218&fields=key,title,author_name,isbn&limit=3'],
+  ['O4 /isbn/ page (status only)','o3',OL+'isbn/9780593545218.json'],
+  ['O5 books API for the UK ISBN','o1x',OL+'api/books?bibkeys=ISBN:9781035437382&format=json&jscmd=data'],
+  ['O6 books API for the control (Pride and Prejudice)','o1c',OL+'api/books?bibkeys=ISBN:9780141439518&format=json&jscmd=data']
+ ]]
+];
+var LINES=[];
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function gItems(j){return (j.items||[]).slice(0,3).map(function(it){var v=it.volumeInfo||{};var ids=(v.industryIdentifiers||[]).map(function(x){return x.identifier;}).join(' ');return (v.title||'?')+' | '+((v.authors||[]).join(', ')||'?')+' | '+(v.publishedDate||'?')+' | '+ids;});}
+/* one request, up to 3 tries when the server answers 5xx or the network drops */
+function tryFetch(url,n,log){
+  return fetch(url).then(function(r){
+    return r.text().then(function(t){
+      var j=null;try{j=JSON.parse(t);}catch(e){}
+      var o={n:n,s:r.status,j:j,len:t.length};
+      if(r.status>=500&&n<3){log.push('try '+n+': HTTP '+r.status);return wait(1000).then(function(){return tryFetch(url,n+1,log);});}
+      return o;
+    });
+  }).catch(function(e){
+    if(n<3){log.push('try '+n+': network error');return wait(1000).then(function(){return tryFetch(url,n+1,log);});}
+    return {n:n,s:0,j:null,err:String(e)};
+  });
+}
+function describe(kind,o){
+  var j=o.j,cls='warn',txt='';
+  if(o.s===0){return {cls:'bad',res:'NO-ANSWER',txt:'No readable answer. The server was busy, or it sent an error with no access headers (the browser shows both as a network error).'};}
+  if(kind==='g'){
+    if(j&&j.error){return {cls:'bad',res:'ERROR',txt:'HTTP '+o.s+' ERROR: '+(j.error.status||j.error.code)+' - '+(j.error.message||'')};}
+    var it=gItems(j||{});
+    return {cls:it.length?'ok':'warn',res:it.length?'FOUND':'EMPTY',txt:'HTTP '+o.s+' totalItems='+(j&&j.totalItems!==undefined?j.totalItems:'?')+(it.length?'\n'+it.join('\n'):'\n(no books returned)')};
+  }
+  if(kind.charAt(0)==='o'&&kind.charAt(1)==='1'){
+    var keys=j?Object.keys(j):[];
+    if(!keys.length)return {cls:'warn',res:'EMPTY',txt:'HTTP '+o.s+' (no record)'};
+    var b=j[keys[0]];return {cls:'ok',res:'FOUND',txt:'HTTP '+o.s+'\n'+(b.title||'?')+' | '+((b.authors||[]).map(function(a){return a.name;}).join(', ')||'?')+' | '+(b.publish_date||'?')+' | cover: '+(b.cover?'yes':'no')};
+  }
+  if(kind==='o2'){
+    var d=(j&&j.docs)||[];
+    return {cls:d.length?'ok':'warn',res:d.length?'FOUND':'EMPTY',txt:'HTTP '+o.s+' numFound='+(j&&j.numFound!==undefined?j.numFound:'?')+(d.length?'\n'+d.slice(0,3).map(function(x){return (x.title||'?')+' | '+((x.author_name||[]).join(', ')||'?');}).join('\n'):'\n(no books returned)')};
+  }
+  return {cls:(o.s>=200&&o.s<300)?'ok':'warn',res:(o.s>=200&&o.s<300)?'FOUND':'EMPTY',txt:'HTTP '+o.s+((j&&j.title)?'\n'+j.title:'')};
+}
+function runOne(t,box){
+  var kind=t[1],url=kind==='g'?GB+t[2]:t[2],log=[];
+  var res=box.querySelector('.res');
+  return tryFetch(url,1,log).then(function(o){
+    var d=describe(kind==='o1x'||kind==='o1c'?'o1':kind,o);
+    if(kind==='o3'&&o.s>0){var okk=(o.s>=200&&o.s<300);d={cls:okk?'ok':'warn',res:okk?'FOUND':'EMPTY',txt:'HTTP '+o.s+((o.j&&o.j.title)?'\n'+o.j.title:'')};}
+    var extra=(o.n>1?'\nattempts: '+o.n+' ('+log.join('; ')+')':'');
+    res.className='res '+d.cls;res.innerHTML=esc('['+d.res+'] '+d.txt+extra).replace(/\n/g,'<br>');
+    LINES.push(t[0]+' => ['+d.res+'] '+d.txt.replace(/\n/g,' // ')+extra.replace(/\n/g,' // '));
+  });
+}
+function run(){
+  var out=document.getElementById('out');out.innerHTML='';LINES=[];
+  document.getElementById('sum').textContent='';
+  var queue=[];
+  GROUPS.forEach(function(g){
+    var h=document.createElement('h2');h.textContent=g[0];out.appendChild(h);
+    g[1].forEach(function(t){
+      var box=document.createElement('div');box.className='t';
+      var shown=(t[1]==='g'?GB+t[2]:t[2]).replace(KEY,'AIza...');
+      box.innerHTML='<b>'+esc(t[0])+'</b><div class="q">'+esc(shown)+'</div><div class="res warn">waiting...</div>';
+      out.appendChild(box);queue.push([t,box]);
+    });
+  });
+  var i=0;
+  return queue.reduce(function(p,q){
+    return p.then(function(){i++;document.getElementById('prog').textContent='Running test '+i+' of '+queue.length+'...';q[1].querySelector('.res').textContent='asking...';return runOne(q[0],q[1]);}).then(function(){return wait(400);});
+  },Promise.resolve()).then(function(){
+    document.getElementById('prog').textContent='Finished. Tap Copy Report.';
+    document.getElementById('sum').textContent='ISBN check report\n'+location.href+'\n'+navigator.userAgent+'\n'+new Date().toISOString()+'\n\n'+LINES.join('\n');
+  });
+}
+function copyReport(){
+  var t=document.getElementById('sum').textContent;if(!t){return;}
+  var done=function(m){document.getElementById('prog').textContent=m;};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done('Copied. Paste it into the chat.');},function(){fallback(t,done);});}else{fallback(t,done);}
+}
+function fallback(t,done){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done('Copied. Paste it into the chat.');}catch(e){done('Could not copy. Take a screenshot of the page instead.');}document.body.removeChild(ta);}
+document.getElementById('go').onclick=run;
+document.getElementById('cp').onclick=copyReport;
+run();
+</script></body></html>
