@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book Nerd ISBN check 3</title>
+<style>
+body{margin:0;background:#001F5F;color:#fff;font:16px/1.45 -apple-system,Helvetica,Arial,sans-serif;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 6px}
+h2{font-size:15px;font-weight:500;margin:0 0 4px;color:#00BDF6}
+p{margin:6px 0 12px;color:#cfd8ef;font-size:14px}
+textarea{width:100%;box-sizing:border-box;height:96px;background:#00164a;color:#fff;border:.5px solid #00478E;border-radius:10px;padding:10px;font:15px/1.4 ui-monospace,Menlo,monospace}
+button{background:#0a63c9;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;margin:8px 8px 6px 0}
+#prog{font-size:13px;color:#ffd37a;margin:6px 0}
+.card{background:#00164a;border:.5px solid #00478E;border-radius:12px;padding:12px;margin:12px 0}
+.v{font-size:15px;font-weight:600;margin:4px 0 8px}
+.v.ok{color:#7be07b}.v.no{color:#ff9a9a}.v.ws{color:#ffd37a}
+.row{font-size:12.5px;margin:7px 0;color:#cfd8ef;word-break:break-word}
+.row b{color:#00BDF6;font-weight:500}
+.row i{font-style:normal;color:#9fb0d6;display:block;margin-left:10px}
+.y{color:#7be07b}.n{color:#9fb0d6}.r{color:#ff9a9a}
+pre{white-space:pre-wrap;word-break:break-word;font-size:11px;background:#00164a;border-radius:8px;padding:10px;margin:8px 0 0}
+</style></head><body>
+<h1>Book Nerd: ISBN check, round three</h1>
+<p>Type or paste one book per line: the ISBN, then (optional) the title. The page asks Open Library and Google Books the same way the app does, and then says what the app would show for that ISBN. Keep the page open until "Finished" appears, then tap Copy Report and paste it into the chat.</p>
+<textarea id="inp" spellcheck="false" autocapitalize="off">9781250345363 The Slantwise Histories</textarea>
+<button id="go">Check</button><button id="cp">Copy Report</button>
+<div id="prog"></div>
+<div id="out"></div>
+<pre id="sum"></pre>
+<script>
+var KEY='AIzaSyDy2HxQT6lDLOH8BbMkMS9q7uyKxHSnwz8';
+var GB='https://www.googleapis.com/books/v1/volumes?';
+var OLB='https://openlibrary.org/api/books?format=json&jscmd=data&bibkeys=ISBN:';
+function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function chk13(b){var t=0,k;for(k=0;k<12;k++)t+=(k%2===0?1:3)*Number(b.charAt(k));return String((10-t%10)%10);}
+function toI13(raw){
+  var d=String(raw||'').replace(/[\s-]/g,'').toUpperCase();
+  if(/^(978|979)[0-9]{10}$/.test(d))return d;
+  if(/^[0-9]{9}[0-9X]$/.test(d)){var b='978'+d.slice(0,9);return b+chk13(b);}
+  return '';
+}
+function toI10(i13){if(i13.slice(0,3)!=='978')return '';var b=i13.slice(3,12),s=0,k;for(k=0;k<9;k++)s+=(10-k)*Number(b.charAt(k));var c=(11-s%11)%11;return b+(c===10?'X':String(c));}
+function near(a,b){return /^97[89][0-9]{10}$/.test(a)&&/^97[89][0-9]{10}$/.test(b)&&a.slice(0,10)===b.slice(0,10);}
+function tryFetch(url,n,max,gap){
+  return fetch(url).then(function(r){return r.text().then(function(t){
+    var j=null;try{j=JSON.parse(t);}catch(e){}
+    if(r.status>=500&&n<max)return wait(gap).then(function(){return tryFetch(url,n+1,max,gap);});
+    return {s:r.status,j:j,n:n};
+  });}).catch(function(){
+    if(n<max)return wait(gap).then(function(){return tryFetch(url,n+1,max,gap);});
+    return {s:0,j:null,n:n};
+  });
+}
+/* summarise a Google answer: error, count, and the first few results with their ISBN-13s and whether each is "near" (shares 10 digits) */
+function sumG(o,i13){
+  var j=o.j;
+  if(o.s===0)return {err:'no readable answer',items:[]};
+  if(j&&j.error)return {err:'HTTP '+o.s+' '+(j.error.status||j.error.code)+' '+(j.error.message||''),items:[]};
+  var items=((j&&j.items)||[]).map(function(it,k){
+    var v=it.volumeInfo||{},ids=(v.industryIdentifiers||[]).map(function(x){return {t:x.type,i:x.identifier};});
+    var nr=ids.some(function(x){return x.t==='ISBN_13'&&near(x.i,i13);});
+    var ex=ids.some(function(x){return x.i===i13;});
+    return {pos:k+1,title:v.title||'?',au:(v.authors||[]).join(', '),ids:ids,near:nr,exact:ex};
+  });
+  return {err:'',total:j&&j.totalItems,items:items};
+}
+function line(g,n){
+  if(g.err)return '! '+g.err;
+  if(!g.items.length)return '- empty (total='+(g.total!==undefined?g.total:'?')+')';
+  return g.items.slice(0,n).map(function(x){return '#'+x.pos+' "'+x.title+'"'+(x.au?' by '+x.au:'')+' ['+x.ids.map(function(i){return i.i;}).join(' ')+']'+(x.exact?' EXACT':(x.near?' NEAR':''));}).join('\n');
+}
+function checkOne(raw){
+  var m=String(raw).trim().match(/^([0-9Xx][0-9Xx\s-]{8,16}[0-9Xx])\s*(.*)$/),R={raw:raw};
+  if(!m){R.bad=true;return Promise.resolve(R);}
+  R.i13=toI13(m[1]);R.title=(m[2]||'').trim();
+  if(!R.i13){R.bad=true;return Promise.resolve(R);}
+  R.i10=toI10(R.i13);
+  var qs=[
+    ['G1','isbn: 13 (the app\u2019s second step)',GB+'q=isbn:'+R.i13+'&key='+KEY],
+    ['G2','plain 13 (the new Build 34 fallback)',GB+'q='+R.i13+'&maxResults=10&key='+KEY]
+  ];
+  if(R.i10){qs.push(['G3','isbn: 10',GB+'q=isbn:'+R.i10+'&maxResults=10&key='+KEY]);qs.push(['G4','plain 10',GB+'q='+R.i10+'&maxResults=10&key='+KEY]);}
+  if(R.title)qs.push(['G5','title search "'+R.title+'"',GB+'q=intitle:'+encodeURIComponent('"'+R.title+'"')+'&maxResults=10&key='+KEY]);
+  R.g={};R.names={};
+  return tryFetch(OLB+R.i13,1,3,1500).then(function(o){
+    var k=o.j?Object.keys(o.j):[];
+    R.ol=o.s===0?{err:'no readable answer'}:(k.length?{title:o.j[k[0]].title||'?',au:((o.j[k[0]].authors||[]).map(function(a){return a.name;})).join(', ')}:{none:true});
+    return qs.reduce(function(p,q){return p.then(function(){return wait(250).then(function(){return tryFetch(q[2],1,3,1000).then(function(o2){R.g[q[0]]=sumG(o2,R.i13);R.names[q[0]]=q[1];});});});},Promise.resolve());
+  }).then(function(){
+    var g1=R.g.G1,g2=R.g.G2,v;
+    if(R.ol&&R.ol.title)v={c:'ok',t:'Open Library finds it: "'+R.ol.title+'". The app stops here (Google is not asked).'};
+    else if(g1&&g1.items.length)v={c:'ok',t:'Google\u2019s ISBN search finds "'+g1.items[0].title+'". Build 33 found it too, so this book does NOT test the new fallback.'};
+    else if(g2&&g2.items.length&&g2.items[0].near)v={c:'ok',t:'THE NEW FALLBACK ACCEPTS "'+g2.items[0].title+'". This is a real test of Build 34.'};
+    else if((g1&&g1.err)||(g2&&g2.err)||(R.ol&&R.ol.err))v={c:'ws',t:'Could Not Check This ISBN (an error answer, see below).'};
+    else v={c:'no',t:'No Match Found. The app asks Open Library, Google\u2019s ISBN search and the plain number, and none gives a book it can keep.'};
+    var late=g2&&g2.items.filter(function(x){return x.near&&x.pos>1;})[0];
+    var t5=R.g.G5&&R.g.G5.items.filter(function(x){return x.near;})[0];
+    R.verdict=v;R.notes=[];
+    if(v.c==='no'&&late)R.notes.push('A near edition IS in the plain-number results, at position '+late.pos+' ("'+late.title+'"). The first-result-only rule is what rejects it.');
+    if(v.c==='no'&&t5)R.notes.push('The title search shows a near edition: '+t5.ids.filter(function(i){return i.t==='ISBN_13';}).map(function(i){return i.i;}).join(' ')+' (result '+t5.pos+'). A title is not available when scanning, so the app cannot use this.');
+    if(v.c==='no'&&!late&&!t5&&!R.title)R.notes.push('Add the title after the ISBN to see which editions Google knows.');
+    return R;
+  });
+}
+var RES=[];
+function render(){
+  var h='';
+  RES.forEach(function(R){
+    if(R.bad){h+='<div class="card"><div class="v no">Not an ISBN: '+esc(R.raw)+'</div></div>';return;}
+    h+='<div class="card"><h2>'+esc(R.i13)+(R.title?' &middot; '+esc(R.title):'')+'</h2><div class="v '+R.verdict.c+'">'+esc(R.verdict.t)+'</div>';
+    h+='<div class="row"><b>Open Library</b> '+(R.ol.title?'<span class="y">has it: "'+esc(R.ol.title)+'"'+(R.ol.au?' by '+esc(R.ol.au):'')+'</span>':(R.ol.err?'<span class="r">'+esc(R.ol.err)+'</span>':'<span class="n">no record</span>'))+'</div>';
+    ['G1','G2','G3','G4','G5'].forEach(function(k){
+      if(!R.g[k])return;
+      h+='<div class="row"><b>'+esc(k+' '+R.names[k])+'</b><i>'+esc(line(R.g[k],k==='G1'?1:5)).replace(/\n/g,'<br>')+'</i></div>';
+    });
+    R.notes.forEach(function(n){h+='<div class="row"><b>Note</b> '+esc(n)+'</div>';});
+    h+='</div>';
+  });
+  document.getElementById('out').innerHTML=h;
+}
+function reportText(){
+  var t='ISBN check report, round three\n'+location.href+'\n'+navigator.userAgent+'\n'+new Date().toISOString()+'\n';
+  RES.forEach(function(R){
+    if(R.bad){t+='\nNOT AN ISBN: '+R.raw+'\n';return;}
+    t+='\n== '+R.i13+(R.title?' | '+R.title:'')+'\nAPP VERDICT: '+R.verdict.t+'\nOpen Library: '+(R.ol.title?'has "'+R.ol.title+'"':(R.ol.err||'no record'))+'\n';
+    ['G1','G2','G3','G4','G5'].forEach(function(k){if(R.g[k])t+=k+' '+R.names[k]+':\n'+line(R.g[k],k==='G1'?1:5)+'\n';});
+    R.notes.forEach(function(n){t+='NOTE: '+n+'\n';});
+  });
+  return t;
+}
+function run(){
+  var lines=document.getElementById('inp').value.split(/\n/).map(function(s){return s.trim();}).filter(Boolean).slice(0,12);
+  RES=[];document.getElementById('sum').textContent='';document.getElementById('out').innerHTML='';
+  var n=0;
+  return lines.reduce(function(p,l){
+    return p.then(function(){
+      document.getElementById('prog').textContent='Checking '+(n+1)+' of '+lines.length+'... keep this page open';
+      return checkOne(l).then(function(R){RES.push(R);n++;render();return wait(300);});
+    });
+  },Promise.resolve()).then(function(){
+    document.getElementById('prog').textContent=lines.length?'Finished. Tap Copy Report.':'Type at least one ISBN.';
+    document.getElementById('sum').textContent=lines.length?reportText():'';
+  });
+}
+function copyReport(){
+  var t=document.getElementById('sum').textContent;if(!t)return;
+  var done=function(m){document.getElementById('prog').textContent=m;};
+  function fb(){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done('Copied. Paste it into the chat.');}catch(e){done('Could not copy. Take screenshots of the page instead.');}document.body.removeChild(ta);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done('Copied. Paste it into the chat.');},fb);}else{fb();}
+}
+document.getElementById('go').onclick=run;
+document.getElementById('cp').onclick=copyReport;
+</script></body></html>
