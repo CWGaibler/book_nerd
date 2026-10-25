@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-10-24 20:38 UTC">
+<meta name="build" content="2026-10-24 23:24 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -1990,11 +1990,11 @@ function recDraw(b,logo,mas,cov){
   var c=document.createElement('canvas');c.width=REC_W;c.height=REC_H;
   var g=c.getContext('2d');
   g.fillStyle='#001F5F';g.fillRect(0,0,REC_W,REC_H);
-  if(logo)g.drawImage(logo,64,60,470,92);
+  if(logo)g.drawImage(logo,64,140,470,92);
   g.fillStyle='#fff';g.textAlign='center';g.textBaseline='alphabetic';g.font='500 60px '+REC_F;
-  g.fillText('I Thought You Might',REC_W/2,272);g.fillText('Enjoy This Great Book!',REC_W/2,346);
-  if(mas){var mh=740,mw=Math.round(mh*mas.width/mas.height);g.drawImage(mas,Math.round((REC_W-mw)/2),395,mw,mh);}
-  var px=64,py=1255,pw=952,ph=270;
+  g.fillText('I Thought You Might',REC_W/2,337);g.fillText('Enjoy This Great Book!',REC_W/2,411);
+  if(mas){var mh=660,mw=Math.round(mh*mas.width/mas.height);g.drawImage(mas,Math.round((REC_W-mw)/2),447,mw,mh);}
+  var px=64,py=1192,pw=952,ph=270;
   recRR(g,px,py,pw,ph,36);g.fillStyle='#00296B';g.fill();
   g.lineWidth=2;g.strokeStyle='#00478E';recRR(g,px+1,py+1,pw-2,ph-2,35);g.stroke();
   var cx=px+40,cw=150,ch=225,cy=py+Math.round((ph-ch)/2),tc=COVERS[hash(b.title)%COVERS.length],tt=(tc==='#6B8E6B')?'#00033C':'#fff';
