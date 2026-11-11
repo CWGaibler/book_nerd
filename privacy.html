@@ -94,6 +94,23 @@ section+section{margin-top:34px;padding-top:26px;border-top:1px solid var(--line
   bd.addEventListener('scroll',fit);window.addEventListener('resize',fit);
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
   window.addEventListener('hashchange',function(){var m=location.hash.match(/^#(\d)$/);if(m&&+m[1]!==cur)go(+m[1]);});
+  var dl=document.querySelector('a.dl'),pdfFile=null;
+  function canShareFile(f){try{return !!(f&&navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));}catch(e){return false;}}
+  if(dl&&window.fetch&&window.File){
+    fetch(dl.getAttribute('href')).then(function(r){return r.ok?r.blob():null;}).then(function(b){
+      if(!b)return;
+      var f=new File([b],dl.getAttribute('download')||'BookNerd-Privacy.pdf',{type:'application/pdf'});
+      if(canShareFile(f))pdfFile=f;
+    }).catch(function(){});
+    dl.addEventListener('click',function(e){
+      if(!pdfFile)return;
+      e.preventDefault();
+      navigator.share({files:[pdfFile],title:'Book Nerd Privacy'}).catch(function(err){
+        if(err&&err.name==='AbortError')return;
+        location.href=dl.getAttribute('href');
+      });
+    });
+  }
   var m=location.hash.match(/^#(\d)$/);go(m?+m[1]:1,true);
 })();
 </script>
