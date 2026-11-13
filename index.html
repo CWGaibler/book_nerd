@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-11-13 03:12 UTC">
+<meta name="build" content="2026-11-13 12:33 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" integrity="sha384-c9d8RFSL+u3exBOJ4Yp3HUJXS4znl9f+z66d1y54ig+ea249SpqR+w1wyvXz/lk+" crossorigin="anonymous"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -756,7 +756,7 @@ var FR=(function(){
   function verifySheet(){
     var em=esc(myEmail());
     if(!V.sent)openSheet('<h2>Verify Your Email</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">Before others can find you, we need to confirm that '+em+' is really yours. We will send you a message. Open it and tap the link, then come back here.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="closesheet2">Cancel</button><button class="pb" data-act="frsendver">Send Email</button></div>');
-    else openSheet('<h2>Check Your Email</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">We sent a message to '+em+'. Open it and tap the link, then come back and tap the button below.</p><div class="sm clmsg err" id="fr-vmsg" role="alert" style="min-height:20px;margin-top:10px">'+esc(V.msg)+'</div><div class="row" style="margin-top:8px"><button class="pb" data-act="frsendver">Send Again</button><button class="pb" data-act="frverdone">I Have Verified It</button></div>');
+    else openSheet('<h2>Check Your Email</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">We sent a message to '+em+'. Open it and tap the link, then come back and tap the button below.</p><p style="margin:12px 0 0;font-size:15px;line-height:1.4">It comes from <b>admin@booknerd.online</b>. If you don\u2019t see it in a minute, check your junk or spam folder. The subject mentions \u201Cbook-nerd-85c7f,\u201D which is the technical name of the Book Nerd project.</p><div class="sm clmsg err" id="fr-vmsg" role="alert" style="min-height:20px;margin-top:10px">'+esc(V.msg)+'</div><div class="row" style="margin-top:8px"><button class="pb" data-act="frsendver">Send Again</button><button class="pb" data-act="frverdone">I Have Verified It</button></div>');
   }
   function sendVerify(){
     var f=fb();if(!f||!f.U||!f.user){toast('No Connection');return;}
@@ -2073,7 +2073,7 @@ var CLOUD=(function(){
   }
   function forgotLinked(){
     var em=lsGet(EM_KEY)||'';if(!em){msg('cl-dmsg','err','No account email is saved on this phone.');return;}
-    loadSDK().then(function(){return S.sdk.U.sendPasswordResetEmail(S.auth,em);}).then(function(){msg('cl-dmsg','ok','If that email has an account, a reset link is on its way. Check your inbox.');}).catch(function(er){msg('cl-dmsg','err',human(er));});
+    loadSDK().then(function(){return S.sdk.U.sendPasswordResetEmail(S.auth,em);}).then(function(){msg('cl-dmsg','ok','If that email has an account, a reset link is on its way. Check your inbox and your junk folder. It comes from admin@booknerd.online.');}).catch(function(er){msg('cl-dmsg','err',human(er));});
   }
   function wipeCloud(uid){
     var F=S.sdk.F,fs=S.fs;
@@ -2160,7 +2160,7 @@ var CLOUD=(function(){
   }
   function forgot(){
     var e=document.getElementById('cl-email'),em=e?e.value.trim():'';if(!em){msg('cl-msg','err','Type your email above first.');return;}
-    loadSDK().then(function(){return S.sdk.U.sendPasswordResetEmail(S.auth,em);}).then(function(){msg('cl-msg','ok','If that email has an account, a reset link is on its way. Check your inbox.');}).catch(function(er){msg('cl-msg','err',human(er));});
+    loadSDK().then(function(){return S.sdk.U.sendPasswordResetEmail(S.auth,em);}).then(function(){msg('cl-msg','ok','If that email has an account, a reset link is on its way. Check your inbox and your junk folder. It comes from admin@booknerd.online.');}).catch(function(er){msg('cl-msg','err',human(er));});
   }
   function afterAuth(user,em){
     if(linked()&&linked()!==user.uid&&sameEmail(user.email||em))wipeLink();
