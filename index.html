@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-11-13 12:33 UTC">
+<meta name="build" content="2026-11-13 16:29 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" integrity="sha384-c9d8RFSL+u3exBOJ4Yp3HUJXS4znl9f+z66d1y54ig+ea249SpqR+w1wyvXz/lk+" crossorigin="anonymous"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -148,6 +148,9 @@ body.noscroll{overflow:hidden}
 .chs{display:flex;flex-wrap:wrap;gap:6px}
 .scrim2{position:fixed;inset:0;background:rgba(0,3,60,.72);z-index:25;display:flex;align-items:flex-end;justify-content:center}
 #addcard .scrim2{z-index:24}
+#addcard .spw input{background-color:var(--navy)}
+.fld input:-webkit-autofill,.fld textarea:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--card) inset;box-shadow:0 0 0 1000px var(--card) inset;-webkit-text-fill-color:#fff;caret-color:#fff}
+.card2 .fld input:-webkit-autofill,.sheet .fld input:-webkit-autofill,.wcard .fld input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--navy) inset;box-shadow:0 0 0 1000px var(--navy) inset}
 .frsel{position:relative;display:inline-flex;border-radius:50%;padding:3px;border:3px solid transparent}.frsel.on{border-color:#00BDF6}.frchk{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:#00BDF6;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)}.frwrow{display:flex;gap:10px;margin-top:8px}.frwc{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1 1 0;min-width:0;max-width:25%}.frwl{font-size:12px;opacity:.85}
 
 #addcard .sp{background:var(--navy)}#addcard .cbody{margin:0 -6px;padding-left:6px;padding-right:6px}.frdt{position:absolute;top:-1px;left:calc(50% + 7px);width:9px;height:9px;border-radius:50%;background:var(--blue);border:1.5px solid var(--navy)}.frcirc{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;color:#fff;font-weight:500;flex:none}.frcirc img{width:100%;height:100%;object-fit:cover;display:block}.frgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 4px;justify-items:center}.frg{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;color:#fff;min-width:0;width:100%}.frgn{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.frrq{padding:2px 16px}.frreq{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:0.5px solid var(--line)}.frreq.last{border-bottom:0}.frnm{flex:1;min-width:0;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pb.frmini{width:auto;min-width:76px;height:38px;padding:0 12px;font-size:14px;margin:0;flex:none;display:inline-flex;align-items:center;justify-content:center}.frall{width:100%;border-top:0.5px solid var(--line)}.frbk{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--line)}.frbk.last{border-bottom:0}.frcv{flex:none;display:block;width:48px;height:72px}.frbt{display:flex;flex-direction:column;gap:2px;min-width:0}.frbn{font-size:16px;font-weight:500}.frba{font-size:14px;opacity:.85}.frst{color:#FFB500;font-size:15px;letter-spacing:1px}.frst i{font-style:normal;color:#3A4F86}.frhead{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px}.frhn{font-size:22px;font-weight:500;margin-top:10px}.frhs{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:4px;flex-wrap:wrap;justify-content:center}.frrad{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #00BDF6;box-sizing:border-box}.frrad.on{background:#00BDF6;box-shadow:inset 0 0 0 4px var(--card)}.frop{display:flex;flex-direction:column;align-items:flex-start;width:100%;padding:14px 0;background:none;border:0;border-bottom:0.5px solid var(--line);color:#fff;text-align:left;gap:2px;font-size:17px}.frop.last{border-bottom:0}.frsub{font-size:13px;opacity:.8}
@@ -733,6 +736,8 @@ function mcW(k,m){return MASC[k].w*m/56;}
 function mcAddHTML(){
   return '<div class="cd mcd mc-add" id="mcadd" style="padding-right:'+Math.round(mcW('library',40)+14)+'px"><div><div class="mct">Found a Good One?</div><div style="font-size:14px;margin-top:4px">Scan its barcode, or search below.</div></div>'+mcImg('library',40,8,10)+'</div>';
 }
+function frZ(){var w=(window.innerWidth||390)-32;return Math.max(22,Math.min(46,Math.floor((w-216)*0.3224)));}
+function frTop(){return Math.max(4,Math.round(frZ()*10/46));}
 /* ---------- Build 41: Friends (the directory, requests, friendships, blocking, a friends-readable shelf) ---------- */
 var FR=(function(){
   var X={admin:false,newRep:0,reports:null,repTab:'new',on:false,find:false,known:false,friends:[],reqs:[],blocks:[],recs:[],prof:{},shelf:{},unsub:[],times:[],cur:'',q:'',res:null,mt:null,pt:null,lastN:-1};
@@ -901,15 +906,15 @@ var FR=(function(){
     return '<div class="frreq'+(last?' last':'')+'">'+circ(r.uid,r.n,'',36)+'<span class="frnm">'+esc(r.n)+'</span><button class="pb frmini" data-act="fracc" data-u="'+esc(r.uid)+'">Accept</button><button class="pb frmini" data-act="frdec" data-u="'+esc(r.uid)+'">Decline</button></div>';
   }
   function viewHTML(){
-    var h=top()+ptitle('Friends')+mcFriendsHTML(X.friends.length?'Tap a friend to find out.':'Add a friend to find out.');
+    var h=top()+ptitle('Friends')+mcFriendsHTML(X.friends.length?'Tap a friend to find out.':'Add a friend to find out.')+'<button class="pb" data-act="frfind" style="margin:14px 0 0">Add a Friend</button>';
     if(X.reqs.length){
       var show=X.reqs.slice(0,2),more=X.reqs.length>2;
       h+='<h2 class="sec">Friend Requests</h2><div class="cd frrq">'+show.map(function(r,i){return reqRow(r,i===show.length-1&&!more);}).join('')+(more?'<button type="button" class="lrow frall" data-act="frreqs"><span>See All '+X.reqs.length+' Requests</span><span class="st"></span>'+CHEV+'</button>':'')+'</div>';
     }
     if(!X.friends.length){
-      return h+'<h2 class="sec">Your Friends</h2><div class="cd"><div style="font-weight:500;font-size:17px">Your circle is waiting.</div><p class="sm" style="margin:6px 0 0">Find a friend by their exact email to see what they are reading.</p><button class="pb" data-act="frfind" style="margin-top:14px">Find a Friend</button><p class="sm" style="margin:12px 0 0">Want friends to find you? Turn on Let Others Find Me in Profile.</p></div>';
+      return h+'<h2 class="sec">Your Friends</h2><div class="cd"><div style="font-weight:500;font-size:17px">Your circle is waiting.</div><p class="sm" style="margin:6px 0 0">Add a friend by their exact email to see what they are reading.</p><p class="sm" style="margin:12px 0 0">Want friends to find you? Turn on Let Others Find Me in Profile.</p></div>';
     }
-    h+='<h2 class="sec">Your Friends</h2><div class="cd"><div class="frgrid">'+X.friends.map(function(fr){var p=X.prof[fr.uid]||{};return '<button type="button" class="frg" data-act="frfriend" data-u="'+esc(fr.uid)+'">'+circ(fr.uid,p.n,p.p,64)+'<span class="frgn">'+esc(p.n||'Friend')+'</span></button>';}).join('')+'</div><button class="pb" data-act="frfind" style="margin-top:18px">Find a Friend</button></div>';
+    h+='<h2 class="sec">Your Friends</h2><div class="cd"><div class="frgrid">'+X.friends.map(function(fr){var p=X.prof[fr.uid]||{};return '<button type="button" class="frg" data-act="frfriend" data-u="'+esc(fr.uid)+'">'+circ(fr.uid,p.n,p.p,64)+'<span class="frgn">'+esc(p.n||'Friend')+'</span></button>';}).join('')+'</div></div>';
     return h;
   }
   function resHTML(){
@@ -925,7 +930,7 @@ var FR=(function(){
   }
   function paintRes(){var e=document.getElementById('fr-res');if(e)e.innerHTML=resHTML();}
   function cardFind(){
-    return cardHead('Find a Friend')+'<div class="cbody"><p class="sm" style="margin:0 0 12px">Type their exact email. People appear only if they choose to be found.</p><label class="fld"><span class="lb">Email</span><input class="dt" id="fr-q" type="email" inputmode="email" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" value="'+esc(X.q)+'"></label><button class="pb" data-act="frsearch" style="margin-top:14px">Search</button><div id="fr-res">'+resHTML()+'</div></div>';
+    return cardHead('Add a Friend')+'<div class="cbody"><p class="sm" style="margin:0 0 12px">Type their exact email. People appear only if they choose to be found.</p><label class="fld"><span class="lb">Email</span><input class="dt" id="fr-q" type="email" inputmode="email" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" value="'+esc(X.q)+'"></label><button class="pb" data-act="frsearch" style="margin-top:14px">Search</button><div id="fr-res">'+resHTML()+'</div></div>';
   }
   function cardReqs(){
     return cardHead('Friend Requests')+'<div class="cbody"><p class="sm" style="margin:0 0 8px">'+X.reqs.length+(X.reqs.length===1?' person wants':' people want')+' to be your friend.</p><div class="cd frrq">'+(X.reqs.length?X.reqs.map(function(r,i){return reqRow(r,i===X.reqs.length-1);}).join(''):'<p class="sm" style="margin:12px 0">No requests are waiting.</p>')+'</div></div>';
@@ -1017,16 +1022,18 @@ var FR=(function(){
     var F=ctx.F,fs=ctx.fs,u=user.uid;
     function ign(e){if(e&&e.code==='permission-denied')return;throw e;}
     function delAll(path){return F.getDocs(F.collection.apply(F,[fs].concat(path))).then(function(s){var ps=[];s.forEach(function(d){ps.push(F.deleteDoc(d.ref).catch(ign));});return Promise.all(ps);});}
-    return hash(String(user.email||'').toLowerCase())
-      .then(function(h){return F.deleteDoc(F.doc(fs,'finder',h)).catch(ign);})
-      .then(function(){return F.getDocs(F.collection(fs,'friends',u,'list'));})
-      .then(function(s){var ps=[];s.forEach(function(d){ps.push(F.deleteDoc(F.doc(fs,'friends',d.id,'list',u)).catch(ign));ps.push(F.deleteDoc(d.ref).catch(ign));});return Promise.all(ps);})
-      .then(function(){return Promise.all([F.deleteDoc(F.doc(fs,'profiles',u)).catch(ign),F.deleteDoc(F.doc(fs,'shelf',u)).catch(ign)]);})
-      .then(function(){return delAll(['requests',u,'in']);})
-      .then(function(){return delAll(['blocks',u,'list']);})
-      .then(function(){return delAll(['recs',u,'in']);})
-      .then(function(){var a=[];try{a=JSON.parse(lsGet('bm_fr_sent')||'[]');}catch(e){a=[];}return Promise.all(a.map(function(t){return F.deleteDoc(F.doc(fs,'requests',t,'in',u)).catch(ign);}));})
-      .then(function(){try{localStorage.removeItem('bm_fr_sent');localStorage.removeItem('bm_rec_sent');}catch(e){}});
+    var sent=[];try{sent=JSON.parse(lsGet('bm_fr_sent')||'[]');}catch(e){sent=[];}
+    /* every one of these is independent of the others, so they all run at the same time */
+    return hash(String(user.email||'').toLowerCase()).then(function(h){
+      return Promise.all([
+        F.deleteDoc(F.doc(fs,'finder',h)).catch(ign),
+        F.getDocs(F.collection(fs,'friends',u,'list')).then(function(s){var ps=[];s.forEach(function(d){ps.push(F.deleteDoc(F.doc(fs,'friends',d.id,'list',u)).catch(ign));ps.push(F.deleteDoc(d.ref).catch(ign));});return Promise.all(ps);}),
+        F.deleteDoc(F.doc(fs,'profiles',u)).catch(ign),
+        F.deleteDoc(F.doc(fs,'shelf',u)).catch(ign),
+        delAll(['requests',u,'in']),delAll(['blocks',u,'list']),delAll(['recs',u,'in']),
+        Promise.all(sent.map(function(t){return F.deleteDoc(F.doc(fs,'requests',t,'in',u)).catch(ign);}))
+      ]);
+    }).then(function(){try{localStorage.removeItem('bm_fr_sent');localStorage.removeItem('bm_rec_sent');}catch(e){}});
   }
   function act(a,el){
     var u=el&&el.getAttribute?el.getAttribute('data-u'):'';
@@ -1232,11 +1239,11 @@ var FRR=(function(){
   return {openSender:openSender,cardOf:cardOf,act:act,back:back,senderClosed:senderClosed,onRecs:onRecs,whoHTML:whoHTML,loadShelves:loadShelves,Q:Q,keyOf:keyOf,same:same};
 })();
 
-function mcFriendsHTML(line){ return '<div class=\"cd mcd mc-ex mc-fr\" style=\"padding-right:'+Math.round(mcW('friends',34)+14)+'px\"><div><div class=\"mct\">Who\u2019s Reading What?</div><div style=\"font-size:14px;margin-top:4px\">'+esc(line)+'</div></div>'+mcImg('friends',34,8,4)+'</div>'; }
+function mcFriendsHTML(line){ return '<div class=\"cd mcd mc-ex mc-fr\" style=\"padding-right:'+Math.round(mcW('friends',frZ())+14)+'px\"><div><div class=\"mct\">Who\u2019s Reading What?</div><div style=\"font-size:14px;margin-top:4px\">'+esc(line)+'</div></div>'+mcImg('friends',frZ(),8,frTop())+'</div>'; }
 function viewFriends(){
   var h=top()+ptitle('Friends');
   if(!lsGet('bm_cloud_uid')){
-    return h+mcFriendsHTML('Create an account to find out.')+'<h2 class=\"sec\">Your Friends</h2><div class=\"cd\"><div style=\"font-weight:500;font-size:17px\">Friends need an account.</div><p class=\"sm\" style=\"margin:6px 0 0\">Create one to find friends, see what they are reading, and send books you love. Your books are saved in the cloud too.</p><div class=\"row\" style=\"margin-top:14px\"><button class=\"pb\" data-act=\"acctcreate\">Create Account</button><button class=\"pb\" data-act=\"acctsignin\">Sign In</button></div></div>';
+    return h+mcFriendsHTML('Create an account to start.')+'<h2 class=\"sec\">Your Friends</h2><div class=\"cd\"><div style=\"font-weight:500;font-size:17px\">Friends need an account.</div><p class=\"sm\" style=\"margin:6px 0 0\">Create one to find friends, see what they are reading, and send books you love. Your books are saved in the cloud too.</p><div class=\"row\" style=\"margin-top:14px\"><button class=\"pb\" data-act=\"acctcreate\">Create Account</button><button class=\"pb\" data-act=\"acctsignin\">Sign In</button></div></div>';
   }
   return FR.viewHTML();
 }
@@ -2065,7 +2072,7 @@ var CLOUD=(function(){
     closeSheet();ui();toast('Phone Unlinked');
   }
   function sheetDelete(){
-    openSheet('<h2>Delete My Cloud Data?</h2><p class="sm" style="margin:0 0 8px">This erases your books, name, photo and settings from the cloud and deletes your sign-in account. It cannot be undone.</p><p class="sm" style="margin:0">Books on your devices stay where they are.</p>'+
+    openSheet('<h2>Delete My Cloud Data?</h2><p class="sm" style="margin:0 0 8px">This erases your books, name, photo and settings from the cloud, along with your friendships, friend requests, blocked people and the reading list your friends see. It deletes your sign-in account. It cannot be undone. Your friends aren\u2019t told.</p><p class="sm" style="margin:0">Books on your devices stay where they are.</p>'+
       '<label class="fld"><span class="lb">Password</span><input class="dt" id="cl-dpw" type="password" autocomplete="current-password" enterkeyhint="done"></label>'+
       '<div class="sm clmsg" id="cl-dmsg" role="alert" aria-live="assertive" style="min-height:20px;margin-top:8px"></div>'+
       '<button class="lnk l14" data-act="cldforgot" style="margin-top:0">Forgot Password?</button>'+
@@ -2096,7 +2103,7 @@ var CLOUD=(function(){
     if(!pw){msg('cl-dmsg','err','Please enter your password.');return;}
     if(!navigator.onLine){msg('cl-dmsg','err','No connection. Try again when you are online.');return;}
     var TT=window.__bmDel||{},WARN=TT.warn||45000,GIVE=TT.giveup||180000,DELAY=TT.delay||0;   /* the three numbers are only changed by the tests */
-    S.busy=true;S.deleting=true;S.delPend=true;state.lockSheet=true;var g=document.getElementById('cl-dgo');if(g)g.disabled=true;msg('cl-dmsg','','Deleting…');
+    S.busy=true;S.deleting=true;S.delPend=true;state.lockSheet=true;var g=document.getElementById('cl-dgo');if(g)g.disabled=true;msg('cl-dmsg','','Deleting\u2026 this can take a minute or two. Please keep Book Nerd open.');
     var user=null,tw,tg,settled=false,gaveUp=false;
     function unsure(){try{return sessionStorage.getItem('bm_del_unsure')==='1';}catch(e){return false;}}
     function setUnsure(v){try{if(v)sessionStorage.setItem('bm_del_unsure','1');else sessionStorage.removeItem('bm_del_unsure');}catch(e){}}
@@ -2107,8 +2114,7 @@ var CLOUD=(function(){
         stage=1;stopSync();return S.sdk.F.waitForPendingWrites(S.fs);
       })
       .then(function(){stage=2;return DELAY?new Promise(function(r){setTimeout(r,DELAY);}):0;})
-      .then(function(){return (typeof FR!=='undefined')?FR.wipe({F:S.sdk.F,fs:S.fs},user):0;})
-      .then(function(){return wipeCloud(user.uid);})
+      .then(function(){return Promise.all([(typeof FR!=='undefined')?FR.wipe({F:S.sdk.F,fs:S.fs},user):0,wipeCloud(user.uid)]);})
       .then(function(){stage=3;return S.sdk.U.deleteUser(user);});
     function ok(){
       settled=true;clearTimeout(tw);clearTimeout(tg);S.delPend=false;setUnsure(false);release();
@@ -5700,7 +5706,7 @@ var AGE_KEY='bm_age_block',PRIV_KEY='bm_privacy_ack';
 function ageBlocked(){var t=0;try{t=+localStorage.getItem(AGE_KEY)||0;}catch(e){}if(!t)return false;if(Date.now()>=t&&Date.now()-t<86400000)return true;try{localStorage.removeItem(AGE_KEY);}catch(e){}return false;}
 function ageOf(y,m,d){var n=new Date(),a=n.getFullYear()-y;if(n.getMonth()+1<m||(n.getMonth()+1===m&&n.getDate()<d))a--;return a;}
 function abHTML(){
-  var bd=pfBdSel(0,0,false).replace(/<\/div>$/,'<input id=\"ab-y\" class=\"bsel\" type=\"text\" inputmode=\"numeric\" maxlength=\"4\" placeholder=\"Year\" aria-label=\"Birth year\" autocomplete=\"bday-year\" style=\"padding-right:12px\"></div>');
+  var bd=pfBdSel(0,0,false).replace(/<\/div>$/,'<input id=\"ab-y\" class=\"bsel\" type=\"text\" inputmode=\"numeric\" maxlength=\"4\" placeholder=\"YYYY\" aria-label=\"Birth year, four digits\" autocomplete=\"bday-year\" style=\"padding-right:12px\"></div>');
   return '<h2>Welcome to Book Nerd!</h2><p class=\"wlead\">Tell us about yourself to get started.</p>'+
     '<div style=\"height:14px\"></div>'+pfNameHTML({edit:true})+pfPhotoHTML({})+
     '<div class=\"fld\" id=\"ab-bd\"><div class=\"lb\">Birthday</div>'+bd+'<p class=\"sm\" style=\"margin:8px 0 0\">We use your birthday once to check your age. We keep your month and day for a birthday card, never your year.</p><p class=\"err\" id=\"bd-err\" role=\"alert\"></p></div>'+
@@ -5830,7 +5836,8 @@ function wlFirst(){
     er.textContent='';be.textContent='';
     if(!nm){er.textContent='Enter your first name.';inp.focus();return;}
     var m=+document.getElementById('bd-m').value||0,d=+document.getElementById('bd-d').value||0,ys=String(document.getElementById('ab-y').value||'').trim(),y=+ys;
-    if(!m||!d||!/^\d{4}$/.test(ys)){be.textContent='Enter your full birthday: month, day and year.';return;}
+    if(!m||!d||!ys){be.textContent='Enter your full birthday: month, day and year.';return;}
+    if(!/^\d{4}$/.test(ys)){be.textContent='Enter your birth year with four digits, like 1990.';return;}
     if(y<1900||y>new Date().getFullYear()){be.textContent='That year does not look right.';return;}
     var dm=MDAYS[m-1];if(m===2&&d===29&&!((y%4===0&&y%100!==0)||y%400===0))dm=28;
     if(d>dm){be.textContent='That month does not have that many days.';return;}
@@ -6335,7 +6342,7 @@ var TSTEPS=[
  {pose:'peaceful',title:'Home',body:'Your day starts here. See what you\u2019re reading, update your progress and start a Reading Challenge.',hl:'home',b1:'Next',b2:'Skip Tour'},
  {pose:'reading',title:'Library',body:'Every book you add lives here, and add new ones in seconds by scanning a barcode or searching.',hl:'library',b1:'Next',b2:'Skip Tour'},
   {pose:'explore',title:'Explore',body:'Not sure what to read next? Get a suggestion from your \u201CTo Read\u201D list, or find something new picked just for you.',hl:'explore',b1:'Next',b2:'Skip Tour'},
-{pose:'friends',title:'Friends',body:'Find a friend by email, see what they are reading, and send a book you think they will love.',hl:'friends',b1:'Next',b2:'Skip Tour'},
+{pose:'friends',title:'Friends',body:'Add a friend by email, see what they are reading, and send a book you think they will love.',hl:'friends',b1:'Next',b2:'Skip Tour'},
  {pose:'badges',title:'Badges',body:function(){return 'Earn badges as you read, finish books and complete challenges. There are '+BGX.defs.length+' to discover, and each one is a mystery until you earn it.';},hl:'badges',b1:'Next',b2:'Skip Tour'},
  {pose:'focused',mult:1.10,title:'Profile',body:'Tap your circle at the top right to see your stats, change your photo, name or birthday, and keep your books safe.',hl:'profile',b1:'Next',b2:'Skip Tour'},
  {pose:'complete',mult:0.90,title:'You\u2019re All Set!',body:'Add your first book and let\u2019s start reading.',hl:null,b1:'Add My First Book',b2:'Go to Home',last:true}
