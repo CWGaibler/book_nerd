@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
 <title>Book Nerd</title>
-<meta name="build" content="2026-11-13 16:29 UTC">
+<meta name="build" content="2026-11-13 21:25 UTC">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" integrity="sha384-c9d8RFSL+u3exBOJ4Yp3HUJXS4znl9f+z66d1y54ig+ea249SpqR+w1wyvXz/lk+" crossorigin="anonymous"></script>
 <style>
 :root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--navy:#001F5F;--card:#00296B;--line:#00478E;--deep:#00033C;--blue:#00BDF6;--gold:#FFB500;--green:#42BB37;--dblue:#009CC6;color-scheme:dark;--mo:900ms;--mc:765ms;--do:250ms;--dc:200ms;--fade:950ms;--eo:cubic-bezier(.3,.05,.2,1);--ec:cubic-bezier(.4,0,.3,1)}
@@ -148,6 +148,8 @@ body.noscroll{overflow:hidden}
 .chs{display:flex;flex-wrap:wrap;gap:6px}
 .scrim2{position:fixed;inset:0;background:rgba(0,3,60,.72);z-index:25;display:flex;align-items:flex-end;justify-content:center}
 #addcard .scrim2{z-index:24}
+.wfn{margin:-4px 0 6px 40px}
+.wfn[hidden]{display:none}
 #addcard .spw input{background-color:var(--navy)}
 .fld input:-webkit-autofill,.fld textarea:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--card) inset;box-shadow:0 0 0 1000px var(--card) inset;-webkit-text-fill-color:#fff;caret-color:#fff}
 .card2 .fld input:-webkit-autofill,.sheet .fld input:-webkit-autofill,.wcard .fld input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--navy) inset;box-shadow:0 0 0 1000px var(--navy) inset}
@@ -758,6 +760,35 @@ var FR=(function(){
   function circ(u,n,p,size){var ph=photoClean(p||'');return '<span class="frcirc" style="width:'+size+'px;height:'+size+'px;background:'+(ph?'#9CC3E8':colorOf(u))+';font-size:'+Math.round(size*.38)+'px">'+(ph?'<img alt="" src="'+ph+'">':esc((String(n||'').trim().charAt(0)||'?').toUpperCase()))+'</span>';}
   var V={sent:false,msg:''};
   function verified(){var f=fb();return !!(f&&f.user&&f.user.emailVerified);}
+  function wantOn(){return lsGet('bm_fr_want')==='1';}
+  function waiting(){return wantOn()&&!X.find;}
+  function dropKey(k){try{localStorage.removeItem(k);}catch(e){}}
+  function autoSend(n){
+    n=n||0;var f=fb();
+    if(!f||!f.U||!f.user||!ready()){if(n<40)setTimeout(function(){autoSend(n+1);},1000);return;}
+    if(verified()){if(!X.find)setFind(true);return;}
+    f.U.sendEmailVerification(f.user).then(function(){V.sent=true;lsSet('bm_fr_vsent',String(Date.now()));refresh();},function(){refresh();});
+  }
+  function want(on,send){
+    if(on){lsSet('bm_fr_want','1');dropKey('bm_fr_remdis');if(send)autoSend(0);}
+    else dropKey('bm_fr_want');
+    refresh();
+  }
+  var lastAC=0;
+  function autoCheck(force){
+    if(!wantOn()||X.find||!X.known)return;
+    var f=fb();if(!f||!f.user)return;
+    var now=Date.now();if(!force&&now-lastAC<8000)return;lastAC=now;
+    if(f.user.emailVerified){setFind(true);return;}
+    f.user.reload().then(function(){return f.user.getIdToken(true);}).then(function(){if(f.user.emailVerified&&wantOn()&&!X.find)setFind(true);},function(){});
+  }
+  function maybeIntro(){
+    if(window.__bmRf&&!window.__bmIntro)return;
+    if(!X.known||X.find||wantOn()||lsGet('bm_fr_intro')==='1'||!linked()||!ready())return;
+    if(typeof FRR==='undefined'||!FRR||!FRR.clear||!FRR.clear())return;
+    if(X.recs&&X.recs.length)return;
+    state.card=null;openCard('frintro');
+  }
   function verifySheet(){
     var em=esc(myEmail());
     if(!V.sent)openSheet('<h2>Verify Your Email</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">Before others can find you, we need to confirm that '+em+' is really yours. We will send you a message. Open it and tap the link, then come back here.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="closesheet2">Cancel</button><button class="pb" data-act="frsendver">Send Email</button></div>');
@@ -774,7 +805,7 @@ var FR=(function(){
       else{V.msg='Not verified yet. Open the link in the email, then try again.';verifySheet();}
     },function(){V.msg='Could not check right now. Try again in a moment.';verifySheet();});
   }
-  function findText(){return X.find?'On':'Off';}
+  function findText(){return X.find?'On':(wantOn()?'Waiting for Confirmation':'Off');}
   function blockedText(){return X.blocks.length?String(X.blocks.length):'None';}
   function refresh(){
     var d=document.getElementById('frdot');if(d)d.hidden=!(X.reqs.length>0);
@@ -803,7 +834,7 @@ var FR=(function(){
       var a=[];s.forEach(function(d){var o=d.data()||{};o.slot=d.id;a.push(o);});a.sort(function(p,q){return (p.at||0)-(q.at||0);});X.recs=a;if(typeof FRR!=='undefined'&&FRR)FRR.onRecs();
     },err));
     F.getDoc(F.doc(fs,'admins',u)).then(function(a){X.admin=!!a.exists();if(X.admin)loadReports();},function(){});
-    hash(myEmail()).then(function(h){return F.getDoc(F.doc(fs,'finder',h));}).then(function(s){X.find=!!(s.exists()&&s.data().uid===u);X.known=true;refresh();},function(){X.known=true;});
+    hash(myEmail()).then(function(h){return F.getDoc(F.doc(fs,'finder',h));}).then(function(s){X.find=!!(s.exists()&&s.data().uid===u);X.known=true;refresh();autoCheck(true);maybeIntro();},function(){X.known=true;});
   }
   function stop(){X.unsub.forEach(function(f){try{f();}catch(e){}});X.unsub=[];X.on=false;X.friends=[];X.reqs=[];X.blocks=[];X.recs=[];X.prof={};X.shelf={};X.find=false;X.known=false;X.admin=false;X.reports=null;X.newRep=0;X.lastN=-1;X.pubDone=false;X.res=null;}
   function loadProfiles(){
@@ -849,14 +880,14 @@ var FR=(function(){
       if(X.find&&k==='bm_name'){var f=fb(),F=f.F;hash(myEmail()).then(function(h){return F.setDoc(F.doc(f.fs,'finder',h),{uid:f.user.uid,n:myName()});}).catch(function(){});}
     },1500);
   }
-  /* ----- Let Others Find Me ----- */
+  /* ----- Let Friends Find Me ----- */
   function setFind(on){
     if(!ready()){toast('No Connection');return Promise.resolve();}
     var f=fb(),F=f.F;
     return hash(myEmail()).then(function(h){
       var ref=F.doc(f.fs,'finder',h);
       return on?F.setDoc(ref,{uid:f.user.uid,n:myName()}):F.deleteDoc(ref);
-    }).then(function(){X.find=on;if(on)publishProfile();refresh();toast(on?'Others Can Find You':'You Are Hidden');},oops);
+    }).then(function(){X.find=on;dropKey('bm_fr_want');if(on)publishProfile();refresh();toast(on?'Others Can Find You':'You Are Hidden');},oops);
   }
   /* ----- finding a person and asking ----- */
   function search(raw){
@@ -905,14 +936,15 @@ var FR=(function(){
   function reqRow(r,last){
     return '<div class="frreq'+(last?' last':'')+'">'+circ(r.uid,r.n,'',36)+'<span class="frnm">'+esc(r.n)+'</span><button class="pb frmini" data-act="fracc" data-u="'+esc(r.uid)+'">Accept</button><button class="pb frmini" data-act="frdec" data-u="'+esc(r.uid)+'">Decline</button></div>';
   }
+  function remCard(){return '<div class="cd frrem" style="margin-top:14px"><div style="font-weight:500;font-size:17px">Confirm Your Email</div><p class="sm" style="margin:6px 0 0">Tap the link in the message we sent to '+esc(myEmail())+', and friends can find you.</p><div class="row" style="margin-top:14px"><button class="pb" type="button" data-act="frremsend">Send Again</button><button class="pb" type="button" data-act="frremdis">Dismiss</button></div></div>';}
   function viewHTML(){
-    var h=top()+ptitle('Friends')+mcFriendsHTML(X.friends.length?'Tap a friend to find out.':'Add a friend to find out.')+'<button class="pb" data-act="frfind" style="margin:14px 0 0">Add a Friend</button>';
+    var h=top()+ptitle('Friends')+mcFriendsHTML(X.friends.length?'Tap a friend to find out.':'Add a friend to find out.')+'<button class="pb" data-act="frfind" style="margin:14px 0 0">Add a Friend</button>'+(waiting()&&lsGet('bm_fr_remdis')!=='1'?remCard():'');
     if(X.reqs.length){
       var show=X.reqs.slice(0,2),more=X.reqs.length>2;
       h+='<h2 class="sec">Friend Requests</h2><div class="cd frrq">'+show.map(function(r,i){return reqRow(r,i===show.length-1&&!more);}).join('')+(more?'<button type="button" class="lrow frall" data-act="frreqs"><span>See All '+X.reqs.length+' Requests</span><span class="st"></span>'+CHEV+'</button>':'')+'</div>';
     }
     if(!X.friends.length){
-      return h+'<h2 class="sec">Your Friends</h2><div class="cd"><div style="font-weight:500;font-size:17px">Your circle is waiting.</div><p class="sm" style="margin:6px 0 0">Add a friend by their exact email to see what they are reading.</p><p class="sm" style="margin:12px 0 0">Want friends to find you? Turn on Let Others Find Me in Profile.</p></div>';
+      return h+'<h2 class="sec">Your Friends</h2><div class="cd"><div style="font-weight:500;font-size:17px">Your circle is waiting.</div><p class="sm" style="margin:6px 0 0">Add a friend by their exact email to see what they are reading.</p><p class="sm" style="margin:12px 0 0">Want friends to find you? Turn on Let Friends Find Me in Profile.</p></div>';
     }
     h+='<h2 class="sec">Your Friends</h2><div class="cd"><div class="frgrid">'+X.friends.map(function(fr){var p=X.prof[fr.uid]||{};return '<button type="button" class="frg" data-act="frfriend" data-u="'+esc(fr.uid)+'">'+circ(fr.uid,p.n,p.p,64)+'<span class="frgn">'+esc(p.n||'Friend')+'</span></button>';}).join('')+'</div></div>';
     return h;
@@ -956,7 +988,11 @@ var FR=(function(){
     var rows=X.blocks.map(function(b,i){return '<div class="frreq'+(i===X.blocks.length-1?' last':'')+'">'+circ(b.uid,b.n,'',38)+'<span class="frnm">'+esc(b.n||'Someone')+'</span><button class="pb frmini" style="width:92px" data-act="frunblock" data-u="'+esc(b.uid)+'">Unblock</button></div>';}).join('');
     return cardHead('Blocked People')+'<div class="cbody"><p class="sm" style="margin:0 0 8px">People you block can\u2019t find you, send you requests, or see your books. Unblocking does not make you friends again.</p>'+(X.blocks.length?'<div class="cd frrq">'+rows+'</div>':'<div class="cd"><div style="font-weight:500;font-size:17px">No one is blocked.</div><p class="sm" style="margin:6px 0 0">If you block someone, they will appear here.</p></div>')+'</div>';
   }
-  function cardOf(t){return t==='frfind'?cardFind():t==='frreqs'?cardReqs():t==='friend'?cardFriend():t==='frfin'?cardFin():t==='frblocked'?cardBlocked():t==='frreports'?cardReports():((typeof FRR!=='undefined'&&FRR)?FRR.cardOf(t):'');}
+  function cardIntro(){
+    var src=(typeof MASC!=='undefined'&&MASC.friends)?MASC.friends.s:'';
+    return '<div style="position:relative;display:flex;flex-direction:column;flex:1;min-height:0"><div class="cbody" style="text-align:center;padding-top:40px"><img alt="" src="'+src+'" style="height:216px;width:auto;display:inline-block"><h2 style="font-size:26px;font-weight:500;margin:18px 0 0">Friends Are Here!</h2><p style="font-size:16px;line-height:1.45;margin:12px 6px 0">Let people find you by your email, and see what each other is reading. You can change this anytime in Profile.</p><p class="sm" style="margin:12px 6px 0">Clicking \u201CTurn On\u201D sends a message to confirm your email address.</p></div><div class="row" style="padding:12px 0 calc(16px + env(safe-area-inset-bottom,0px));flex:none"><button class="pb" data-act="frintroon">Turn On</button><button class="pb" data-act="frintrono">Not Now</button></div></div>';
+  }
+  function cardOf(t){return t==='frintro'?cardIntro():t==='frfind'?cardFind():t==='frreqs'?cardReqs():t==='friend'?cardFriend():t==='frfin'?cardFin():t==='frblocked'?cardBlocked():t==='frreports'?cardReports():((typeof FRR!=='undefined'&&FRR)?FRR.cardOf(t):'');}
   function opt(act,t,sub,last){return '<button type="button" class="frop'+(last?' last':'')+'" data-act="'+act+'"><span>'+t+'</span><span class="frsub">'+sub+'</span></button>';}
   function manageSheet(){
     var n=esc(nameOf(X.cur)||'This Person');
@@ -968,12 +1004,13 @@ var FR=(function(){
     else openSheet('<h2>Block '+n+'?</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">You will no longer be friends. '+n+' can\u2019t find you, send you requests, or see your books. '+n+' is not told.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="closesheet2">Cancel</button><button class="pb" data-act="frblkgo">Block</button></div>');
   }
   function findSheet(){
-    if(X.find)openSheet('<h2>Let Others Find Me</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">This is on. People who know your exact email can find you and send a friend request. They see only your first name until you accept.</p><p class="sm" style="margin:10px 0 0">Turning it off stops new people from finding you. Your friends stay your friends.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="frfindoff">Turn Off</button><button class="pb" data-act="closesheet2">Done</button></div>');
-    else openSheet('<h2>Let Others Find Me</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">When this is on, people who know your exact email can find you and send a friend request. They see only your first name until you accept. Your photo stays private until you are friends.</p><p class="sm" style="margin:10px 0 0">You can turn this off at any time. Your friends stay your friends.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="closesheet2">Cancel</button><button class="pb" data-act="frfindon">Turn On</button></div>');
+    if(X.find)openSheet('<h2>Let Friends Find Me</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">This is on. People who know your exact email can find you and send a friend request. They see only your first name until you accept.</p><p class="sm" style="margin:10px 0 0">Turning it off stops new people from finding you. Your friends stay your friends.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="frfindoff">Turn Off</button><button class="pb" data-act="closesheet2">Done</button></div>');
+    else if(wantOn())openSheet('<h2>Let Friends Find Me</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">We are waiting for you to confirm '+esc(myEmail())+'. Open the message we sent and tap the link.</p><p class="sm" style="margin:10px 0 0">It comes from admin@booknerd.online. If you do not see it, check your junk or spam folder.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="frsendver">Send Again</button><button class="pb" data-act="frwantoff">Turn Off</button></div>');
+    else openSheet('<h2>Let Friends Find Me</h2><p style="margin:8px 0 0;font-size:15px;line-height:1.4">When this is on, people who know your exact email can find you and send a friend request. They see only your first name until you accept. Your photo stays private until you are friends.</p><p class="sm" style="margin:10px 0 0">You can turn this off at any time. Your friends stay your friends.</p><div class="row" style="margin-top:18px"><button class="pb" data-act="closesheet2">Cancel</button><button class="pb" data-act="frfindon">Turn On</button></div>');
   }
   function profHTML(){
     if(!linked())return '';
-    return '<h2 class="sec">Friend Settings</h2><div class="cd lrows">'+lrow('rowfind','Let Others Find Me','row-find',esc(findText()))+lrow('rowblocked','Blocked People','row-blocked',esc(blockedText()))+'</div>'+(X.admin?'<h2 class="sec">Admin</h2><div class="cd lrows">'+lrow('rowreports','Reports','row-reports',esc(X.newRep?X.newRep+' New':'None'))+'</div>':'');
+    return '<h2 class="sec">Friend Settings</h2><div class="cd lrows">'+lrow('rowfind','Let Friends Find Me','row-find',esc(findText()))+lrow('rowblocked','Blocked People','row-blocked',esc(blockedText()))+'</div>'+(X.admin?'<h2 class="sec">Admin</h2><div class="cd lrows">'+lrow('rowreports','Reports','row-reports',esc(X.newRep?X.newRep+' New':'None'))+'</div>':'');
   }
   function invite(){
     var data={title:'Book Nerd',text:'I use Book Nerd to keep track of my reading. Come join me!',url:'https://booknerd.online/'};
@@ -1033,7 +1070,7 @@ var FR=(function(){
         delAll(['requests',u,'in']),delAll(['blocks',u,'list']),delAll(['recs',u,'in']),
         Promise.all(sent.map(function(t){return F.deleteDoc(F.doc(fs,'requests',t,'in',u)).catch(ign);}))
       ]);
-    }).then(function(){try{localStorage.removeItem('bm_fr_sent');localStorage.removeItem('bm_rec_sent');}catch(e){}});
+    }).then(function(){try{localStorage.removeItem('bm_fr_sent');localStorage.removeItem('bm_rec_sent');localStorage.removeItem('bm_fr_want');localStorage.removeItem('bm_fr_intro');localStorage.removeItem('bm_fr_remdis');localStorage.removeItem('bm_fr_vsent');}catch(e){}});
   }
   function act(a,el){
     var u=el&&el.getAttribute?el.getAttribute('data-u'):'';
@@ -1063,13 +1100,21 @@ var FR=(function(){
     if(a==='rowfind'){findSheet();return true;}
     if(a==='rowblocked'){openCard('frblocked');return true;}
     if(a==='frfindon'){if(verified()){closeSheet();setFind(true);}else{V.sent=false;V.msg='';verifySheet();}return true;}
-    if(a==='frsendver'){sendVerify();return true;}
+    if(a==='frsendver'){want(true,false);sendVerify();return true;}
+    if(a==='frwantoff'){closeSheet();want(false);return true;}
+    if(a==='frremsend'){want(true,false);if(verified()){autoCheck(true);}else{var f2=fb();if(f2&&f2.U&&f2.user){f2.U.sendEmailVerification(f2.user).then(function(){V.sent=true;toast('Email Sent');},function(e){toast(e&&e.code==='auth/too-many-requests'?'Try Again Soon':'Email Not Sent');});}else toast('No Connection');}return true;}
+    if(a==='frremdis'){lsSet('bm_fr_remdis','1');if(state.view==='friends'&&!state.card)render();return true;}
+    if(a==='frintroon'){lsSet('bm_fr_intro','1');closeCard(true);want(true,false);if(verified()){setFind(true);}else{V.sent=false;V.msg='';sendVerify();}return true;}
+    if(a==='frintrono'){lsSet('bm_fr_intro','1');closeCard();return true;}
     if(a==='frverdone'){verifyDone();return true;}
     if(a==='frfindoff'){closeSheet();setFind(false);return true;}
     if(typeof FRR!=='undefined'&&FRR&&FRR.act(a,el))return true;
     return false;
   }
-  return {wipe:wipe,X:X,start:start,stop:stop,mirror:mirror,bookChanged:function(){mirror(false);},settingChanged:settingChanged,viewHTML:viewHTML,profHTML:profHTML,cardOf:cardOf,act:act,hash:hash,search:search,publishProfile:publishProfile,nameOf:nameOf,friendOf:friendOf,circ:circ,stars:stars,shelfList:shelfList,fb:fb,me:me,myName:myName,ready:ready,refresh:refresh};
+  setInterval(maybeIntro,4000);
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')autoCheck(false);});
+  window.addEventListener('focus',function(){autoCheck(false);});
+  return {wipe:wipe,X:X,start:start,stop:stop,mirror:mirror,bookChanged:function(){mirror(false);},settingChanged:settingChanged,viewHTML:viewHTML,profHTML:profHTML,cardOf:cardOf,act:act,hash:hash,search:search,publishProfile:publishProfile,nameOf:nameOf,friendOf:friendOf,circ:circ,stars:stars,shelfList:shelfList,fb:fb,me:me,myName:myName,ready:ready,refresh:refresh,want:want,autoCheck:autoCheck,maybeIntro:maybeIntro};
 })();
 
 /* ---------- Build 41: recommending a book to friends, and Friends Who Read This ---------- */
@@ -1236,7 +1281,7 @@ var FRR=(function(){
     return false;
   }
   setInterval(tick,4000);
-  return {openSender:openSender,cardOf:cardOf,act:act,back:back,senderClosed:senderClosed,onRecs:onRecs,whoHTML:whoHTML,loadShelves:loadShelves,Q:Q,keyOf:keyOf,same:same};
+  return {clear:clearScreen,openSender:openSender,cardOf:cardOf,act:act,back:back,senderClosed:senderClosed,onRecs:onRecs,whoHTML:whoHTML,loadShelves:loadShelves,Q:Q,keyOf:keyOf,same:same};
 })();
 
 function mcFriendsHTML(line){ return '<div class=\"cd mcd mc-ex mc-fr\" style=\"padding-right:'+Math.round(mcW('friends',frZ())+14)+'px\"><div><div class=\"mct\">Who\u2019s Reading What?</div><div style=\"font-size:14px;margin-top:4px\">'+esc(line)+'</div></div>'+mcImg('friends',frZ(),8,frTop())+'</div>'; }
@@ -5712,11 +5757,12 @@ function abHTML(){
     '<div class=\"fld\" id=\"ab-bd\"><div class=\"lb\">Birthday</div>'+bd+'<p class=\"sm\" style=\"margin:8px 0 0\">We use your birthday once to check your age. We keep your month and day for a birthday card, never your year.</p><p class=\"err\" id=\"bd-err\" role=\"alert\"></p></div>'+
     '<button class=\"pb\" id=\"wl-go\" type=\"button\" style=\"margin-top:18px\">Continue</button>';
 }
-function crHTML(){
+function crHTML(adult){
   return '<h2>Create Your Account</h2><p class=\"wlead\">Choose an email and a password you will remember (at least ten characters).</p>'+
     '<label class=\"fld\" style=\"margin-top:14px\"><span class=\"lb\">Email</span><input class=\"dt\" id=\"cl-email\" type=\"email\" inputmode=\"email\" autocomplete=\"email\" autocapitalize=\"off\" autocorrect=\"off\" spellcheck=\"false\"></label>'+
     '<label class=\"fld\"><span class=\"lb\">Password</span><input class=\"dt\" id=\"cl-pw\" type=\"password\" autocomplete=\"new-password\"></label>'+
     '<div class=\"wck\"><button class=\"bx\" id=\"wl-ck\" type=\"button\" role=\"checkbox\" aria-checked=\"false\" aria-label=\"I have read the Privacy Page\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></button><span>I Have Read the <a href=\"privacy.html\" target=\"_blank\" rel=\"noopener\">Privacy Page</a></span></div>'+
+    '<div class=\"wck\"><button class=\"bx\" id=\"wl-find\" type=\"button\" role=\"checkbox\" aria-checked=\"'+(adult?'true':'false')+'\" aria-label=\"Let friends find me\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></button><span>Let Friends Find Me</span></div><p class=\"sm wfn\" id=\"wl-fnote\"'+(adult?'':' hidden')+'>We\u2019ll send a message to confirm your email.</p>'+
     '<div class=\"sm clmsg\" id=\"cl-msg\" role=\"alert\" aria-live=\"assertive\" style=\"min-height:20px;margin-top:4px\"></div>'+
     '<div class=\"row\" style=\"margin-top:8px\"><button class=\"pb\" id=\"wl-cback\" type=\"button\">Back</button><button class=\"pb\" id=\"wl-cgo\" type=\"button\">Create Account</button></div>'+
     '<button class=\"lnk l14\" id=\"wl-cmode\" type=\"button\" style=\"margin-top:6px\">Sign In</button>';
@@ -5732,7 +5778,7 @@ function siHTML(){
 function sorryHTML(){return '<h2>We\u2019re Sorry</h2><p class=\"wlead\">We can\u2019t set up Book Nerd for you. Don\u2019t worry, we haven\u2019t kept anything you entered.</p>';}
 function acctScreen(mode){
   if(document.getElementById('wl'))return;
-  var el=document.createElement('div'),p=wlLogo(false),card=document.createElement('div'),iv=0;
+  var el=document.createElement('div'),p=wlLogo(false),card=document.createElement('div'),iv=0,wf=false;
   el.id='wl';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Account');
   card.className='wcard on';el.appendChild(p.box);el.appendChild(card);document.body.appendChild(el);wl=el;
   function close(){if(iv){clearInterval(iv);iv=0;}wlClose(0);}
@@ -5740,20 +5786,23 @@ function acctScreen(mode){
     if(iv)clearInterval(iv);var t0=Date.now();
     iv=setInterval(function(){
       var open=!!document.querySelector('#layer .ov:not(.out)'),lk=!!lsGet('bm_cloud_uid');
-      if(lk){if(open){el.style.display='none';return;}clearInterval(iv);iv=0;el.style.display='';if(m==='signup')lsSet(PRIV_KEY,dstr(Date.now()));close();render();return;}
+      if(lk){if(open){el.style.display='none';return;}clearInterval(iv);iv=0;el.style.display='';if(m==='signup'){lsSet(PRIV_KEY,dstr(Date.now()));lsSet('bm_fr_intro','1');if(wf&&typeof FR!=='undefined'&&FR&&FR.want)FR.want(true,true);}close();render();return;}
       if(open){el.style.display='none';return;}
       el.style.display='';
       if(Date.now()-t0>180000){clearInterval(iv);iv=0;}
     },300);
   }
   function showC(){
-    card.innerHTML=crHTML();
+    card.innerHTML=crHTML(false);
     var ck=document.getElementById('wl-ck');
+    var fk=document.getElementById('wl-find'),fn=document.getElementById('wl-fnote');
+    if(fk)fk.addEventListener('click',function(){var on=fk.getAttribute('aria-checked')==='true';fk.setAttribute('aria-checked',on?'false':'true');if(fn)fn.hidden=on;});
     ck.addEventListener('click',function(){var on=ck.getAttribute('aria-checked')==='true';ck.setAttribute('aria-checked',on?'false':'true');var m=document.getElementById('cl-msg');if(m&&m.textContent==='Please check the box to continue.'){m.textContent='';m.className='sm clmsg';}});
     document.getElementById('wl-cback').addEventListener('click',close);
     document.getElementById('wl-cmode').addEventListener('click',showS);
     function go(){
       if(ck.getAttribute('aria-checked')!=='true'){var m=document.getElementById('cl-msg');m.className='sm clmsg err';m.textContent='Please check the box to continue.';return;}
+      wf=!!(fk&&fk.getAttribute('aria-checked')==='true');
       CLOUD.setMode('signup');CLOUD.submit();watch('signup');
     }
     document.getElementById('wl-cgo').addEventListener('click',go);
@@ -5823,7 +5872,7 @@ function wlFirst(){
   }
   var pend=null,wlIv=0;
   function wlShow(id){['wl-v1','wl-v2','wl-v3','wl-v4','wl-v5'].forEach(function(k){var e=document.getElementById(k);if(e)e.style.display=(k===id?'':'none');});wlFit();}
-  function showCreate(){var v=document.getElementById('wl-v3'),o=document.getElementById('wl-v4');o.innerHTML='';v.innerHTML=crHTML();wlShow('wl-v3');wireCreate();var e=document.getElementById('cl-email');if(e)setTimeout(function(){try{e.focus();}catch(x){}},60);}
+  function showCreate(){var v=document.getElementById('wl-v3'),o=document.getElementById('wl-v4');o.innerHTML='';v.innerHTML=crHTML(!!(pend&&pend.adult));wlShow('wl-v3');wireCreate();var e=document.getElementById('cl-email');if(e)setTimeout(function(){try{e.focus();}catch(x){}},60);}
   function showSignin(){var v=document.getElementById('wl-v4'),o=document.getElementById('wl-v3');o.innerHTML='';v.innerHTML=siHTML();wlShow('wl-v4');wireSignin();var e=document.getElementById('cl-email');if(e)setTimeout(function(){try{e.focus();}catch(x){}},60);}
   function ageFail(){
     try{localStorage.setItem(AGE_KEY,String(Date.now()));}catch(e){}
@@ -5843,13 +5892,15 @@ function wlFirst(){
     if(d>dm){be.textContent='That month does not have that many days.';return;}
     if(new Date(y,m-1,d).getTime()>Date.now()){be.textContent='That date is in the future.';return;}
     if(ageOf(y,m,d)<13){ageFail();return;}
-    pend={name:nm,bd:pad(m)+'-'+pad(d)};
+    pend={name:nm,bd:pad(m)+'-'+pad(d),adult:ageOf(y,m,d)>=18};
     if(wlPath==='create')showCreate();
     else{lsSet(BD_KEY,pend.bd);done(nm);}
   }
   function finishCreate(){
     if(pend){lsSet(BD_KEY,pend.bd);}
     lsSet(PRIV_KEY,dstr(Date.now()));
+    lsSet('bm_fr_intro','1');
+    if(pend&&pend.find&&typeof FR!=='undefined'&&FR&&FR.want)FR.want(true,true);
     done(pend?pend.name:'');
   }
   function wlWatch(mode){
@@ -5865,11 +5916,14 @@ function wlFirst(){
   }
   function wireCreate(){
     var ck=document.getElementById('wl-ck');
+    var fk=document.getElementById('wl-find'),fn=document.getElementById('wl-fnote');
+    if(fk)fk.addEventListener('click',function(){var on=fk.getAttribute('aria-checked')==='true';fk.setAttribute('aria-checked',on?'false':'true');if(fn)fn.hidden=on;});
     ck.addEventListener('click',function(){var on=ck.getAttribute('aria-checked')==='true';ck.setAttribute('aria-checked',on?'false':'true');var m=document.getElementById('cl-msg');if(m&&m.textContent==='Please check the box to continue.'){m.textContent='';m.className='sm clmsg';}});
     document.getElementById('wl-cback').addEventListener('click',function(){wlShow('wl-v2');});
     document.getElementById('wl-cmode').addEventListener('click',function(){wlPath='signin';showSignin();});
     function cgo(){
       if(ck.getAttribute('aria-checked')!=='true'){var m=document.getElementById('cl-msg');m.className='sm clmsg err';m.textContent='Please check the box to continue.';return;}
+      if(pend)pend.find=!!(fk&&fk.getAttribute('aria-checked')==='true');
       CLOUD.setMode('signup');CLOUD.submit();wlWatch('signup');
     }
     document.getElementById('wl-cgo').addEventListener('click',cgo);
